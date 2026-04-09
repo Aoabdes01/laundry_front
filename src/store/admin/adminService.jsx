@@ -60,3 +60,25 @@ export const getClientStatistics = async () => {
 export const getClientCommandes = async (clientId) => {
     return await api.get(`/admin/client/${clientId}`);
 }
+
+// ========== CARPET TYPES ENDPOINTS ==========
+
+export const adminGetCarpetTypes = async () => {
+    return await api.get('/admin/carpet-types');
+}
+
+export const adminCreateCarpetType = async (data) => {
+    return await api.post('/admin/carpet-types', data);
+}
+
+export const adminUpdateCarpetType = async (id, data) => {
+    return await api.put(`/admin/carpet-types/${id}`, data);
+}
+
+export const adminDeleteCarpetType = async (id) => {
+    return await api.delete(`/admin/carpet-types/${id}`);
+}
+
+export const adminChangePassword = async (id, password) => {
+    return await api.put(`/admin/change-user-password/${id}`, password)
+}

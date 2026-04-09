@@ -11,7 +11,11 @@ import {
     fetchCommandeById,
     fetchAllClients,
     fetchClientCommandes,
-    fetchClientStatistics
+    fetchClientStatistics,
+    fetchAdminCarpetTypes,
+    createAdminCarpetType,
+    updateAdminCarpetType,
+    deleteAdminCarpetType,
 } from "./adminThunk";
 
 const initialState = {
@@ -24,6 +28,9 @@ const initialState = {
     clientCommandes: [],
     selectedClient: null,
     clientStatistics: null,
+    carpetTypes: [],
+    carpetTypesLoading: false,
+    carpetTypesError: null,
     loading: false,
     error: null,
     success: false,
@@ -281,6 +288,36 @@ const adminSlice = createSlice({
             .addCase(fetchClientStatistics.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload?.message || "Erreur chargement statistiques clients";
+            })
+
+            // --- FETCH ADMIN CARPET TYPES ---
+            .addCase(fetchAdminCarpetTypes.pending, (state) => {
+                state.carpetTypesLoading = true;
+                state.carpetTypesError = null;
+            })
+            .addCase(fetchAdminCarpetTypes.fulfilled, (state, action) => {
+                state.carpetTypesLoading = false;
+                state.carpetTypes = action.payload;
+            })
+            .addCase(fetchAdminCarpetTypes.rejected, (state, action) => {
+                state.carpetTypesLoading = false;
+                state.carpetTypesError = action.payload?.message || "Erreur chargement types";
+            })
+
+            // --- CREATE CARPET TYPE ---
+            .addCase(createAdminCarpetType.fulfilled, (state, action) => {
+                state.carpetTypes.push(action.payload);
+            })
+
+            // --- UPDATE CARPET TYPE ---
+            .addCase(updateAdminCarpetType.fulfilled, (state, action) => {
+                const idx = state.carpetTypes.findIndex(t => t.id === action.payload.id);
+                if (idx !== -1) state.carpetTypes[idx] = action.payload;
+            })
+
+            // --- DELETE CARPET TYPE ---
+            .addCase(deleteAdminCarpetType.fulfilled, (state, action) => {
+                state.carpetTypes = state.carpetTypes.filter(t => t.id !== action.payload);
             });
     }
 });

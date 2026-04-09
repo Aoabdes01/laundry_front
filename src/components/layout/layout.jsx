@@ -23,7 +23,7 @@ const Layout = () => {
       {user && <Sidebar user={user} />}
 
       {/* 2. MAIN CONTENT AREA */}
-      <div className={`flex-1 flex flex-col h-screen relative transition-all duration-300 ${user ? 'md:ml-16 lg:ml-60' : 'ml-0'}`}>
+      <div className={`flex-1 flex flex-col h-screen relative transition-all duration-300 ${user ? 'md:ms-16 lg:ms-60' : 'ms-0'}`}>
         {/* CONTEXTUAL TOP HEADER (Fixed) */}
         <Header />
 

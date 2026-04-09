@@ -7,7 +7,7 @@ const LoadingScreen = ({ message = "Chargement de votre session..." }) => {
       <div className="bg-white p-8 rounded-2xl shadow-xl flex flex-col items-center max-w-sm w-full mx-4">
         <div className="relative">
           <div className="w-16 h-16 border-4 border-primary-100 rounded-full"></div>
-          <Loader2 className="w-16 h-16 text-primary-600 animate-spin absolute top-0 left-0" />
+          <Loader2 className="w-16 h-16 text-primary-600 animate-spin absolute top-0 start-0" />
         </div>
         <h2 className="mt-6 text-xl font-semibold text-gray-900 text-center">
           {message}
@@ -21,3 +21,4 @@ const LoadingScreen = ({ message = "Chargement de votre session..." }) => {
 };
 
 export default LoadingScreen;
+

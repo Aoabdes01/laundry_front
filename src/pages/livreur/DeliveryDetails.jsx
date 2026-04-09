@@ -9,9 +9,11 @@ import {
   User, Receipt, Sparkles, Wallet, ArrowRight
 } from 'lucide-react';
 import { confirmPayment, fetchReadyForDelivery, fetchPaymentTypes } from '../../store/livreur/livreurThunk';
+import { useTranslation } from 'react-i18next';
 import { selectReadyForDelivery, selectLoading, selectPaymentTypes } from '../../store/livreur/livreurSelectors';
 
 export default function DeliveryDetails() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,18 +34,18 @@ export default function DeliveryDetails() {
 
   useEffect(() => {
     if (paymentTypes?.length > 0 && !paymentMethod) {
-      setPaymentMethod(paymentTypes[0].code);
+      setPaymentMethod(paymentTypes[0].id);
     }
   }, [paymentTypes, paymentMethod]);
 
   const handleRecordPayment = async () => {
-    if (!paymentMethod) return toast.warning('Veuillez choisir un mode de paiement');
+    if (!paymentMethod) return toast.warning(t('driver.delivery_details.toasts.choose_method'));
     try {
       await dispatch(confirmPayment({ orderId: order.id, data: { modePaiement: paymentMethod } })).unwrap();
-      toast.success('Livraison validée avec succès !');
+      toast.success(t('driver.delivery_details.toasts.success'));
       navigate('/livreur/delivery');
     } catch (err) {
-      toast.error(err || "Erreur lors de l'enregistrement du paiement");
+      toast.error(err || t('driver.delivery_details.toasts.error'));
     }
   };
 
@@ -51,7 +53,7 @@ export default function DeliveryDetails() {
     return (
       <div className="flex flex-col items-center justify-center py-32 space-y-4 animate-pulse">
         <Loader2 size={48} className="text-primary-500 animate-spin" />
-        <p className="text-sm font-black text-text-muted uppercase tracking-widest">Chargement des détails...</p>
+        <p className="text-sm font-black text-text-muted uppercase tracking-widest">{t('driver.delivery_details.loading')}</p>
       </div>
     );
   }
@@ -62,13 +64,13 @@ export default function DeliveryDetails() {
         <div className="w-24 h-24 rounded-[2rem] bg-gray-50 flex items-center justify-center mb-6 shadow-card">
           <Package size={40} className="text-text-muted opacity-20" />
         </div>
-        <h3 className="text-xl font-black text-text-primary uppercase tracking-tight mb-2">Commande introuvable</h3>
-        <p className="text-sm text-text-muted mb-8 max-w-xs">Il se peut que la commande ait déjà été traitée ou n'existe plus.</p>
+        <h3 className="text-xl font-black text-text-primary uppercase tracking-tight mb-2">{t('driver.delivery_details.not_found.title')}</h3>
+        <p className="text-sm text-text-muted mb-8 max-w-xs">{t('driver.delivery_details.not_found.desc')}</p>
         <button 
           onClick={() => navigate('/livreur/delivery')} 
           className="bg-primary-600 text-white rounded-2xl px-10 py-5 text-xs font-black uppercase tracking-widest hover:bg-primary-700 transition-all shadow-xl shadow-primary-500/20 active:scale-95"
         >
-          Retourner aux livraisons
+          {t('driver.delivery_details.not_found.back_btn')}
         </button>
       </div>
     );
@@ -78,20 +80,20 @@ export default function DeliveryDetails() {
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-20 px-4">
       
       {/* HEADER & BACK */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 text-start">
         <button 
           onClick={() => navigate('/livreur/delivery')}
           className="flex items-center gap-2 text-text-muted hover:text-primary-600 transition-colors text-xs font-black uppercase tracking-widest self-start"
         >
-          <ArrowLeft size={16} /> Retour à la liste
+          <ArrowLeft size={16} className="rtl:rotate-180" /> {t('driver.delivery_details.back_list')}
         </button>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h1 className="text-3xl font-black text-text-primary uppercase tracking-tighter flex items-center gap-3">
-               Détails Livraison
+               {t('driver.delivery_details.title')}
             </h1>
             <div className="bg-teal-500/10 text-teal-600 px-4 py-1.5 rounded-full flex items-center gap-2 self-start sm:self-center">
                <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
-               <span className="text-[10px] font-black uppercase tracking-widest">Prête pour livraison</span>
+               <span className="text-[10px] font-black uppercase tracking-widest">{t('driver.delivery_details.ready_badge')}</span>
             </div>
         </div>
       </div>
@@ -102,28 +104,28 @@ export default function DeliveryDetails() {
         <div className="lg:col-span-3 space-y-8">
             {/* MAIN INFO CARD */}
             <div className="bg-white rounded-[2.5rem] shadow-card border border-border/50 overflow-hidden">
-                <div className="bg-gray-50/50 p-8 border-b border-border/50 flex flex-col sm:flex-row justify-between items-start gap-6">
+                <div className="bg-gray-50/50 p-8 border-b border-border/50 flex flex-col sm:flex-row justify-between items-start gap-6 text-start">
                    <div>
                       <div className="flex items-center gap-2 text-primary-600 font-black text-xs uppercase tracking-widest mb-1">
-                         <Hash size={14} strokeWidth={3} /> Numéro Commande
+                         <Hash size={14} strokeWidth={3} /> {t('driver.delivery_details.order_number')}
                       </div>
                       <p className="text-4xl font-black text-text-primary tracking-tighter">#{order.numeroCommande}</p>
                    </div>
-                   <div className="sm:text-right">
+                   <div className="sm:text-end">
                       <div className="flex items-center sm:justify-end gap-2 text-text-muted font-black text-xs uppercase tracking-widest mb-1">
-                         <Calendar size={14} strokeWidth={3} /> Date de Prête
+                         <Calendar size={14} strokeWidth={3} /> {t('driver.delivery_details.ready_date')}
                       </div>
-                      <p className="text-sm font-bold text-text-primary uppercase">AUJOURD'HUI • 14:30</p>
+                      <p className="text-sm font-bold text-text-primary uppercase">{t('driver.delivery_details.today')} • 14:30</p>
                    </div>
                 </div>
 
-                <div className="p-8 space-y-6">
+                <div className="p-8 space-y-6 text-start">
                    <div className="flex items-start gap-5 p-4 rounded-3xl bg-primary-50/30 border border-primary-100/50">
                       <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary-600 shadow-sm border border-primary-100 shrink-0">
                          <User size={24} />
                       </div>
                       <div className="min-w-0">
-                         <p className="text-[10px] font-black text-primary-500 uppercase tracking-widest mb-0.5">Destinataire</p>
+                         <p className="text-[10px] font-black text-primary-500 uppercase tracking-widest mb-0.5">{t('driver.delivery_details.recipient')}</p>
                          <h3 className="text-lg font-black text-text-primary uppercase truncate">{order.client?.nom || order.client?.name}</h3>
                          <div className="flex flex-wrap gap-4 mt-2">
                             <span className="text-xs font-bold text-text-muted flex items-center gap-1.5">
@@ -138,8 +140,8 @@ export default function DeliveryDetails() {
                          <MapPin size={20} />
                       </div>
                       <div className="min-w-0">
-                         <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest mb-0.5">Adresse</p>
-                         <p className="text-xs font-bold text-text-primary leading-relaxed">{order.client?.addresses?.[0]?.address || 'Adresse non spécifiée'}</p>
+                         <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest mb-0.5">{t('driver.delivery_details.address')}</p>
+                         <p className="text-xs font-bold text-text-primary leading-relaxed">{order.client?.addresses?.[0]?.address || t('driver.delivery_details.no_address')}</p>
                          <button 
                            onClick={() => {
                              const lat = order.client?.addresses?.[0]?.latitude;
@@ -149,7 +151,7 @@ export default function DeliveryDetails() {
                            }}
                            className="flex items-center gap-2 mt-3 text-xs font-black text-teal-600 hover:text-teal-700 tracking-widest uppercase transition-colors"
                          >
-                            Itinéraire <MapIcon size={14} strokeWidth={3} />
+                            Itinéraire <MapIcon size={14} strokeWidth={3} className="rtl:rotate-180" />
                          </button>
                       </div>
                    </div>
@@ -157,12 +159,12 @@ export default function DeliveryDetails() {
             </div>
 
             {/* ARTICULES LIST */}
-            <div className="bg-white rounded-[2.5rem] shadow-card border border-border/50 p-8 space-y-6">
+            <div className="bg-white rounded-[2.5rem] shadow-card border border-border/50 p-8 space-y-6 text-start">
                <div className="flex items-center gap-3 mb-2">
                   <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-text-primary">
                      <Package size={20} />
                   </div>
-                  <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">Articles du colis</h3>
+                  <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('driver.delivery_details.package_items')}</h3>
                </div>
 
                <div className="divide-y divide-gray-100">
@@ -183,8 +185,8 @@ export default function DeliveryDetails() {
                </div>
 
                <div className="pt-6 mt-2 border-t border-dashed border-border flex items-center justify-between">
-                  <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">Total Commande</p>
-                  <div className="text-right">
+                  <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.delivery_details.total_order')}</p>
+                  <div className="text-end">
                      <p className="text-3xl font-black text-primary-600 tracking-tighter">{order.montantTotal.toFixed(0)} <span className="text-base font-bold">DH</span></p>
                   </div>
                </div>
@@ -196,11 +198,11 @@ export default function DeliveryDetails() {
             
             <div className="bg-white rounded-[2.5rem] shadow-2xl border-4 border-primary-500 overflow-hidden sticky top-24">
                 <div className="bg-primary-500 p-8 text-white relative">
-                   <div className="absolute top-0 right-0 p-4 opacity-10">
+                   <div className="absolute top-0 end-0 p-4 opacity-10">
                       <Wallet size={80} strokeWidth={1} />
                    </div>
                    <h3 className="text-sm font-black uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
-                      <CreditCard size={18} strokeWidth={3} /> Résumé Règlement
+                      <CreditCard size={18} strokeWidth={3} /> {t('driver.delivery_details.payment_summary')}
                    </h3>
                    <div className="flex items-baseline gap-1">
                       <span className="text-5xl font-black tracking-tighter">{order.montantTotal.toFixed(0)}</span>
@@ -208,39 +210,40 @@ export default function DeliveryDetails() {
                    </div>
                 </div>
 
-                <div className="p-8 space-y-8">
+                <div className="p-8 space-y-8 text-start">
                    <div className="space-y-4">
-                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest px-2">Mode de paiement reçu</p>
+                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest px-2">{t('driver.delivery_details.payment_method_label')}</p>
                       <div className="grid grid-cols-1 gap-3">
                          {paymentTypes?.length > 0 ? (
-                           paymentTypes.map(opt => (
+                           paymentTypes.map((opt, pidx) => (
                             <button
-                                key={opt.code}
-                                onClick={() => setPaymentMethod(opt.code)}
+                                key={opt.id || pidx}
+                                type="button"
+                                onClick={() => setPaymentMethod(opt.id)}
                                 className={`flex items-center justify-between px-6 py-5 rounded-2xl border-2 transition-all group ${
-                                  paymentMethod === opt.code
+                                  paymentMethod === opt.id
                                     ? 'bg-primary-50 border-primary-500 shadow-md'
                                     : 'bg-gray-50 border-transparent hover:border-border'
                                 }`}
                               >
                                  <div className="flex items-center gap-4">
                                     <div className={`w-6 h-6 rounded-full border-4 flex items-center justify-center transition-all ${
-                                      paymentMethod === opt.code ? 'border-primary-500 bg-white' : 'border-gray-200 bg-gray-100'
+                                      paymentMethod === opt.id ? 'border-primary-500 bg-white' : 'border-gray-200 bg-gray-100'
                                     }`}>
-                                       {paymentMethod === opt.code && <div className="w-2 h-2 rounded-full bg-primary-500 animate-in zoom-in-0" />}
+                                       {paymentMethod === opt.id && <div className="w-2 h-2 rounded-full bg-primary-500 animate-in zoom-in-0" />}
                                     </div>
                                     <span className={`text-sm font-black uppercase tracking-widest transition-colors ${
-                                      paymentMethod === opt.code ? 'text-primary-700' : 'text-text-muted group-hover:text-text-primary'
+                                      paymentMethod === opt.id ? 'text-primary-700' : 'text-text-muted group-hover:text-text-primary'
                                     }`}>{opt.label}</span>
                                  </div>
-                                 {opt.code === 'especes' ? <Banknote className={paymentMethod === opt.code ? 'text-primary-500' : 'text-text-muted'} /> : 
-                                  opt.code === 'carte' ? <CreditCard className={paymentMethod === opt.code ? 'text-primary-500' : 'text-text-muted'} /> :
-                                  <FileText className={paymentMethod === opt.code ? 'text-primary-500' : 'text-text-muted'} />}
+                                 {opt.code === 'especes' || opt.label?.toLowerCase().includes('esp') ? <Banknote className={paymentMethod === opt.id ? 'text-primary-500' : 'text-text-muted'} /> : 
+                                  opt.code === 'carte' || opt.label?.toLowerCase().includes('cart') ? <CreditCard className={paymentMethod === opt.id ? 'text-primary-500' : 'text-text-muted'} /> :
+                                  <FileText className={paymentMethod === opt.id ? 'text-primary-500' : 'text-text-muted'} />}
                               </button>
                            ))
                          ) : (
                            <div className="py-4 px-6 bg-red-50 text-red-600 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center">
-                              Erreur: Modes de paiement non disponibles
+                              {t('driver.delivery_details.payment_unavailable')}
                            </div>
                          )}
                       </div>
@@ -255,14 +258,14 @@ export default function DeliveryDetails() {
                        <Loader2 className="animate-spin" size={24} />
                      ) : (
                        <>
-                         VALIDER LA LIVRAISON
-                         <ArrowRight size={20} strokeWidth={3} className="group-hover:translate-x-2 transition-transform" />
+                         {t('driver.delivery_details.validate_btn')}
+                         <ArrowRight size={20} strokeWidth={3} className="group-hover:translate-x-2 transition-transform rtl:rotate-180 rtl:group-hover:-translate-x-2" />
                        </>
                      )}
                    </button>
                    
                    <p className="text-[9px] text-center font-bold text-text-muted uppercase tracking-widest px-4">
-                      Cette action marquera la commande comme livrée et encaissée définitivement.
+                      {t('driver.delivery_details.warning_note')}
                    </p>
                 </div>
             </div>
@@ -273,3 +276,4 @@ export default function DeliveryDetails() {
     </div>
   );
 }
+

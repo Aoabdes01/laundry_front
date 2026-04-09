@@ -60,7 +60,7 @@ const ConfirmModal = ({
         <div className={`h-2 w-full ${confirmBtn.split(' ')[0]}`}></div>
 
         <div className="p-8 sm:p-10 space-y-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-laundry-fresh/5 rounded-full -mr-16 -mt-16 animate-pulse"></div>
+          <div className="absolute top-0 end-0 w-32 h-32 bg-laundry-fresh/5 rounded-full -me-16 -mt-16 animate-pulse"></div>
 
           <div className="flex flex-col items-center text-center gap-6 relative z-10">
             <div className={`${iconBg} p-5 rounded-[1.5rem] border-2 ${accent} text-laundry-deep shadow-inner animate-float`}>

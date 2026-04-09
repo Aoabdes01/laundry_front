@@ -107,9 +107,9 @@ export const uploadTapisImage = async (tapisId, file) => {
   });
 }
 
-// Get carpet types
+// Get active carpet types (for livreur dropdown)
 export const getCarpetTypes = async () => {
-  return await api.get('/api/livreur/carpet-types')
+  return await api.get('/livreur/carpet-types/active')
 }
 
 // Upload tapis images (plural)

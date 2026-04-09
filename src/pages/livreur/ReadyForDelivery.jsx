@@ -19,9 +19,14 @@ import {
   Search,
   AlertTriangle,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  MoreVertical,
+  ChevronDown
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { printReceipt } from '../../utils/printReceipt';
+import { removeOrderFromReady } from '../../store/livreur/livreurSlice';
 import {
   fetchReadyForDelivery,
   confirmPayment,
@@ -35,7 +40,7 @@ import {
 } from '../../store/livreur/livreurSelectors';
 
 // Leaflet Imports
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -54,7 +59,39 @@ const leafletStyles = `
   .leaflet-control-attribution {
     font-size: 9px !important;
   }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  .livreur-dot-ring {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(59,130,246,0.35);
+    animation: pulse-ring 1.4s ease-out infinite;
+  }
+  .livreur-dot-core {
+    width: 14px; height: 14px;
+    background: #3B82F6;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(59,130,246,0.5);
+    position: relative; z-index: 1;
+  }
 `;
+
+const livreurIcon = new L.DivIcon({
+  html: `
+    <div style="position:relative;width:20px;height:20px;display:flex;align-items:center;justify-content:center;">
+      <div class="livreur-dot-ring"></div>
+      <div class="livreur-dot-core"></div>
+    </div>
+  `,
+  className: '',
+  iconSize: [20, 20],
+  iconAnchor: [10, 10],
+});
 
 // Custom orange marker for non-optimized or general use
 const orangeIcon = new L.Icon({
@@ -82,7 +119,7 @@ const createNumberedIcon = (number) =>
         font-size: 12px;
         font-weight: 700;
         border: 2px solid white;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.6);
       ">${number}</div>
     `,
     className: '',
@@ -91,12 +128,101 @@ const createNumberedIcon = (number) =>
     popupAnchor: [0, -14],
   });
 
+const createSelectedIcon = (number) =>
+  new L.DivIcon({
+    html: `
+      <div style="
+        background: #F97316;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 900;
+        border: 3px solid white;
+        box-shadow: 0 0 15px rgba(249, 115, 22, 0.8);
+      ">${number || ''}</div>
+    `,
+    className: '',
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -18],
+  });
+
+const MapController = ({ markers, selectedOrderId }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (!selectedOrderId) {
+        if (markers && markers.length > 0) {
+           const bounds = L.latLngBounds(markers.map(m => [m.lat, m.lng]));
+           map.fitBounds(bounds, { padding: [50, 50], animate: true });
+        }
+        return;
+    }
+    const target = markers.find(m => m.orderId === selectedOrderId || m.id === selectedOrderId);
+    if (target) {
+      map.flyTo([target.lat, target.lng], 17, { animate: true, duration: 1.2 });
+    }
+  }, [selectedOrderId, markers, map]);
+  return null;
+};
+
 // ─── Sub-Components ───────────────────
 
-const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes, loading }) => {
+const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes, loading, success, selectedMethodId }) => {
+  const { t } = useTranslation();
   const [selectedType, setSelectedType] = useState(null);
 
+  useEffect(() => {
+    if (isOpen && !success) {
+      setSelectedType(null);
+    }
+  }, [isOpen, success, order]);
+
+  useEffect(() => {
+    let timer;
+    if (success) {
+      timer = setTimeout(() => {
+        onClose();
+      }, 8000);
+    }
+    return () => clearTimeout(timer);
+  }, [success, onClose]);
+
   if (!isOpen) return null;
+
+  if (success) {
+    const ptLabel = paymentTypes.find(t => t.id === selectedMethodId)?.label || 'Paiement';
+    return (
+      <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300" onClick={onClose}></div>
+        <div className="relative bg-white w-full max-w-sm rounded-t-[2rem] sm:rounded-2xl shadow-modal overflow-hidden animate-in slide-in-from-bottom duration-300 p-8 text-center flex flex-col items-center">
+          <div className="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mb-6 shadow-inner">
+            <CheckCircle2 size={40} />
+          </div>
+          <h3 className="text-xl font-black text-text-primary uppercase tracking-tight mb-2">{t('driver.ready_delivery.payment_modal.success.title')}</h3>
+          <p className="text-sm font-bold text-text-muted mb-8">{t('driver.ready_delivery.payment_modal.order_prefix')} #{order?.numeroCommande || order?.id}</p>
+          <div className="w-full flex gap-3">
+            <button
+              onClick={() => printReceipt(order, ptLabel)}
+              className="flex-1 bg-primary-500 text-white rounded-xl py-3 text-xs font-black uppercase tracking-widest shadow-lg shadow-primary-500/30 flex items-center justify-center hover:bg-primary-600 transition-all active:scale-95"
+            >
+              {t('driver.ready_delivery.payment_modal.success.print')}
+            </button>
+            <button
+              onClick={onClose}
+              className="px-6 bg-gray-100 text-text-primary border border-gray-200 rounded-xl py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center hover:bg-gray-200 transition-all active:scale-95"
+            >
+              {t('driver.ready_delivery.payment_modal.success.close')}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -104,16 +230,15 @@ const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes, loading
 
       <div className="relative bg-white w-full max-w-sm rounded-t-[2rem] sm:rounded-2xl shadow-modal overflow-hidden animate-in slide-in-from-bottom duration-300 p-6">
         <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5 sm:hidden"></div>
-
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold text-text-primary uppercase tracking-tight">Mode de paiement</h3>
+        <div className="flex justify-between items-center mb-4 text-start">
+          <h3 className="text-lg font-bold text-text-primary uppercase tracking-tight">{t('driver.ready_delivery.payment_modal.title')}</h3>
           <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
             <X size={20} className="text-text-muted" />
           </button>
         </div>
 
-        <p className="text-sm text-text-muted mb-6 font-bold uppercase tracking-widest text-[10px]">
-          Commande <span className="text-primary-500">#{order?.numeroCommande || order?.id}</span>
+        <p className="text-sm text-text-muted mb-6 font-bold uppercase tracking-widest text-[10px] text-start">
+          {t('driver.ready_delivery.payment_modal.order_prefix')} <span className="text-primary-500">#{order?.numeroCommande || order?.id}</span>
         </p>
 
         <div className="space-y-2 mb-6">
@@ -124,8 +249,8 @@ const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes, loading
                 key={type.id}
                 onClick={() => setSelectedType(type.id)}
                 className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${isSelected
-                    ? 'border-2 border-primary-500 bg-primary-50'
-                    : 'border-border hover:border-primary-300 hover:bg-primary-50'
+                  ? 'border-2 border-primary-500 bg-primary-50'
+                  : 'border-border hover:border-primary-300 hover:bg-primary-50'
                   }`}
               >
                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-primary-500' : 'border-gray-300'}`}>
@@ -142,15 +267,17 @@ const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes, loading
           disabled={!selectedType || loading}
           className="w-full bg-primary-500 text-white rounded-xl py-4 text-sm font-black uppercase tracking-[0.1em] shadow-xl shadow-primary-500/30 flex items-center justify-center gap-2 hover:bg-primary-600 disabled:opacity-50 transition-all active:scale-95"
         >
-          {loading ? <Loader2 className="animate-spin" /> : 'Confirmer le paiement'}
+          {loading ? <Loader2 className="animate-spin" /> : t('driver.ready_delivery.payment_modal.confirm_btn')}
         </button>
       </div>
     </div>
   );
 };
 
-const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized }) => {
-  const baseUrl = import.meta.env.VITE_API_URL// 'http://localhost:8080';
+const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized, isSelected, onSelect }) => {
+  const { t } = useTranslation();
+  const baseUrl = 'http://localhost:8080'
+  // import.meta.env.VITE_API_URL;
 
   const getAllPhotos = (order) => {
     const photos = [];
@@ -195,16 +322,19 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized }) =>
     } else if (address) {
       window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`, '_blank');
     } else {
-      toast.warning("Coordonnées GPS et adresse non disponibles");
+      toast.warning(t('driver.ready_delivery.card.no_address_error'));
     }
   };
 
   return (
-    <div className="relative bg-white rounded-2xl shadow-md overflow-hidden flex flex-col md:flex-row border border-border/40 animate-in slide-in-from-bottom duration-500 group">
+    <div 
+      className={`relative bg-white rounded-2xl shadow-md overflow-hidden flex flex-col md:flex-row border animate-in slide-in-from-bottom duration-500 group cursor-pointer transition-all ${isSelected ? 'border-l-4 border-l-primary-500 border-border/40' : 'border-border/40'}`}
+      onClick={() => onSelect(order.id)}
+    >
 
       {/* STOP NUMBER BADGE */}
       {isOptimized && order._stopNumber && (
-        <div className="absolute top-3 left-3 z-20 w-8 h-8 rounded-full bg-primary-500 text-white text-xs font-black flex items-center justify-center shadow-lg border-2 border-white">
+        <div className="absolute top-3 start-3 z-20 w-8 h-8 rounded-full bg-primary-500 text-white text-xs font-black flex items-center justify-center shadow-lg border-2 border-white">
           {order._stopNumber}
         </div>
       )}
@@ -216,7 +346,7 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized }) =>
             src={mainPhoto}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 cursor-pointer"
             alt="tapis"
-            onClick={() => onShowGallery(allPhotos, 0)}
+            onClick={(e) => { e.stopPropagation(); onShowGallery(allPhotos, 0); }}
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center text-primary-400">
@@ -224,7 +354,7 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized }) =>
           </div>
         )}
 
-        <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg text-white text-[10px] font-black uppercase tracking-widest border border-white/20">
+        <div className="absolute bottom-3 end-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg text-white text-[10px] font-black uppercase tracking-widest border border-white/20">
           {order.montantTotal} DH
         </div>
       </div>
@@ -232,12 +362,12 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized }) =>
       {/* RIGHT CONTENT */}
       <div className="flex-1 p-4 flex flex-col justify-between min-w-0">
         <div>
-          <div className="flex justify-between items-start gap-3 mb-3">
+          <div className="flex justify-between items-start gap-3 mb-3 text-start">
             <div className="min-w-0">
-              <h3 className="text-base font-black text-text-primary tracking-tight truncate uppercase">#{order.numeroCommande} • {order.client?.nom || order.client?.name || order.client?.fullName || 'Client'}</h3>
+              <h3 className="text-base font-black text-text-primary tracking-tight truncate uppercase">#{order.numeroCommande} • {order.client?.nom || order.client?.name || order.client?.fullName || t('driver.create_order.articles.labels.client_fallback', 'Client')}</h3>
               <div className="flex items-center gap-2 mt-1">
                 <span className="bg-green-100 text-green-700 text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest border border-green-200">
-                  PRÊT
+                  {t('driver.ready_delivery.card.ready')}
                 </span>
                 <div className="flex items-center gap-1 text-text-muted">
                   <Clock size={12} />
@@ -248,22 +378,24 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized }) =>
             {order._legDistance && (
               <div className="flex flex-col items-end gap-1 shrink-0">
                 <div className="flex items-center gap-1 px-2 py-1 bg-primary-50 rounded-lg border border-primary-100">
-                  <Navigation size={10} className="text-primary-500" />
-                  <span className="text-[9px] font-black text-primary-600 uppercase tracking-widest">{order._legDistance} KM</span>
+                  <Navigation size={10} className="text-primary-500 shrink-0 rtl:rotate-180" />
+                  <span className="text-[9px] font-black text-primary-600 uppercase tracking-widest whitespace-nowrap">
+                    {order._isFirstStop ? `📍 ${order._legDistance} km` : `↳ ${order._legDistance} KM`}
+                  </span>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="bg-gray-50/50 p-3 rounded-xl mb-4 border border-gray-100">
+          <div className="bg-gray-50/50 p-3 rounded-xl mb-4 border border-gray-100 text-start">
             <div className="flex items-start gap-2.5 mb-2">
               <MapPin size={14} className="text-primary-500 mt-0.5 shrink-0" />
-              <p className="text-xs font-bold text-text-primary leading-relaxed uppercase tracking-tight line-clamp-2">{order.client?.addresses?.[0]?.address || 'Sans adresse'}</p>
+              <p className="text-xs font-bold text-text-primary leading-relaxed uppercase tracking-tight line-clamp-2">{order.client?.addresses?.[0]?.address || t('driver.ready_delivery.card.no_address')}</p>
             </div>
             <div className="flex items-center gap-2.5">
-              <Phone size={14} className="text-primary-500 shrink-0" />
+              <Phone size={14} className="text-primary-500 shrink-0 rtl:rotate-180" />
               <a href={`tel:${order.client?.phones?.[0]?.phoneNumber}`} className="text-xs font-black text-primary-600 hover:text-primary-700 transition-colors uppercase tracking-wider">
-                {order.client?.phones?.[0]?.phoneNumber || 'Sans numéro'}
+                {order.client?.phones?.[0]?.phoneNumber || t('driver.ready_delivery.card.no_phone')}
               </a>
             </div>
           </div>
@@ -271,19 +403,19 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized }) =>
 
         <div className="flex gap-2 items-center">
           <button
-            onClick={handleItinerary}
+            onClick={(e) => { e.stopPropagation(); handleItinerary(); }}
             className="flex-1 bg-primary-500 hover:bg-primary-600 text-white rounded-xl py-3.5 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-md shadow-primary-500/10 active:scale-95"
           >
-            <Navigation size={14} fill="white" /> Itinéraire
+            <Navigation size={14} fill="white" className="rtl:rotate-180" /> {t('driver.ready_delivery.card.itinerary')}
           </button>
           <button
-            onClick={() => onPay(order)}
+            onClick={(e) => { e.stopPropagation(); onPay(order); }}
             className="flex-1 bg-white hover:bg-gray-50 text-text-primary border border-border rounded-xl py-3.5 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95"
           >
-            <CreditCard size={14} /> Paiement
+            <CreditCard size={14} /> {t('driver.ready_delivery.card.payment')}
           </button>
           <button
-            onClick={() => onCancel(order)}
+            onClick={(e) => { e.stopPropagation(); onCancel(order); }}
             className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-text-muted hover:bg-red-50 hover:text-red-500 transition-all border border-border/50 active:scale-95 shrink-0"
           >
             <X size={20} />
@@ -297,13 +429,14 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized }) =>
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function ReadyForDelivery() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const orders = useSelector(selectReadyForDelivery);
   const paymentTypes = useSelector(selectPaymentTypes);
   const loading = useSelector(selectLoading);
 
-  const [paymentModal, setPaymentModal] = useState({ isOpen: false, order: null });
+  const [paymentModal, setPaymentModal] = useState({ isOpen: false, order: null, success: false, selectedMethodId: null });
 
   // Lightbox State
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -318,6 +451,7 @@ export default function ReadyForDelivery() {
   const [totalDistance, setTotalDistance] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const [optimized, setOptimized] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   const [noGpsWarning, setNoGpsWarning] = useState(false);
   const [mapReady, setMapReady] = useState(false);
@@ -329,6 +463,33 @@ export default function ReadyForDelivery() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const [travelMode, setTravelMode] = useState('driving');
+  const [livreurPosition, setLivreurPosition] = useState(null);
+  const watchIdRef = React.useRef(null);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      watchIdRef.current = navigator.geolocation.watchPosition(
+        (position) => {
+          setLivreurPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
+        },
+        () => {},
+        { enableHighAccuracy: true }
+      );
+    }
+    return () => {
+      if (watchIdRef.current !== null && "geolocation" in navigator) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!import.meta.env.VITE_MAPTILER_KEY) {
+      console.warn('[PureClean] VITE_MAPTILER_KEY is not set. Add it to your .env file.');
+    }
+  }, []);
+
   useEffect(() => {
     dispatch(fetchReadyForDelivery());
     dispatch(fetchPaymentTypes());
@@ -336,13 +497,15 @@ export default function ReadyForDelivery() {
   }, [dispatch]);
 
   // Route Optimization Logic (OSRM)
-  const optimizeRoute = async () => {
+  const optimizeRoute = async (mode = travelMode) => {
+    const livreurIncluded = !!livreurPosition;
+
     const ordersWithGPS = orders.filter(order =>
       order.client?.addresses?.[0]?.latitude && order.client?.addresses?.[0]?.longitude
     );
 
     if (ordersWithGPS.length < 2) {
-      setOptimizationError('Minimum 2 adresses GPS nécessaires pour optimiser le trajet');
+      setOptimizationError(t('driver.ready_delivery.status.min_gps'));
       return;
     }
 
@@ -350,53 +513,103 @@ export default function ReadyForDelivery() {
     setOptimizationError(null);
 
     try {
-      const coords = ordersWithGPS
-        .map(order => `${order.client.addresses[0].longitude},${order.client.addresses[0].latitude}`)
-        .join(';');
+      if (livreurIncluded) {
+        // PHASE 1 — Sort clients by road distance from livreur
+        const allCoords = [
+          `${livreurPosition.lng},${livreurPosition.lat}`,
+          ...ordersWithGPS.map(o => `${o.client.addresses[0].longitude},${o.client.addresses[0].latitude}`)
+        ].join(';');
 
-      const response = await fetch(
-        `https://router.project-osrm.org/trip/v1/driving/${coords}?roundtrip=false&source=first&destination=last&overview=full&geometries=geojson&annotations=true`
-      );
+        const tableUrl = `https://router.project-osrm.org/table/v1/${mode}/${allCoords}?sources=0&annotations=distance`;
+        const tableRes = await fetch(tableUrl);
+        if (!tableRes.ok) throw new Error('OSRM Table API unavailable');
+        const tableData = await tableRes.json();
+        if (tableData.code !== 'Ok') throw new Error('Table distance calculation failed');
 
-      if (!response.ok) throw new Error('OSRM unavailable');
-      const data = await response.json();
+        const distancesFromLivreur = tableData.distances[0].slice(1);
 
-      if (data.code !== 'Ok') throw new Error('Optimization failed');
+        const ordersWithDistance = ordersWithGPS.map((order, idx) => ({
+          ...order,
+          _distanceFromLivreur: distancesFromLivreur[idx]
+        }));
 
-      const waypointOrder = data.waypoints
-        .sort((a, b) => a.waypoint_index - b.waypoint_index)
-        .map(wp => wp.waypoint_index);
+        const sortedOrders = [...ordersWithDistance].sort(
+          (a, b) => a._distanceFromLivreur - b._distanceFromLivreur
+        );
 
-      const reordered = waypointOrder.map(idx => ordersWithGPS[waypointOrder.indexOf(idx)]);
-      // Note: OSRM Trip API returns waypoints in the order they appear in the input, but with a 'trips_index' or similar to indicate order. 
-      // Actually, for Trip API, waypoints[i].waypoint_index corresponds to input index i.
-      // The order is determined by data.trips[0].legs and the sequences.
-      // Correct reordering for Trip API:
-      const trip = data.trips[0];
-      const itemsOrder = data.waypoints.sort((a, b) => a.trips_index - b.trips_index).map(wp => wp.waypoint_index);
-      const reorderedOrders = itemsOrder.map(idx => ordersWithGPS[idx]);
+        // PHASE 2 — Get the actual road route in that sorted order
+        const routeCoords = [
+          `${livreurPosition.lng},${livreurPosition.lat}`,
+          ...sortedOrders.map(o => `${o.client.addresses[0].longitude},${o.client.addresses[0].latitude}`)
+        ].join(';');
 
-      const legs = trip.legs;
-      const reorderedWithInfo = reorderedOrders.map((order, idx) => ({
-        ...order,
-        _legDistance: legs[idx] ? (legs[idx].distance / 1000).toFixed(1) : null,
-        _legDuration: legs[idx] ? Math.round(legs[idx].duration / 60) : null,
-        _stopNumber: idx + 1
-      }));
+        const routeUrl = `https://router.project-osrm.org/route/v1/${mode}/${routeCoords}?overview=full&geometries=geojson&steps=false`;
+        const routeRes = await fetch(routeUrl);
+        if (!routeRes.ok) throw new Error('OSRM Route API unavailable');
+        const routeData = await routeRes.json();
+        if (routeData.code !== 'Ok') throw new Error('Route calculation failed');
 
-      const ordersWithoutGPS = orders.filter(order =>
-        !order.client?.addresses?.[0]?.latitude || !order.client?.addresses?.[0]?.longitude
-      );
+        const route = routeData.routes[0];
+        const legs = route.legs;
 
-      setOptimizedOrders([...reorderedWithInfo, ...ordersWithoutGPS]);
-      setRouteCoords(trip.geometry.coordinates.map(coord => [coord[1], coord[0]]));
-      setTotalDistance((trip.distance / 1000).toFixed(1));
-      setTotalDuration(Math.round(trip.duration / 60));
-      setOptimized(true);
+        const reorderedWithInfo = sortedOrders.map((order, idx) => ({
+          ...order,
+          _legDistance: legs[idx] ? (legs[idx].distance / 1000).toFixed(1) : null,
+          _legDuration: legs[idx] ? Math.round(legs[idx].duration / 60) : null,
+          _stopNumber: idx + 1,
+          _isFirstStop: idx === 0 
+        }));
+
+        const ordersWithoutGPS = orders.filter(order =>
+          !order.client?.addresses?.[0]?.latitude || !order.client?.addresses?.[0]?.longitude
+        );
+
+        setOptimizedOrders([...reorderedWithInfo, ...ordersWithoutGPS]);
+        setRouteCoords(route.geometry.coordinates.map(coord => [coord[1], coord[0]]));
+        setTotalDistance((route.distance / 1000).toFixed(1));
+        setTotalDuration(Math.round(route.duration / 60));
+        setOptimized(true);
+        
+      } else {
+        // FALLBACK — When livreurPosition is null
+        const coords = ordersWithGPS.map(o => `${o.client.addresses[0].longitude},${o.client.addresses[0].latitude}`).join(';');
+        const response = await fetch(
+          `https://router.project-osrm.org/trip/v1/${mode}/${coords}?roundtrip=false&source=first&destination=last&overview=full&geometries=geojson&annotations=true`
+        );
+  
+        if (!response.ok) throw new Error('OSRM unavailable');
+        const data = await response.json();
+  
+        if (data.code !== 'Ok') throw new Error('Optimization failed');
+  
+        const trip = data.trips[0];
+        
+        const clientWaypoints = data.waypoints.sort((a, b) => a.trips_index - b.trips_index);
+        const reorderedOrders = clientWaypoints.map(wp => ordersWithGPS[wp.waypoint_index]).filter(Boolean);
+  
+        const legs = trip.legs;
+        const reorderedWithInfo = reorderedOrders.map((order, idx) => ({
+          ...order,
+          _legDistance: legs[idx] ? (legs[idx].distance / 1000).toFixed(1) : null,
+          _legDuration: legs[idx] ? Math.round(legs[idx].duration / 60) : null,
+          _stopNumber: idx + 1,
+          _isFirstStop: false
+        }));
+  
+        const ordersWithoutGPS = orders.filter(order =>
+          !order.client?.addresses?.[0]?.latitude || !order.client?.addresses?.[0]?.longitude
+        );
+  
+        setOptimizedOrders([...reorderedWithInfo, ...ordersWithoutGPS]);
+        setRouteCoords(trip.geometry.coordinates.map(coord => [coord[1], coord[0]]));
+        setTotalDistance((trip.distance / 1000).toFixed(1));
+        setTotalDuration(Math.round(trip.duration / 60));
+        setOptimized(true);
+      }
 
     } catch (error) {
       console.error('Optimization error:', error);
-      setOptimizationError("Impossible d'optimiser le trajet. Utilisation de l'ordre par défaut.");
+      setOptimizationError(t('driver.ready_delivery.status.error'));
     } finally {
       setIsOptimizing(false);
     }
@@ -442,11 +655,16 @@ export default function ReadyForDelivery() {
         orderId: paymentModal.order.id,
         data: { modePaiement: methodId }
       })).unwrap();
-      toast.success("Paiement validé !");
-      setPaymentModal({ isOpen: false, order: null });
+      
+      const paidId = paymentModal.order.id;
+      dispatch(removeOrderFromReady(paidId));
+      setOptimizedOrders(prev => prev.filter(o => o.id !== paidId));
+
+      toast.success(t('driver.ready_delivery.toasts.payment_success'));
+      setPaymentModal(prev => ({ ...prev, success: true, selectedMethodId: methodId }));
       dispatch(fetchReadyForDelivery());
     } catch (err) {
-      toast.error(err || "Une erreur est survenue");
+      toast.error(err || t('driver.delivery_details.toasts.error'));
     }
   };
 
@@ -467,11 +685,11 @@ export default function ReadyForDelivery() {
 
       setCancelModalOpen(false);
       setOrderToCancel(null);
-      setSuccessMessage('Commande annulée avec succès. Elle apparaît dans "Annulées".');
+      setSuccessMessage(t('driver.ready_delivery.toasts.cancel_success'));
       setTimeout(() => setSuccessMessage(''), 4000);
     } catch (error) {
       console.error('Cancel error:', error);
-      setErrorMessage("Erreur lors de l'annulation. Veuillez réessayer.");
+      setErrorMessage(t('driver.ready_delivery.toasts.cancel_error'));
       setTimeout(() => setErrorMessage(''), 4000);
     } finally {
       setCancelLoading(false);
@@ -530,34 +748,60 @@ export default function ReadyForDelivery() {
       )}
 
       {/* PAGE HEADER */}
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-2 text-start">
         <div>
-          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">Livraisons du jour</h1>
-          <p className="text-sm text-text-muted mt-1 font-bold">Optimisez votre trajet et gérez vos encaissements.</p>
+          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">{t('driver.ready_delivery.title')}</h1>
+          <p className="text-sm text-text-muted mt-1 font-bold">{t('driver.ready_delivery.subtitle')}</p>
         </div>
 
         <div className="bg-primary-50 border border-primary-200 rounded-2xl px-5 py-3 flex items-center gap-3 shadow-sm shrink-0">
           <ShoppingBag className="text-primary-500" size={20} />
           <p className="text-sm font-black text-primary-600 uppercase tracking-widest leading-none">
-            {orders.length} Commandes
+            {t('driver.ready_delivery.orders_count', { count: orders.length })}
           </p>
         </div>
       </div>
 
+      <div className="flex bg-gray-100 p-1 rounded-xl w-fit">
+        <button 
+          onClick={() => { setTravelMode('driving'); optimizeRoute('driving'); }}
+          className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+            travelMode === 'driving' ? 'bg-primary-500 text-white shadow-sm' : 'text-text-muted hover:text-text-primary'
+          }`}
+        >
+          🚗 {t('driver.ready_delivery.travel_mode.driving')}
+        </button>
+        <button 
+          onClick={() => { setTravelMode('foot'); optimizeRoute('foot'); }}
+          className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+            travelMode === 'foot' ? 'bg-primary-500 text-white shadow-sm' : 'text-text-muted hover:text-text-primary'
+          }`}
+        >
+          🚶 {t('driver.ready_delivery.travel_mode.foot')}
+        </button>
+      </div>
+
       {/* OPTIMIZATION STATUS */}
-      <div className="space-y-3">
+      <div className="space-y-3 text-start">
         {isOptimizing && (
           <div className="flex items-center gap-3 bg-white border border-border/50 rounded-2xl px-4 py-3 shadow-sm animate-pulse">
             <div className="w-5 h-5 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm font-bold text-text-muted uppercase tracking-tight">Optimisation du trajet en cours...</span>
+            <span className="text-sm font-bold text-text-muted uppercase tracking-tight">{t('driver.ready_delivery.status.optimizing')}</span>
           </div>
         )}
 
         {optimized && !isOptimizing && (
-          <div className="flex items-center gap-4 flex-wrap bg-white border border-border/50 rounded-2xl px-4 py-3 shadow-sm">
+          <div className="flex flex-col gap-3">
+            {livreurPosition === null && (
+              <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 shadow-sm">
+                <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                <span className="text-xs font-bold text-amber-800 uppercase tracking-tight">{t('driver.ready_delivery.status.gps_missing')}</span>
+              </div>
+            )}
+            <div className="flex items-center gap-4 flex-wrap bg-white border border-border/50 rounded-2xl px-4 py-3 shadow-sm">
             <div className="flex items-center gap-1.5 bg-green-50 border border-green-200 rounded-xl px-3 py-1.5">
               <CheckCircle className="w-4 h-4 text-green-500" />
-              <span className="text-[10px] font-black text-green-700 uppercase tracking-widest">Optimisé</span>
+              <span className="text-[10px] font-black text-green-700 uppercase tracking-widest">{t('driver.ready_delivery.status.optimized')}</span>
             </div>
             <div className="flex items-center gap-1.5 bg-primary-50 border border-primary-200 rounded-xl px-3 py-1.5">
               <MapPin className="w-4 h-4 text-primary-500" />
@@ -567,16 +811,26 @@ export default function ReadyForDelivery() {
               <Clock className="w-4 h-4 text-primary-500" />
               <span className="text-[10px] font-black text-primary-600 uppercase tracking-widest">~{totalDuration} MIN</span>
             </div>
-            <button
-              className="text-[10px] font-black text-text-muted hover:text-primary-500 uppercase tracking-widest underline ml-auto transition-colors"
-              onClick={() => {
-                setOptimized(false);
-                setOptimizedOrders([]);
-                setRouteCoords([]);
-              }}
-            >
-              Réinitialiser
-            </button>
+            <div className="flex flex-col sm:flex-row ms-auto items-center gap-3">
+              <button
+                className="flex items-center justify-center gap-2 text-[10px] bg-primary-50 text-primary-600 px-3 py-1.5 rounded-lg border border-primary-200 font-black hover:bg-primary-100 uppercase tracking-widest transition-colors disabled:opacity-50"
+                onClick={() => optimizeRoute(travelMode)}
+                disabled={isOptimizing}
+              >
+                {isOptimizing ? <Loader2 size={12} className="animate-spin" /> : null} {t('driver.ready_delivery.actions.recalculate')}
+              </button>
+              <button
+                className="text-[10px] font-black text-text-muted hover:text-primary-500 uppercase tracking-widest underline transition-colors"
+                onClick={() => {
+                  setOptimized(false);
+                  setOptimizedOrders([]);
+                  setRouteCoords([]);
+                }}
+              >
+                {t('driver.ready_delivery.actions.reset')}
+              </button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -595,30 +849,45 @@ export default function ReadyForDelivery() {
             <MapContainer
               center={mapCenter}
               zoom={mapMarkers.length > 0 ? 12 : 10}
+              maxZoom={22}
               style={{ height: '100%', width: '100%', zIndex: 0 }}
               zoomControl={true}
               scrollWheelZoom={false}
             >
+              {/* Maptiler Satellite Streets — free 100k tiles/month, no credit card */}
               <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                url={`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${import.meta.env.VITE_MAPTILER_KEY}`}
+                attribution='&copy; <a href="https://www.maptiler.com/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                tileSize={512}
+                zoomOffset={-1}
+                maxZoom={22}
               />
 
               {routeCoords.length > 0 && (
                 <Polyline
                   positions={routeCoords}
-                  color="#F97316"
-                  weight={4}
-                  opacity={0.8}
+                  pathOptions={{ color: '#ffffff', weight: 3, dashArray: '8, 10', opacity: 0.9 }}
                 />
               )}
 
-              {mapMarkers.map((marker, idx) => (
-                <Marker
-                  key={idx}
-                  position={[marker.lat, marker.lng]}
-                  icon={optimized ? createNumberedIcon(marker.stopNumber) : orangeIcon}
-                >
+              {livreurPosition && (
+                <Marker position={[livreurPosition.lat, livreurPosition.lng]} icon={livreurIcon} />
+              )}
+
+              <MapController markers={mapMarkers} selectedOrderId={selectedOrderId} />
+
+              {mapMarkers.map((marker, idx) => {
+                const isSelected = selectedOrderId === marker.orderId;
+                const icon = isSelected 
+                  ? createSelectedIcon(marker.stopNumber) 
+                  : (optimized ? createNumberedIcon(marker.stopNumber) : orangeIcon);
+
+                return (
+                  <Marker
+                    key={idx}
+                    position={[marker.lat, marker.lng]}
+                    icon={icon}
+                  >
                   <Popup>
                     <div style={{ minWidth: '160px' }}>
                       <div style={{ fontWeight: 900, fontSize: '13px', marginBottom: '4px', textTransform: 'uppercase', color: '#111827' }}>
@@ -638,7 +907,7 @@ export default function ReadyForDelivery() {
                     </div>
                   </Popup>
                 </Marker>
-              ))}
+              )})}
             </MapContainer>
           )}
 
@@ -647,20 +916,20 @@ export default function ReadyForDelivery() {
               <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg mb-4">
                 <MapPin size={32} className="text-gray-300" />
               </div>
-              <p className="text-sm font-black text-text-primary uppercase tracking-tight">Aucune coordonnée GPS</p>
-              <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-1">L'optimisation nécessite les positions clients</p>
+              <p className="text-sm font-black text-text-primary uppercase tracking-tight">{t('driver.ready_delivery.card.gps_unavailable', 'Aucune coordonnée GPS')}</p>
+              <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-1">{t('driver.ready_delivery.status.optim_needs_gps', "L'optimisation nécessite les positions clients")}</p>
             </div>
           )}
         </div>
 
         {/* SmartRoute banner */}
-        <div className="bg-gray-900 px-4 py-3 md:px-5 md:py-4 flex justify-between items-center gap-3">
+        <div className="bg-gray-900 px-4 py-3 md:px-5 md:py-4 flex justify-between items-center gap-3 text-start">
           <div>
-            <h4 className="font-semibold text-sm md:text-base text-white leading-tight uppercase">Lancer la Livraison</h4>
+            <h4 className="font-semibold text-sm md:text-base text-white leading-tight uppercase">{t('driver.ready_delivery.actions.launch')}</h4>
             <p className="text-gray-400 text-xs mt-0.5 hidden sm:block font-bold">
               {mapMarkers.length > 0
-                ? `Ouvrir l'itinéraire pour ${mapMarkers.length} clients`
-                : 'Gagnez du temps sur votre tournée'
+                ? t('driver.ready_delivery.route_info', { dist: totalDistance, time: totalDuration })
+                : t('driver.ready_delivery.subtitle')
               }
             </p>
           </div>
@@ -684,6 +953,15 @@ export default function ReadyForDelivery() {
               onCancel={handleCancelOrder}
               onShowGallery={handleShowGallery}
               isOptimized={optimized}
+              isSelected={selectedOrderId === order.id}
+              onSelect={(id) => {
+                setSelectedOrderId(id === selectedOrderId ? null : id);
+                if (id !== selectedOrderId) {
+                    setTimeout(() => {
+                        document.querySelector('.leaflet-container')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 50);
+                }
+              }}
             />
           ))
         ) : (
@@ -691,8 +969,8 @@ export default function ReadyForDelivery() {
             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 shadow-inner">
               <Navigation size={40} className="text-text-muted opacity-20" />
             </div>
-            <h3 className="text-xl font-black text-text-primary uppercase tracking-tight">Aucune livraison en attente</h3>
-            <p className="text-sm font-bold text-text-muted mt-2 uppercase tracking-widest text-center px-8">Toutes vos livraisons ont été effectuées pour le moment.</p>
+            <h3 className="text-xl font-black text-text-primary uppercase tracking-tight">{t('driver.ready_delivery.empty.title')}</h3>
+            <p className="text-sm font-bold text-text-muted mt-2 uppercase tracking-widest text-center px-8">{t('driver.ready_delivery.empty.desc')}</p>
           </div>
         )}
       </div>
@@ -703,7 +981,9 @@ export default function ReadyForDelivery() {
         order={paymentModal.order}
         paymentTypes={paymentTypes}
         loading={loading.payment}
-        onClose={() => setPaymentModal({ isOpen: false, order: null })}
+        success={paymentModal.success}
+        selectedMethodId={paymentModal.selectedMethodId}
+        onClose={() => setPaymentModal({ isOpen: false, order: null, success: false, selectedMethodId: null })}
         onConfirm={handleConfirmPayment}
       />
 
@@ -725,13 +1005,16 @@ export default function ReadyForDelivery() {
               <AlertCircle size={32} className="text-red-500" />
             </div>
 
-            <h3 className="text-xl font-black text-text-primary text-center mb-2 uppercase tracking-tight">Annuler la livraison ?</h3>
+            <h3 className="text-xl font-black text-text-primary text-center mb-2 uppercase tracking-tight">{t('driver.ready_delivery.cancel_modal.title')}</h3>
 
             <p className="text-sm text-text-muted text-center mb-1 font-bold uppercase tracking-widest text-[10px]">
-              Commande <span className="text-red-500">#{orderToCancel.numeroCommande || orderToCancel.id}</span>
+              {t('driver.ready_delivery.payment_modal.order_prefix')} <span className="text-red-500">#{orderToCancel.numeroCommande || orderToCancel.id}</span>
             </p>
             <p className="text-xs text-text-muted text-center mb-8 font-medium">
-              Cette action marquera la commande comme annulée. Elle apparaîtra dans la section "Annulées".
+              {t('driver.ready_delivery.cancel_modal.warning')}
+            </p>
+            <p className="text-xs text-text-muted text-center mb-8 font-medium">
+              {t('driver.ready_delivery.cancel_modal.question')}
             </p>
 
             <div className="flex gap-4">
@@ -743,7 +1026,7 @@ export default function ReadyForDelivery() {
                 }}
                 disabled={cancelLoading}
               >
-                Garder
+                {t('driver.ready_delivery.cancel_modal.keep')}
               </button>
               <button
                 className="flex-1 bg-red-500 hover:bg-red-600 text-white rounded-2xl py-4 text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-red-500/20 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
@@ -753,7 +1036,7 @@ export default function ReadyForDelivery() {
                 {cancelLoading ? (
                   <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
                 ) : (
-                  'Annuler'
+                  t('driver.ready_delivery.cancel_modal.confirm')
                 )}
               </button>
             </div>
@@ -768,12 +1051,12 @@ export default function ReadyForDelivery() {
             if (e.target === e.currentTarget) setLightboxOpen(false);
           }}
         >
-          <div className="absolute top-4 left-4 bg-black/50 text-white text-sm font-medium px-3 py-1 rounded-full border border-white/10 backdrop-blur-md">
+          <div className="absolute top-4 start-4 bg-black/50 text-white text-sm font-medium px-3 py-1 rounded-full border border-white/10 backdrop-blur-md">
             {lightboxIndex + 1} / {lightboxImages.length}
           </div>
 
           <button
-            className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center z-10 transition-all"
+            className="absolute top-4 end-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center z-10 transition-all"
             onClick={() => setLightboxOpen(false)}
           >
             <X className="w-6 h-6 text-white" />
@@ -781,7 +1064,7 @@ export default function ReadyForDelivery() {
 
           {lightboxIndex > 0 && (
             <button
-              className="absolute left-4 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all"
+              className="absolute start-4 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all"
               onClick={() => setLightboxIndex(i => i - 1)}
             >
               <ChevronLeft className="w-10 h-10 text-white" />
@@ -796,7 +1079,7 @@ export default function ReadyForDelivery() {
 
           {lightboxIndex < lightboxImages.length - 1 && (
             <button
-              className="absolute right-4 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all"
+              className="absolute end-4 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all"
               onClick={() => setLightboxIndex(i => i + 1)}
             >
               <ChevronRight className="w-10 h-10 text-white" />
@@ -823,3 +1106,4 @@ export default function ReadyForDelivery() {
     </div>
   );
 }
+

@@ -1,6 +1,7 @@
 import React from 'react';
+import { LogIn, Bell, Search, Menu, Package, MoreVertical, LogOut, Languages } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { LogIn, Bell, Search, Menu, Package, MoreVertical, LogOut } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { selectCurrentUser } from '../../store/auth/authSelector';
@@ -13,6 +14,7 @@ import { selectPendingCount, selectPendingOrders, selectSeenNotificationIdsEmplo
 import { markNotificationsAsSeen as markNotificationsAsSeenEmploye } from '../../store/employe/employeSlice';
 
 const Header = () => {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const isLivreur = user?.role === 'livreur';
@@ -105,19 +107,19 @@ const Header = () => {
     newItems.forEach(order => {
       if (seenIds.includes(order.id)) return;
       const toastConfig = isLivreur ? {
-        title: '📦 Nouvelle commande prête !',
-        body: `Commande #${order.numeroCommande} est disponible.`,
+        title: t('header.new_order_ready'),
+        body: t('header.order_available', { number: order.numeroCommande }),
         path: '/livreur/delivery'
       } : {
-        title: '📦 Nouvelle commande !',
-        body: `Commande #${order.numeroCommande} créée par ${order.livreur?.name || 'un livreur'}.`,
+        title: t('header.new_order'),
+        body: t('header.order_created_by', { number: order.numeroCommande, name: order.livreur?.name || t('driver.canceled_deliveries.card.client_fallback', 'un livreur') }),
         path: '/employe/dashboard'
       };
       toast.info(
         <div onClick={() => navigate(toastConfig.path)} className="cursor-pointer">
           <p className="font-semibold text-sm">{toastConfig.title}</p>
           <p className="text-xs text-primary-600 mt-0.5">{toastConfig.body}</p>
-          <p className="text-xs text-text-muted mt-1">Cliquez pour voir.</p>
+          <p className="text-xs text-text-muted mt-1">{t('header.click_to_see')}</p>
         </div>,
         { icon: <Bell size={16} className="text-primary-600" />, toastId: `order-${order.id}` }
       );
@@ -128,18 +130,18 @@ const Header = () => {
   // Page title
   const getPageTitle = () => {
     const path = location.pathname;
-    if (path.includes('/admin/dashboard'))         return 'Tableau de Bord';
-    if (path.includes('/admin/users-management'))  return 'Gestion Utilisateurs';
-    if (path.includes('/admin/commandes'))         return 'Commandes';
-    if (path.includes('/admin/clients'))           return 'Clients';
-    if (path === '/livreur')                      return 'Tableau de Bord';
-    if (path.includes('/livreur/clients'))         return 'Gestion Clients';
-    if (path.includes('/livreur/orders'))          return 'Nouvelle Collecte';
-    if (path.includes('/livreur/delivery'))        return 'Livraisons Prêtes';
-    if (path.includes('/livreur/canceled'))        return 'Commandes Annulées';
-    if (path.includes('/employe/dashboard'))       return 'Atelier de Traitement';
-    if (path.includes('/employe/commandes'))       return 'Détail Commande';
-    if (path.includes('/employe/retours'))         return 'Retours Atelier';
+    if (path.includes('/admin/dashboard'))         return t('nav.dashboard');
+    if (path.includes('/admin/users-management'))  return t('nav.users');
+    if (path.includes('/admin/commandes'))         return t('nav.orders');
+    if (path.includes('/admin/clients'))           return t('nav.clients');
+    if (path === '/livreur')                      return t('nav.dashboard');
+    if (path.includes('/livreur/clients'))         return t('nav.clients');
+    if (path.includes('/livreur/orders'))          return t('nav.collections');
+    if (path.includes('/livreur/delivery'))        return t('nav.deliveries');
+    if (path.includes('/livreur/canceled'))        return t('nav.canceled');
+    if (path.includes('/employe/dashboard'))       return t('nav.workshop');
+    if (path.includes('/employe/commandes'))       return t('nav.details');
+    if (path.includes('/employe/retours'))         return t('nav.returns');
     return 'PureClean';
   };
 
@@ -151,27 +153,27 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 right-0 left-0 md:left-16 lg:left-60 h-16 bg-surface shadow-topbar px-4 md:px-8 flex items-center justify-between z-30 transition-all duration-300">
+    <header className="fixed top-0 end-0 start-0 md:start-16 lg:start-60 h-16 bg-surface shadow-topbar px-4 md:px-8 flex items-center justify-between z-30 transition-all duration-300">
       
       {/* LEFT: Greeting / Title */}
-      <div className="flex flex-col min-w-0 flex-1 mr-2">
+      <div className="flex flex-col min-w-0 flex-1 me-2">
         {isAdmin ? (
           <>
             <h1 className="text-sm md:text-base font-bold text-text-primary flex items-center gap-2 truncate">
-              <span className="hidden md:inline">Bonjour,</span> {user?.name || 'Administrateur'} 
+              <span className="hidden md:inline">{t('header.greeting')},</span> {user?.name || 'Administrateur'} 
               <span className="hidden md:inline text-xl">👋</span>
             </h1>
             <p className="text-[10px] md:text-xs text-text-muted hidden md:block">
-              Heureux de vous revoir, voici l'activité du jour.
+              {t('header.welcome_back')}
             </p>
           </>
         ) : isLivreur ? (
           <>
             <h1 className="text-sm md:text-base font-bold text-text-primary truncate">
-              Tableau de bord Livreur
+              {t('header.driver_dashboard')}
             </h1>
             <p className="text-[10px] md:text-xs text-text-muted hidden lg:block">
-              Gérez vos courses et collectes du jour
+              {t('header.driver_subtitle')}
             </p>
           </>
         ) : (
@@ -187,7 +189,7 @@ const Header = () => {
           <Search size={18} className="text-text-muted group-focus-within:text-primary-500 transition-colors" />
           <input
             type="text"
-            placeholder={isLivreur ? "Chercher une mission..." : "Rechercher une commande, un client..."}
+            placeholder={t('common.search_placeholder')}
             className="bg-transparent border-none outline-none text-sm text-text-primary placeholder:text-text-muted w-full"
           />
           <div className="flex items-center gap-1 bg-surface border border-border px-1.5 py-0.5 rounded-md text-[10px] text-text-muted font-bold shadow-sm">
@@ -215,7 +217,7 @@ const Header = () => {
           >
             <Bell size={22} />
             {unreadCount > 0 && (
-              <span className="absolute top-2 right-2 w-4 h-4 bg-primary-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-surface animate-pulse-dot">
+              <span className="absolute top-2 end-2 w-4 h-4 bg-primary-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-surface animate-pulse-dot">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
@@ -223,11 +225,11 @@ const Header = () => {
 
           {/* Notification Dropdown */}
           {isNotificationsOpen && (
-            <div className="absolute z-50 bg-surface rounded-2xl shadow-modal border border-border left-1/2 -translate-x-1/2 w-[90vw] top-12 md:left-auto md:right-0 md:translate-x-0 md:w-80 md:top-10 max-h-[80vh] overflow-y-auto animate-fade-in origin-top-right">
+            <div className="absolute z-50 bg-surface rounded-2xl shadow-modal border border-border start-1/2 -translate-x-1/2 w-[90vw] top-12 md:start-auto md:end-0 md:translate-x-0 md:w-80 md:top-10 max-h-[80vh] overflow-y-auto animate-fade-in origin-top-right">
               <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-surface">
                 <div>
-                  <h3 className="text-sm font-bold text-text-primary">Notifications</h3>
-                  <p className="text-[10px] text-text-muted">Vous avez {unreadCount} messages non lus</p>
+                  <h3 className="text-sm font-bold text-text-primary">{t('common.notifications')}</h3>
+                  <p className="text-[10px] text-text-muted">{t('header.notifications_count', { count: unreadCount })}</p>
                 </div>
                 {unreadCount > 0 && (
                   <button 
@@ -237,7 +239,7 @@ const Header = () => {
                     }}
                     className="text-[10px] font-bold text-primary-600 hover:text-primary-700 underline"
                   >
-                    Tout lire
+                    {t('common.mark_all_read')}
                   </button>
                 )}
               </div>
@@ -264,15 +266,15 @@ const Header = () => {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
                             <span className={`text-[10px] font-bold uppercase tracking-wider ${isNew ? 'text-primary-600' : 'text-text-muted'}`}>
-                              {isLivreur ? 'Commande Prête' : 'Nouvelle Commande'}
+                              {isLivreur ? t('header.new_order_ready') : t('header.new_order')}
                             </span>
-                            <span className="text-[10px] text-text-muted">Aujourd'hui</span>
+                            <span className="text-[10px] text-text-muted">{t('header.today')}</span>
                           </div>
                           <p className="text-xs text-text-primary leading-snug">
                             {isLivreur ? (
-                              <>La commande <span className="font-bold">#{order.numeroCommande}</span> est prête pour la livraison.</>
+                              t('header.order_available', { number: order.numeroCommande })
                             ) : (
-                              <>Une nouvelle commande <span className="font-bold">#{order.numeroCommande}</span> a été créée par {order.livreur?.name}.</>
+                              t('header.order_created_by', { number: order.numeroCommande, name: order.livreur?.name })
                             )}
                           </p>
                         </div>
@@ -287,7 +289,7 @@ const Header = () => {
                     <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-4">
                       <Bell size={24} className="text-text-muted" />
                     </div>
-                    <p className="text-sm font-medium text-text-primary">Pas de nouvelles notifications</p>
+                    <p className="text-sm font-medium text-text-primary">{t('common.no_notifications')}</p>
                     <p className="text-xs text-text-muted mt-1">Nous vous préviendrons dès qu'il y aura du nouveau.</p>
                   </div>
                 )}
@@ -295,7 +297,7 @@ const Header = () => {
 
               {notifications.length > 0 && (
                 <div className="px-5 py-3 border-t border-border bg-background/50 text-center">
-                  <button
+                    <button
                     onClick={() => {
                       const target = isLivreur ? '/livreur/delivery' : (isAdmin ? '/admin/dashboard' : '/employe/dashboard');
                       navigate(target);
@@ -303,7 +305,7 @@ const Header = () => {
                     }}
                     className="text-xs font-bold text-text-primary hover:text-primary-600 transition-colors"
                   >
-                    Voir tout l'historique
+                    {t('header.see_history')}
                   </button>
                 </div>
               )}
@@ -312,17 +314,27 @@ const Header = () => {
         </div>
 
         {/* USER PROFILE */}
-        {!user ? (
+        <div className="flex items-center gap-2">
+          {/* Language Switcher */}
           <button
-            onClick={() => navigate('/')}
-            className="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary-500/20 hover:bg-primary-700 transition-all flex items-center gap-2 active:scale-95"
+            onClick={() => i18n.changeLanguage(i18n.language === 'fr' ? 'ar' : 'fr')}
+            className="w-10 h-10 flex items-center justify-center rounded-xl text-text-muted hover:bg-background hover:text-text-primary transition-all active:scale-95 border border-transparent hover:border-border"
+            title={i18n.language === 'fr' ? 'العربية' : 'Français'}
           >
-            <LogIn size={18} />
-            <span className="hidden sm:inline">Se connecter</span>
+            <Languages size={20} className="text-primary-500" />
           </button>
-        ) : (
-          <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-border ml-2">
-            <div className="hidden md:flex flex-col text-right">
+
+          {!user ? (
+            <button
+              onClick={() => navigate('/')}
+              className="px-4 py-2 bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary-500/20 hover:bg-primary-700 transition-all flex items-center gap-2 active:scale-95"
+            >
+              <LogIn size={18} />
+              <span className="hidden sm:inline">{t('auth.login.submit')}</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-3 ps-2 md:ps-4 border-l border-border ms-2">
+            <div className="hidden md:flex flex-col text-end">
               <span className="text-xs font-bold text-text-primary leading-none mb-1 truncate max-w-[120px]">
                 {user.name}
               </span>
@@ -337,6 +349,7 @@ const Header = () => {
             </div>
           </div>
         )}
+      </div>
 
         {/* MOBILE MENU (3 dots) */}
         {user && (
@@ -351,7 +364,7 @@ const Header = () => {
             </button>
 
             {isMobileMenuOpen && (
-              <div className="absolute top-12 right-0 w-56 bg-white rounded-2xl shadow-modal border border-border overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
+              <div className="absolute top-12 end-0 w-56 bg-white rounded-2xl shadow-modal border border-border overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
                 <div className="px-5 py-4 border-b border-border bg-gray-50/50">
                   <p className="text-sm font-black text-text-primary truncate">{user.name}</p>
                   <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mt-0.5 capitalize">{user.role}</p>
@@ -363,7 +376,7 @@ const Header = () => {
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl transition-colors"
                   >
                     <LogOut size={18} />
-                    <span>Se déconnecter</span>
+                    <span>{t('common.logout')}</span>
                   </button>
                 </div>
               </div>
@@ -376,3 +389,4 @@ const Header = () => {
 };
 
 export default Header;
+

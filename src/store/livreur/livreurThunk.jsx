@@ -1,4 +1,3 @@
-// src/store/livreur/livreurThunks.js
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {
   getMyPendingClient,
@@ -17,7 +16,8 @@ import {
   getDashboardStats,
   confirmPaymentRequest,
   getPaymentTypes,
-  returnToWorkshopRequest
+  returnToWorkshopRequest,
+  getCarpetTypes
 } from './livreurService'
 
 // ========== CLIENT THUNKS ==========

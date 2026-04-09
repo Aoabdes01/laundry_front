@@ -128,6 +128,10 @@ const livreurSlice = createSlice({
     },
     setPendingClient: (state, action) => {
       state.pendingClient = action.payload
+    },
+    removeOrderFromReady: (state, action) => {
+      const id = action.payload;
+      state.readyForDelivery = state.readyForDelivery.filter(o => o.id !== id);
     }
   },
   extraReducers: (builder) => {
@@ -402,7 +406,8 @@ export const {
   resetOrderCreated,
   resetPaymentRecorded,
   setPendingClient,
-  markNotificationsAsSeen
+  markNotificationsAsSeen,
+  removeOrderFromReady
 } = livreurSlice.actions
 
 export default livreurSlice.reducer

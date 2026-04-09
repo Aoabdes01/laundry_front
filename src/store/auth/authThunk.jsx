@@ -5,22 +5,30 @@ import { logOut, setCredentials } from './authSlice'
 
 export const login = createAsyncThunk(
   "auth/login",
-  async (credentials, { dispatch }) => {
-    const res = await loginRequest(credentials)
+  async (credentials, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await loginRequest(credentials)
 
-    const accessToken = res.data.token;
+      const accessToken = res.data.token;
 
-    const decoded = jwtDecode(accessToken)
+      const decoded = jwtDecode(accessToken)
 
-    dispatch(setCredentials({
-      user: {
-        id:decoded.sub,
-        name:decoded.name,
-        email:decoded.email,
-        role:decoded.role
-      },
-      token: accessToken
-    }))
+      dispatch(setCredentials({
+        user: {
+          id:decoded.sub,
+          name:decoded.name,
+          email:decoded.email,
+          role:decoded.role
+        },
+        token: accessToken
+      }))
+    } catch (error) {
+      if (error.response?.data?.error === "ACCOUNT_DISABLED") {
+        window.location.href = '/compte-suspendu'
+        return rejectWithValue("Compte désactivé") // will not display because of redirect but good practice
+      }
+      return rejectWithValue(error.response?.data || "Erreur de connexion")
+    }
   }
 )
 

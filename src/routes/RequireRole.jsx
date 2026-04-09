@@ -18,3 +18,4 @@ const RequireRole = ({ allowedRoles }) => {
 }
 
 export default RequireRole
+

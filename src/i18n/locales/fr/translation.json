@@ -1,0 +1,873 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "back": "Retour",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "confirm": "Confirmer",
+    "search_placeholder": "Rechercher une commande, un client...",
+    "logout": "Se déconnecter",
+    "notifications": "Notifications",
+    "mark_all_read": "Tout lire",
+    "no_notifications": "Pas de nouvelles notifications",
+    "need_help": "BESOIN D'AIDE ?",
+    "guide": "Guide",
+    "open_guide": "Ouvrir le guide",
+    "support_admin": "Support Admin",
+    "total": "Total",
+    "success_msg": "Opération effectuée avec succès !"
+  },
+  "status": {
+    "en_attente": "En Attente",
+    "validee": "Validée",
+    "en_traitement": "En Traitement",
+    "prete": "À Livrer",
+    "livree": "Livrée",
+    "payee": "Payée",
+    "annulee": "Annulée",
+    "retournee": "Retournée"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "users": "Utilisateurs",
+    "orders": "Commandes",
+    "clients": "Clients",
+    "carpet_types": "Types de Tapis",
+    "collections": "Collecte",
+    "deliveries": "Livraisons",
+    "canceled": "Annulées",
+    "workshop": "Atelier",
+    "details": "Détails",
+    "returns": "Retours"
+  },
+  "header": {
+    "greeting": "Bonjour",
+    "welcome_back": "Ravi de vous revoir, voici l'activité du jour.",
+    "driver_dashboard": "Tableau de Bord Livreur",
+    "driver_subtitle": "Gérez vos courses et collectes du jour",
+    "notifications_count": "Vous avez {{count}} messages non lus",
+    "see_history": "Voir tout l'historique",
+    "today": "Aujourd'hui",
+    "new_order_ready": "📦 Nouvelle commande prête !",
+    "order_available": "Commande #{{number}} est disponible.",
+    "click_to_see": "Cliquez pour voir.",
+    "new_order": "📦 Nouvelle commande !",
+    "order_created_by": "Commande #{{number}} créée par {{name}}."
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "welcome": "Ravis de vous revoir !",
+      "subtitle": "Connectez-vous à votre compte.",
+      "email_label": "Identifiant ou Email",
+      "email_placeholder": "votre@email.com",
+      "password_label": "Mot de passe",
+      "password_placeholder": "••••••••",
+      "remember_me": "Rester connecté",
+      "forgot_password": "Mot de passe oublié ?",
+      "submit": "Se connecter",
+      "submitting": "Connexion...",
+      "error_invalid": "Email ou mot de passe incorrect.",
+      "error_disabled": "Compte désactivé",
+      "footer_title": "© 2026 Pure Clean",
+      "footer_subtitle": "Système Premium de Gestion de Blanchisserie"
+    }
+  },
+  "admin": {
+    "users": {
+      "title": "Gestion Utilisateurs",
+      "new_member": "Nouveau Membre",
+      "member_profile": "Profil Membre",
+      "members_count": "au total",
+      "search_placeholder": "Chercher par nom ou email...",
+      "active": "actifs",
+      "inactive": "inactifs",
+      "show_inactive": "Voir inactifs",
+      "loading": "Chargement de l'équipe...",
+      "no_members": "Aucun membre trouvé",
+      "no_members_sub": "Ajustez vos filtres ou effectuez une nouvelle recherche.",
+      "roles": {
+        "all": "Tous",
+        "admin": "Administrateur",
+        "employe": "Employé",
+        "livreur": "Livreur"
+      },
+      "last_activity": "Dernière activité",
+      "edit": "Modifier",
+      "access_management": "Gestion des Accès",
+      "select_member": "Sélectionnez un membre de l'équipe à gauche pour modifier son profil ou réinitialiser ses accès.",
+      "add_member_title": "Ajout Nouveau Membre",
+      "full_name": "Nom Complet",
+      "email": "Email Professionnel",
+      "phone": "Téléphone",
+      "role": "Rôle Système",
+      "password": "Mot de Passe Initial",
+      "create_account": "CRÉER COMPTE",
+      "update_account": "METTRE À JOUR",
+      "change_password": "Changer le mot de passe",
+      "new_password": "Nouveau mot de passe",
+      "confirm_password": "Confirmer le mot de passe",
+      "update_password_btn": "METTRE À JOUR LE MOT DE PASSE",
+      "security": "Sécurité Compte",
+      "suspend": "SUSPENDRE ACCÈS",
+      "restore": "RÉTABLIR ACCÈS",
+      "delete": "SUPPRIMER DÉFINITIVEMENT",
+      "modals": {
+        "activate_title": "Activer le membre ?",
+        "deactivate_title": "Désactiver le membre ?",
+        "delete_title": "DANGER: Suppression",
+        "activate_body": "Cet utilisateur pourra à nouveau se connecter et accéder à son espace de travail.",
+        "deactivate_body": "Cet utilisateur sera immédiatement déconnecté et ne pourra plus accéder au système.",
+        "delete_body": "Cette action supprimera définitivement l'utilisateur de la base de données."
+      }
+    },
+    "details": {
+      "manual_warning_title": "Note"
+    },
+    "dashboard": {
+      "title": "Tableau de Bord",
+      "performance": "Performance en temps réel",
+      "overview_desc": "Vue d'ensemble de vos opérations et de la santé financière de votre blanchisserie.",
+      "last_data": "Dernières données",
+      "kpi": {
+        "orders_today": "Commandes (Aujourd'hui)",
+        "revenue_today": "Revenus (Aujourd'hui)",
+        "pending": "En attente",
+        "processing": "En traitement"
+      },
+      "revenue_evolution": "Évolution des Revenus",
+      "period_perf": "Performance sur la période sélectionnée",
+      "periods": {
+        "7d": "7j",
+        "30d": "30j",
+        "1y": "1an",
+        "custom": "Période",
+        "today": "Aujourd'hui"
+      },
+      "order_status": "Statut des Commandes",
+      "status_groups": {
+        "completed": "Complétées",
+        "in_progress": "En cours",
+        "cancelled": "Annulées"
+      },
+      "recent_orders": "Commandes Récentes",
+      "activity_flow": "Derniers flux d'activité",
+      "see_all": "Tout voir",
+      "table": {
+        "client": "Client / Information",
+        "details": "Détails Service",
+        "timestamp": "Horodatage",
+        "amount": "Montant",
+        "status": "Statut"
+      },
+      "syncing": "Synchronisation des données...",
+      "carpets": "Tapis"
+    },
+    "clients": {
+      "title": "Base de Données Clients",
+      "subtitle": "Gestion et statistiques",
+      "stats": {
+        "total": "Total Clients",
+        "orders_month": "Commandes ce mois",
+        "new_month": "Nouveaux ce mois"
+      },
+      "search_placeholder": "Nom, numéro de téléphone ou adresse...",
+      "client_since": "Client depuis",
+      "not_specified": "Non renseigné",
+      "last_order": "Dernière commande:",
+      "view_orders": "Voir commandes",
+      "no_clients": "Aucun client trouvé",
+      "table": {
+        "client": "Client",
+        "contact": "Contact",
+        "last_order": "Dernière commande",
+        "orders": "Commandes",
+        "actions": "Actions"
+      },
+      "loading_db": "Chargement de la base clients...",
+      "details": "Détails",
+      "no_results": "Aucun résultat trouvé",
+      "adjust_search": "Essayez d'ajuster vos critères de recherche.",
+      "pagination": {
+        "display": "Affichage",
+        "of": "de",
+        "prev": "Précédent",
+        "next": "Suivant"
+      },
+      "relative_dates": {
+        "today": "Aujourd'hui",
+        "yesterday": "Hier",
+        "days_ago": "Il y a {{count}} jours"
+      },
+      "history": {
+        "back": "Retour aux clients",
+        "count": "{{count}} commandes",
+        "title": "Historique des commandes",
+        "empty_title": "Aucune commande",
+        "empty_body": "Ce client n'a pas encore d'historique de commandes."
+      }
+    },
+    "carpet_types": {
+      "title": "Types de Tapis",
+      "subtitle": "Gérez le catalogue de types avec leurs prix au m²",
+      "new_type": "Nouveau Type",
+      "catalog": "Catalogue",
+      "no_types": "Aucun type configuré",
+      "get_started": "Commencez par créer un type de tapis",
+      "create_first": "Créer le premier type",
+      "table": {
+        "name": "Nom",
+        "price_m2": "Prix / m²",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "active": "Actif",
+      "inactive": "Inactif",
+      "edit_type": "Modifier le Type",
+      "type_name": "Nom du type *",
+      "price_label": "Prix par m² (DH) *",
+      "visible_to_driver": "Visible dans le formulaire livreur",
+      "toasts": {
+        "fill_all": "Remplissez tous les champs",
+        "updated": "Type mis à jour !",
+        "created": "Type créé !",
+        "save_error": "Erreur lors de la sauvegarde",
+        "delete_confirm": "Supprimer ce type de tapis ?",
+        "deleted": "Type supprimé",
+        "delete_error": "Erreur lors de la suppression"
+      }
+    },
+    "orders": {
+      "title": "Base de Données Commandes",
+      "subtitle": "Historique complet et gestion des flux",
+      "export_csv": "Exporter (CSV)",
+      "export_success": "Exportation réussie",
+      "export_error": "Erreur lors de l’exportation",
+      "kpi": {
+        "global": "Global",
+        "value": "Valeur",
+        "urgent": "Urgent",
+        "volumes": "Volumes",
+        "articles": "Articles",
+        "unit_dh": "DH"
+      },
+      "search_placeholder": "N° Commande, Nom client...",
+      "advanced_filters": "Avancé",
+      "filter_labels": {
+        "status": "État actuel",
+        "from": "Depuis le",
+        "to": "Jusqu'au",
+        "reset": "Reset"
+      },
+      "status_options": {
+        "all": "Toutes"
+      },
+      "table": {
+        "ref": "Flux / Référence",
+        "contact": "Contact Client",
+        "timestamp": "Horodatage",
+        "volume": "Volume",
+        "billing": "Facturation",
+        "status": "Statut"
+      },
+      "loading_data": "Indexation des données...",
+      "empty_db": "Base de données vide",
+      "no_match": "Aucun enregistrement ne correspond à vos critères de recherche.",
+      "pagination": {
+        "index": "Index",
+        "prev": "Précédent",
+        "next": "Suivant"
+      },
+      "card": {
+        "recipient": "Destinataire",
+        "billing": "Facturation",
+        "cash": "Espèces"
+      },
+      "details": {
+        "back": "Retour",
+        "ref": "Référence Commande",
+        "collection": "Encaissement",
+        "labels": {
+          "driver": "Livreur",
+          "client": "Client",
+          "phone": "Téléphone",
+          "created_at": "Date Création",
+          "expected_delivery": "Livraison Prévue",
+          "payment": "Paiement"
+        },
+        "articles": "Articles — {{count}} tapis",
+        "modes": {
+          "size": "📐 Dimensions",
+          "manual": "✏️ Manuel"
+        },
+        "pricing": {
+          "calculated": "Calculé: {{price}} DH",
+          "final": "Final: {{price}} DH",
+          "manual_warning": "Prix modifié manuellement",
+          "diff": "Écart: {{diff}} DH",
+          "discount": "(remise)",
+          "surcharge": "(supplément)"
+        },
+        "photos": {
+          "title": "Photos",
+          "before": "Avant nettoyage",
+          "after": "Après nettoyage",
+          "unavailable": "Pas encore disponible"
+        },
+        "footer": {
+          "total_calculated": "Total calculé",
+          "summary": "{{carpets}} tapis · {{units}} unités"
+        }
+      },
+      "client_orders": {
+        "back": "Tous les clients",
+        "title": "Historique des Commandes",
+        "count": "{{count}} commandes",
+        "empty_title": "Aucune commande",
+        "empty_body": "Ce client n'a pas encore de commandes."
+      },
+      "workshop": {
+        "title": "Atelier de Traitement",
+        "active": "Actif",
+        "subtitle": "Gestion de la file d'attente",
+        "stats": {
+          "en_attente": "En Attente",
+          "en_traitement": "En Traitement",
+          "pretes": "Prêtes",
+          "sorties": "Sorties"
+        },
+        "overdue": {
+          "title": "Attention: En Retard",
+          "body": "{{count}} commande(s) des jours précédents nécessitent une action immédiate."
+        },
+        "table": {
+          "all_orders": "Toutes les commandes",
+          "today_orders": "Commandes du jour",
+          "clear_filter": "Effacer le filtre",
+          "view_today": "Voir aujourd'hui",
+          "view_all": "Voir tout",
+          "no_orders_found": "Aucune commande found",
+          "no_orders_today": "Aucune commande aujourd'hui",
+          "new_orders_appear": "Les nouvelles commandes apparaîtront ici",
+          "see_all_orders": "Voir toutes les commandes",
+          "headers": {
+            "order": "Commande",
+            "articles": "Articles",
+            "status": "Statut",
+            "date": "Date",
+            "action": "Action"
+          },
+          "overdue_label": "En Retard",
+          "manage_btn": "Gérer"
+        },
+        "activity": {
+          "title": "Dernières Activités",
+          "no_activity": "Aucune activité",
+          "transition": "Passé en {{status}}"
+        },
+        "detail": {
+          "back": "Retour à l'atelier",
+          "not_found": "Commande introuvable",
+          "labels": {
+            "order": "Commande",
+            "not_assigned": "Non assigné",
+            "not_defined": "Non défini",
+            "qty": "Qté: {{count}}"
+          },
+          "actions": {
+            "validate": "Valider la commande",
+            "start": "Démarrer le traitement",
+            "ready": "Marquer comme Prête",
+            "exit": "Marquer comme Sortie",
+            "redeliver": "Remettre en Livraison",
+            "next_step": "Passer à {{label}}"
+          },
+          "progress": {
+            "title": "Avancement du Traitement",
+            "completed": "Complété",
+            "summary": "{{completed}} / {{total}} articles terminés"
+          },
+          "logistics": {
+            "title": "Détails Logistique",
+            "driver": "Livreur en charge",
+            "payment": "Mode Règlement"
+          },
+          "sections": {
+            "carpet": "Tapis #{{index}}",
+            "before": "Avant",
+            "after": "Après"
+          },
+          "toasts": {
+            "status_updated": "Statut mis à jour !",
+            "update_error": "Erreur lors de la mise à jour",
+            "item_updated": "Tapis mis à jour",
+            "images_added": "Images ajoutées",
+            "upload_error": "Erreur upload"
+          }
+        },
+        "returns": {
+          "title": "Commandes Retournées",
+          "subtitle": "Commandes nécessitant un retraitement",
+          "banner": "Ces commandes ont été rapportées par des livreurs suite à une annulation client. Vérifiez l'état des tapis puis cliquez sur \"Remettre en Livraison\" dans les détails.",
+          "empty_title": "Aucun retour en attente",
+          "empty_body": "Toutes les commandes retournées ont été traitées.",
+          "table": {
+            "headers": {
+              "order": "Commande",
+              "details": "Détails",
+              "status": "Statut",
+              "updated": "Mise à jour",
+              "action": "Action"
+            },
+            "articles": "tapis",
+            "process_btn": "Traiter",
+            "process_return_btn": "Traiter le retour",
+            "returned_on": "Retourné le {{date}}"
+          }
+        }
+      },
+      "item_status": {
+        "en_attente": "En Attente",
+        "en_nettoyage": "Nettoyage",
+        "nettoye": "Nettoyé",
+        "livre": "Livré"
+      }
+    }
+  },
+    "errors": {
+        "suspended": {
+            "title": "Compte Suspendu",
+            "subtitle": "Votre accès a été temporairement suspendu par l'administrateur.",
+            "body": "Pour réactiver votre compte, veuillez contacter votre responsable ou l'équipe PureClean.",
+            "back_to_login": "Retour à la connexion"
+        },
+        "not_found": {
+            "title": "Page introuvable",
+            "subtitle": "La page que vous cherchez n'existe pas ou a été déplacée.",
+            "back_to_prev": "Retour à la page précédente"
+        },
+        "forbidden": {
+            "title": "Accès refusé",
+            "subtitle": "Vous n'avez pas les permissions nécessaires pour accéder à cette page.",
+            "dashboard": "Tableau de bord"
+        }
+    },
+    "driver": {
+        "dashboard": {
+            "stats": {
+                "ready_delivery": "PRÊTES POUR LIVRAISON",
+                "collect_workshop": "À RÉCUPÉRER À L'ATELIER",
+                "canceled": "COMMANDES ANNULÉES",
+                "deliveries": "Livraisons clients",
+                "collections": "Collectes prêtes",
+                "to_return": "À retourner"
+            },
+            "missions": {
+                "title": "Missions du jour",
+                "subtitle": "Liste des commandes à traiter",
+                "view_planning": "Voir tout le planning",
+                "empty_title": "Aucune mission pour le moment",
+                "empty_body": "Vos prochaines livraisons apparaîtront ici.",
+                "badges": {
+                    "delivery": "LIVRAISON",
+                    "collect": "COLLECTE",
+                    "workshop_collect": "COLLECTE ATELIER"
+                },
+                "headers": {
+                    "client": "Client / Destination",
+                    "type": "Type de mission"
+                },
+                "start_mission": "Démarrer la Mission"
+            }
+        },
+        "register_client": {
+            "title": "Gestion des Clients",
+            "subtitle": "Recherchez un client existant ou créez-en un nouveau.",
+            "new_client_btn": "Nouveau Client",
+            "search_placeholder": "Rechercher un client par téléphone (ex: 0612...)",
+            "scanner": "Scanner",
+            "scanner_unavailable": "Scanner de QR Code non disponible pour le moment.",
+            "toasts": {
+                "selected": "Client {{name}} sélectionné !",
+                "geo_unsupported": "Géolocalisation non supportée par votre navigateur",
+                "gps_captured": "Position GPS capturée !",
+                "geo_error": "Erreur de géolocalisation: {{error}}",
+                "required_fields": "Veuillez remplir tous les champs obligatoires (*)",
+                "registered": "Client enregistré et sélectionné !",
+                "create_error": "Erreur lors de la création du client"
+            },
+            "found_badge": "CLIENT TROUVÉ",
+            "no_address": "Aucune adresse enregistrée",
+            "choose_btn": "Choisir et Créer Commande",
+            "not_found": "Aucun client trouvé pour ce numéro.",
+            "form": {
+                "title": "Ajouter un Nouveau Client",
+                "note": "Note: La création d'un nouveau client entraîne automatiquement la création d'une commande.",
+                "personal_info": "Informations Personnelles",
+                "delivery_address": "Adresse de Livraison",
+                "labels": {
+                    "fullname": "NOM COMPLET *",
+                    "phone_primary": "TÉLÉPHONE PRINCIPAL *",
+                    "phone_secondary": "TÉLÉPHONE SECONDAIRE (OPTIONNEL)",
+                    "gps": "POSITION GPS",
+                    "neighborhood": "QUARTIER *",
+                    "street": "RUE / AVENUE *",
+                    "building": "IMMEUBLE / VILLA",
+                    "apartment": "APPARTEMENT",
+                    "notes": "NOTES POUR LE LIVREUR"
+                },
+                "placeholders": {
+                    "fullname": "Ex: Jean Dupont",
+                    "street": "Nom de rue",
+                    "building": "N° Imm",
+                    "apartment": "N° Appt",
+                    "notes": "Précisions d'accès (ex: sonnerie, code porte...)"
+                },
+                "gps_actions": {
+                    "not_captured": "Non capturé",
+                    "capture": "Capturer",
+                    "recapture": "Recapturer"
+                },
+                "submit": "Valider et Créer Commande"
+            }
+        },
+        "create_order": {
+            "title": "Créer une commande",
+            "select_client": "Sélectionner un client",
+            "search_client": "Chercher un client...",
+            "steps": {
+                "title": "Créer une Nouvelle Commande",
+                "notice": "Pour créer une commande, vous devez d'abord sélectionner ou créer un client.",
+                "step1": "Recherchez un client existant par téléphone",
+                "step2": "Ou créez un nouveau profil client",
+                "step3": "Ajoutez les articles et finalisez"
+            },
+            "buttons": {
+                "select_client": "Sélectionner un Client",
+                "back_dashboard": "Retour au tableau de bord",
+                "add_article": "Nouveau Tapis",
+                "finalize": "Finaliser la commande"
+            },
+            "toasts": {
+                "article_removed": "Article supprimé",
+                "min_article": "Vous devez avoir au moins un article",
+                "max_photos": "Maximum 6 photos par article",
+                "photos_added": "{{count}} photo(s) ajoutée(s)",
+                "photo_removed": "Photo supprimée",
+                "validation_error": "Remplissez le type, les dimensions et le prix pour chaque tapis",
+                "success": "Bon de collecte créé avec succès !",
+                "error": "Erreur lors de la création de la commande"
+            },
+            "status": {
+                "compressing": "Optimisation des photos...",
+                "uploading": "Envoi des images...",
+                "creating": "Création du bon de commande..."
+            },
+            "client_details": "Détails du Client",
+            "unknown_address": "Adresse inconnue",
+            "article_label": "Article",
+            "footer": {
+                "articles": "Articles: {{count}}",
+                "total": "Total:"
+            },
+            "finalize_btn": "Finaliser la commande",
+            "articles": {
+                "title": "Articles",
+                "count": "{{count}} Tapis",
+                "type_label": "Type de Tapis *",
+                "choose_type": "CHOISIR UN TYPE…",
+                "no_types": "— Types non disponibles —",
+                "pricing_mode": "Mode de Tarification",
+                "by_size": "Par Dimensions",
+                "manual": "Prix Manuel",
+                "labels": {
+                    "width": "Largeur (m)",
+                    "height": "Hauteur (m)",
+                    "calculated_price": "Prix Calculé",
+                    "final_price": "Prix Final (modifiable)",
+                    "estimated_price": "Prix Estimé (DH) *",
+                    "quantity": "Quantité",
+                    "notes": "État / Notes",
+                    "photos": "Photos ({{count}}/6)",
+                    "principal": "Principal"
+                },
+                "placeholders": {
+                    "notes": "Taches, usure, etc...",
+                    "manual_price": "0.00"
+                },
+                "pricing_warning": {
+                    "modified": "Prix modifié manuellement — {{type}} de {{diff}} DH",
+                    "discount": "Remise",
+                    "extra": "Supplément",
+                    "prompt": "Sélectionnez un type pour calculer le prix automatiquement"
+                },
+                "actions": {
+                    "delete": "Supprimer"
+                }
+            }
+        },
+        "delivery_details": {
+            "title": "Détails Livraison",
+            "back_list": "Retour à la liste",
+            "ready_badge": "Prête pour livraison",
+            "order_number": "Numéro Commande",
+            "ready_date": "Date de Prête",
+            "today": "AUJOURD'HUI",
+            "recipient": "Destinataire",
+            "address": "Adresse",
+            "itinerary": "Itinéraire",
+            "no_address": "Adresse non spécifiée",
+            "package_items": "Articles du colis",
+            "total_order": "Total Commande",
+            "payment_summary": "Résumé Règlement",
+            "payment_method_label": "Mode de paiement reçu",
+            "payment_unavailable": "Erreur: Modes de paiement non disponibles",
+            "validate_btn": "VALIDER LA LIVRAISON",
+            "warning_note": "Cette action marquera la commande comme livrée et encaissée définitivement.",
+            "toasts": {
+                "choose_method": "Veuillez choisir un mode de paiement",
+                "success": "Livraison validée avec succès !",
+                "error": "Erreur lors de l'enregistrement du paiement"
+            },
+            "loading": "Chargement des détails...",
+            "not_found": {
+                "title": "Commande introuvable",
+                "desc": "Il se peut que la commande ait déjà été traitée ou n'existe plus.",
+                "back_btn": "Retourner aux livraisons"
+            }
+        },
+        "ready_delivery": {
+            "title": "Livraisons du jour",
+            "subtitle": "Optimisez votre trajet et gérez vos encaissements.",
+            "orders_count": "{{count}} Commandes",
+            "travel_mode": {
+                "driving": "Voiture",
+                "foot": "Marche"
+            },
+            "status": {
+                "optimizing": "Optimisation du trajet en cours...",
+                "optimized": "Optimisé",
+                "gps_missing": "Position livreur non disponible — ordre approximatif",
+                "min_gps": "Minimum 2 adresses GPS nécessaires pour optimiser le trajet",
+                "error": "Impossible d'optimiser le trajet. Utilisation de l'ordre par défaut."
+            },
+            "route_info": "Trajet estimé: {{dist}} km (~{{time}} min)",
+            "smart_route_btn": "Lancer Itinéraire Complet",
+            "gps_checking": "Vérification GPS...",
+            "gps_error": "Impossible d'ouvrir le trajet GPS",
+            "actions": {
+                "recalculate": "Recalculer",
+                "reset": "Réinitialiser",
+                "launch": "Lancer la Livraison"
+            },
+            "empty": {
+                "title": "Aucune commande prête",
+                "desc": "Vous avez terminé toutes vos livraisons ou aucune commande n'a encore été marquée comme prête.",
+                "back_btn": "Retour au tableau de bord"
+            },
+            "card": {
+                "ready": "PRÊT",
+                "no_address": "Sans adresse",
+                "no_phone": "Sans numéro",
+                "itinerary": "Itinéraire",
+                "payment": "Paiement",
+                "details": "Détails"
+            },
+            "payment_modal": {
+                "title": "Mode de paiement",
+                "order_prefix": "Commande",
+                "confirm_btn": "Confirmer le paiement",
+                "success": {
+                    "title": "Paiement confirmé !",
+                    "print": "Imprimer le reçu",
+                    "close": "Fermer"
+                }
+            },
+            "cancel_modal": {
+                "title": "Annuler la livraison",
+                "question": "Êtes-vous sûr de vouloir annuler la livraison de cette commande ?",
+                "warning": "La commande retournera en atelier.",
+                "keep": "Conserver la livraison",
+                "confirm": "Confirmer l'annulation"
+            },
+            "toasts": {
+                "payment_success": "Paiement validé !",
+                "cancel_success": "Commande annulée avec succès. Elle apparaît dans \"Annulées\".",
+                "cancel_error": "Erreur lors de l'annulation. Veuillez réessayer."
+            }
+        },
+        "canceled_deliveries": {
+            "title": "Commandes Annulées",
+            "subtitle": "Réintégrez les tapis non livrés à l'atelier",
+            "search_placeholder": "Rechercher une annulation...",
+            "required_action": "Action requise",
+            "warning_note": "Tout article annulé doit être physiquement déposé à l'atelier avant de confirmer le retour ici.",
+            "empty": {
+                "title": "Tout est en ordre",
+                "desc": "Vous n'avez aucune commande annulée en attente de retour à l'atelier."
+            },
+            "card": {
+                "canceled_by_client": "Annulé par le client",
+                "client_unknown": "Client inconnu",
+                "current_status": "Statut actuel",
+                "to_return": "À retourner",
+                "address_unknown": "Adresse inconnue",
+                "carpets_count": "{{count}} Tapis",
+                "return_btn": "Réintégrer Workshop",
+                "canceled_on": "Annulé le {{date}}",
+                "validate_return": "Confirmer le retour Atelier"
+            },
+            "toasts": {
+                "success": "Commande réintégrée à l'atelier",
+                "error": "Erreur lors de la réintégration"
+            }
+        }
+    },
+    "workshop": {
+        "title": "Atelier de Traitement",
+        "active": "Actif",
+        "subtitle": "Gérez les flux de traitement en cours aujourd'hui.",
+        "stats": {
+            "en_attente": "En attente",
+            "en_traitement": "En cours",
+            "pretes": "Prêtes",
+            "sorties": "Sorties"
+        },
+        "overdue": {
+            "title": "Retard à rattraper !",
+            "body": "Vous avez {{count}} commandes en suspens des jours précédents."
+        },
+        "table": {
+            "all_orders": "Toutes les commandes",
+            "today_orders": "Commandes du jour",
+            "clear_filter": "Effacer le filtre",
+            "view_today": "Voir aujourd'hui",
+            "view_all": "Voir tout",
+            "no_orders_found": "Aucune commande pour ce filtre",
+            "no_orders_today": "Aucune nouvelle commande aujourd'hui",
+            "new_orders_appear": "Les nouvelles commandes apparaîtront ici automatiquement.",
+            "see_all_orders": "Voir toutes les commandes passées",
+            "headers": {
+                "order": "Commande",
+                "articles": "Articles",
+                "status": "Statut",
+                "date": "Date",
+                "action": "Action"
+            },
+            "overdue_label": "En retard",
+            "manage_btn": "Gérer"
+        },
+        "activity": {
+            "title": "Activité Récente",
+            "no_activity": "Aucune activité enregistrée aujourd'hui",
+            "transition": "Passage en {{status}}"
+        },
+        "detail": {
+            "title": "Détails du Traitement",
+            "back": "Retour à l'Atelier",
+            "not_found": "Commande introuvable",
+            "labels": {
+                "order": "Commande n° #",
+                "not_assigned": "Non assigné",
+                "qty": "{{count}} Articles",
+                "not_defined": "Non défini"
+            },
+            "actions": {
+                "validate": "Valider & Réceptionner",
+                "start": "Lancer le traitement",
+                "ready": "Marquer comme prête",
+                "exit": "Sortie livraison",
+                "redeliver": "Relancer livraison",
+                "next_step": "Passer à {{label}}"
+            },
+            "toasts": {
+                "status_updated": "Statut de la commande mis à jour",
+                "update_error": "Erreur lors de la mise à jour du statut",
+                "item_updated": "État du tapis mis à jour",
+                "images_added": "Photos ajoutées avec succès",
+                "upload_error": "Erreur lors de l'envoi des images"
+            },
+            "sections": {
+                "carpet": "Tapis n° {{index}}",
+                "before": "Avant Traitement",
+                "after": "Après Traitement"
+            },
+            "progress": {
+                "title": "Progression du Traitement",
+                "completed": "Complété",
+                "summary": "{{completed}} sur {{total}} articles traités"
+            },
+            "logistics": {
+                "title": "Données & Logistique",
+                "driver": "Livreur responsable",
+                "payment": "Mode de paiement"
+            }
+        },
+        "returns": {
+            "title": "Retours Atelier",
+            "subtitle": "Gérez les commandes retournées par les livreurs.",
+            "banner": "Les commandes apparaissent ici lorsque les livreurs signalent une annulation ou une impossibilité de livraison.",
+            "empty_title": "Aucun retour",
+            "empty_body": "Tous les retours ont été traités et réintégrés au flux.",
+            "table": {
+                "headers": {
+                    "order": "Commande",
+                    "details": "Détails",
+                    "status": "Statut",
+                    "updated": "Mise à jour",
+                    "action": "Action"
+                },
+                "articles": "Articles",
+                "process_btn": "Réceptionner",
+                "returned_on": "Retourné le {{date}}",
+                "process_return_btn": "Gérer le retour"
+            }
+        }
+    },
+    "carpet_types": {
+        "title": "Types de Tapis",
+        "subtitle": "Gérez et tarifez les différents types de tapis disponibles en magasin.",
+        "new_type": "Nouveau Type +",
+        "catalog": "Catalogue des Articles",
+        "table": {
+            "name": "Nom du Type",
+            "price_m2": "Prix Réf / m²",
+            "status": "Statut",
+            "actions": "Actions"
+        },
+        "active": "Actif",
+        "inactive": "Inactif",
+        "toasts": {
+            "fill_all": "Veuillez remplir tous les champs obligatoires",
+            "updated": "Type mis à jour avec succès",
+            "created": "Type créé avec succès",
+            "save_error": "Erreur lors de la sauvegarde",
+            "delete_confirm": "Êtes-vous sûr de vouloir supprimer ce type ?",
+            "deleted": "Supprimé avec succès",
+            "delete_error": "Erreur lors de la suppression"
+        },
+        "modals": {
+            "add_title": "Ajouter un nouveau type de tapis",
+            "edit_title": "Modifier le type de tapis",
+            "name_label": "Nom de l'article (ex: Berbère, Laine...)",
+            "price_label": "Prix par mètre carré (DH)",
+            "status_label": "Statut de disponibilité dans le système",
+            "cancel": "Annuler",
+            "save": "Enregistrer les modifications"
+        }
+    },
+    "clients": {
+        "not_specified": "Sans nom"
+    },
+    "orders": {
+        "item_status": {
+            "en_attente": "En attente réception",
+            "en_nettoyage": "En cours de nettoyage",
+            "nettoye": "Nettoyé",
+            "livre": "Livré"
+        }
+    }
+}

@@ -14,6 +14,11 @@ import {
     getClientCommandes,
     exportCommandesCsv,
     getClientStatistics,
+    adminGetCarpetTypes,
+    adminCreateCarpetType,
+    adminUpdateCarpetType,
+    adminDeleteCarpetType,
+    adminChangePassword,
 } from "./adminService";
 
 
@@ -196,3 +201,65 @@ export const fetchClientCommandes = createAsyncThunk(
         }
     }
 );
+
+// ===== CARPET TYPES =====
+
+export const fetchAdminCarpetTypes = createAsyncThunk(
+    'admin/fetchCarpetTypes',
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await adminGetCarpetTypes();
+            return res.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
+export const createAdminCarpetType = createAsyncThunk(
+    'admin/createCarpetType',
+    async (data, { rejectWithValue }) => {
+        try {
+            const res = await adminCreateCarpetType(data);
+            return res.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
+export const updateAdminCarpetType = createAsyncThunk(
+    'admin/updateCarpetType',
+    async ({ id, data }, { rejectWithValue }) => {
+        try {
+            const res = await adminUpdateCarpetType(id, data);
+            return res.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
+export const deleteAdminCarpetType = createAsyncThunk(
+    'admin/deleteCarpetType',
+    async (id, { rejectWithValue }) => {
+        try {
+            await adminDeleteCarpetType(id);
+            return id;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
+export const changeUserpassword = createAsyncThunk(
+    'admin/changeUserpassword',
+    async ({ id, password }, { rejectWithValue }) => {
+        try {
+            const res = await adminChangePassword(id, password)
+            return res.data
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message)
+        }
+    }
+)

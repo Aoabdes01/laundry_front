@@ -15,38 +15,42 @@ import {
   XCircle, 
   RefreshCw,
   HelpCircle,
-  ChevronRight
+  ChevronRight,
+  Layers
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import logo from '../../assets/logo.png';
 import LogoutButton from '../../Auth/Logout';
 
 const Sidebar = ({ user }) => {
+  const { t } = useTranslation();
   const location = useLocation();
 
   const adminLinks = [
-    { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
-    { name: 'Utilisateurs', path: '/admin/users-management', icon: Shield },
-    { name: 'Commandes', path: '/admin/commandes', icon: ClipboardList },
-    { name: 'Clients', path: '/admin/clients', icon: Users },
+    { name: t('nav.dashboard'), path: '/admin/dashboard', icon: LayoutDashboard },
+    { name: t('nav.users'), path: '/admin/users-management', icon: Shield },
+    { name: t('nav.orders'), path: '/admin/commandes', icon: ClipboardList },
+    { name: t('nav.clients'), path: '/admin/clients', icon: Users },
+    { name: t('nav.carpet_types'), path: '/admin/carpet-types', icon: Layers },
   ];
 
   const livreurLinks = [
-    { name: 'Dashboard', path: '/livreur', icon: LayoutDashboard },
-    { name: 'Livraisons', path: '/livreur/delivery', icon: Truck },
-    { name: 'Commandes', path: '/livreur/orders', icon: Package },
-    { name: 'Clients', path: '/livreur/clients', icon: Users },
-    { name: 'Annulées', path: '/livreur/canceled', icon: XCircle },
+    { name: t('nav.dashboard'), path: '/livreur', icon: LayoutDashboard },
+    { name: t('nav.deliveries'), path: '/livreur/delivery', icon: Truck },
+    { name: t('nav.orders'), path: '/livreur/orders', icon: Package },
+    { name: t('nav.clients'), path: '/livreur/clients', icon: Users },
+    { name: t('nav.canceled'), path: '/livreur/canceled', icon: XCircle },
   ];
 
   const employeLinks = [
-    { name: 'Atelier', path: '/employe/dashboard', icon: Wrench },
-    { name: 'Retours', path: '/employe/retours', icon: RefreshCw },
+    { name: t('nav.workshop'), path: '/employe/dashboard', icon: Wrench },
+    { name: t('nav.returns'), path: '/employe/retours', icon: RefreshCw },
   ];
 
   const links = user?.role === 'admin' ? adminLinks : user?.role === 'livreur' ? livreurLinks : user?.role === 'employe' ? employeLinks : [];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen bg-surface border-r border-border z-40 transition-all duration-300 shadow-sidebar flex flex-col hidden md:flex w-16 lg:w-60">
+    <aside className="fixed start-0 top-0 h-screen bg-surface border-r border-border z-40 transition-all duration-300 shadow-sidebar flex flex-col hidden md:flex w-16 lg:w-60">
       {/* LOGO SECTION */}
       <div className="h-16 flex items-center px-4 lg:px-6 mb-4">
         <Link to="/" className="flex items-center gap-3">
@@ -80,7 +84,7 @@ const Sidebar = ({ user }) => {
               <span className="text-sm hidden lg:inline-block truncate">{link.name}</span>
               
               {isActive && (
-                <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-primary-500 hidden lg:block" />
+                <div className="absolute end-2 w-1.5 h-1.5 rounded-full bg-primary-500 hidden lg:block" />
               )}
             </Link>
           );
@@ -94,10 +98,10 @@ const Sidebar = ({ user }) => {
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center mb-3 shadow-sm">
               <HelpCircle size={18} className="text-primary-500" />
             </div>
-            <h4 className="text-xs font-bold text-primary-600 mb-1 uppercase tracking-wider">BESOIN D'AIDE ?</h4>
-            <p className="text-[10px] text-text-muted mb-3 italic">"Guide Livreur"</p>
+            <h4 className="text-xs font-bold text-primary-600 mb-1 uppercase tracking-wider">{t('common.need_help')}</h4>
+            <p className="text-[10px] text-text-muted mb-3 italic">"{t('common.guide')} Livreur"</p>
             <button className="w-full py-2 bg-white border border-border rounded-lg text-[10px] font-bold text-text-primary hover:bg-white hover:text-primary-600 transition-colors flex items-center justify-center gap-2 shadow-sm">
-              Ouvrir le guide <ChevronRight size={12} />
+              {t('common.open_guide')} <ChevronRight size={12} className="rtl:rotate-180" />
             </button>
           </div>
         </div>
@@ -110,10 +114,10 @@ const Sidebar = ({ user }) => {
             <div className="w-8 h-8 bg-surface rounded-lg flex items-center justify-center mb-3 shadow-sm">
               <HelpCircle size={18} className="text-primary-500" />
             </div>
-            <h4 className="text-xs font-bold text-text-primary mb-1">Support Admin</h4>
+            <h4 className="text-xs font-bold text-text-primary mb-1">{t('common.support_admin')}</h4>
             <p className="text-[10px] text-text-muted mb-3">Consultez notre guide ou contactez le support.</p>
             <button className="w-full py-2 bg-surface border border-border rounded-lg text-[10px] font-semibold text-text-primary hover:bg-primary-50 hover:text-primary-600 transition-colors flex items-center justify-center gap-2">
-              Ouvrir le guide <ChevronRight size={12} />
+              {t('common.open_guide')} <ChevronRight size={12} className="rtl:rotate-180" />
             </button>
           </div>
         </div>
@@ -137,3 +141,4 @@ const Sidebar = ({ user }) => {
 };
 
 export default Sidebar;
+

@@ -9,23 +9,24 @@ const RequireAuth = ({ allowedRoles }) => {
 
   // Not authenticated
   if (!token || !user) {
-    return <Navigate to="/" 
-                     state={{ from: location }} 
-                     replace />
+    return <Navigate to="/"
+      state={{ from: location }}
+      replace />
   }
 
   // Authenticated but INACTIVE
   if (user.isActive === false) {
-    return <Navigate to="/compte-inactif" replace />
+    return <Navigate to="/compte-suspendu" replace />
   }
 
   // Wrong role
-  if (allowedRoles && 
-      !allowedRoles.includes(user.role)) {
-    return <Navigate to="/non-autorise" replace />
+  if (allowedRoles &&
+    !allowedRoles.includes(user.role)) {
+    return <Navigate to="/interdit" replace />
   }
 
   return <Outlet />
 }
 
 export default RequireAuth
+

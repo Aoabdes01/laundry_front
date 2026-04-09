@@ -41,3 +41,4 @@ const InactivePage = () => {
 };
 
 export default InactivePage;
+

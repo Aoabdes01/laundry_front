@@ -3,8 +3,8 @@ import { store } from "../store/store"
 import { logOut, setCredentials } from "../store/auth/authSlice"
 import { toast } from "react-toastify"
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080"
-
+const BASE_URL = "http://localhost:8080"
+// import.meta.env.VITE_API_URL ||
 export const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true
@@ -28,23 +28,25 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    if (error.response?.status === 429) {
-      const message = error.response?.data?.error || 'Trop de tentatives. R\\u00e9essayez dans 15 minutes.'
-      sessionStorage.setItem('rateLimitMessage', message)
-      window.location.href = '/'
-      return Promise.reject(error)
-    }
 
     if (error.response?.status === 403) {
-      // Check if inactive
+      if (error.response?.data?.error === "ACCOUNT_DISABLED") {
+        store.dispatch(logOut())
+        localStorage.removeItem('user')
+        localStorage.removeItem('token')
+        window.location.href = '/compte-suspendu'
+        return Promise.reject(error)
+      }
+
+      // Check if inactive natively via cache
       const user = JSON.parse(
         localStorage.getItem('user') || 'null'
       )
       store.dispatch(logOut())
       if (user?.isActive === false) {
-        window.location.href = '/compte-inactif'
+        window.location.href = '/compte-suspendu'
       } else {
-        window.location.href = '/non-autorise'
+        window.location.href = '/interdit'
       }
       return Promise.reject(error)
     }
@@ -80,3 +82,4 @@ api.interceptors.response.use(
 )
 
 export { refreshApi }
+
