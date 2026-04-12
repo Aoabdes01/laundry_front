@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   Plus, Minus, Trash2, MapPin, Phone,
-  Package, Camera,
+  Camera,
   X, ShoppingBag,
   ArrowLeft, Loader2, Info, AlertCircle,
-  Users, UserCircle, CheckCircle, Pencil,
-  Ruler, DollarSign, AlertTriangle, ToggleLeft, ToggleRight
+  Users, UserCircle, CheckCircle,
+  Ruler, DollarSign, AlertTriangle
 } from 'lucide-react';
 import { createOrder, uploadImages, fetchCarpetTypes } from '../../store/livreur/livreurThunk';
 import { useTranslation } from 'react-i18next';
@@ -61,15 +61,15 @@ export default function CreateOrder() {
   // ─── LANDING UI ────────────────────────────────────────────────────────────
   if (!pendingClient && !loading?.pendingClient) {
     return (
-      <div className="bg-[#F8F9FA] min-h-[calc(100vh-80px)] flex items-center justify-center p-6 animate-fade-in">
-        <div className="bg-white rounded-2xl shadow-card p-8 max-w-md w-full text-center border border-border/50">
-          <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <ShoppingBag className="text-primary-300" size={40} />
+      <div className="bg-background min-h-[calc(100vh-80px)] flex items-center justify-center p-6 animate-fade-in">
+        <div className="bg-surface rounded-2xl shadow-card p-8 max-w-md w-full text-center border border-border/60">
+          <div className="w-20 h-20 bg-primary-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <ShoppingBag className="text-primary-500" size={40} />
           </div>
-          <h1 className="text-2xl font-black text-text-primary mb-2 uppercase tracking-tight">{t('driver.create_order.steps.title')}</h1>
-          <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-4 mb-8 text-start flex items-start gap-3">
+          <h1 className="text-2xl font-bold text-text-primary mb-2 tracking-tight">{t('driver.create_order.steps.title')}</h1>
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-4 mb-8 text-start flex items-start gap-3">
             <AlertCircle className="text-amber-500 shrink-0 mt-0.5" size={18} />
-            <p className="text-sm font-bold text-amber-700 leading-tight">
+            <p className="text-sm font-medium text-amber-600 dark:text-amber-500 leading-snug">
               {t('driver.create_order.steps.notice')}
             </p>
           </div>
@@ -80,23 +80,23 @@ export default function CreateOrder() {
               { id: 3, text: t('driver.create_order.steps.step3') }
             ].map(step => (
               <div key={step.id} className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full bg-primary-50 text-primary-600 text-sm font-black flex items-center justify-center shrink-0 shadow-sm border border-primary-100">
+                <div className="w-8 h-8 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-500 text-sm font-bold flex items-center justify-center shrink-0 border border-primary-500/20">
                   {step.id}
                 </div>
-                <p className="text-sm font-bold text-text-secondary uppercase tracking-tight">{step.text}</p>
+                <p className="text-sm font-semibold text-text-secondary tracking-tight">{step.text}</p>
               </div>
             ))}
           </div>
           <div className="space-y-3">
             <button
               onClick={() => navigate('/livreur/clients')}
-              className="w-full bg-primary-500 hover:bg-primary-600 text-white rounded-xl py-4 text-sm font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 active:scale-95"
+              className="w-full bg-primary-500 hover:bg-primary-600 text-white rounded-xl py-3.5 text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary-500/10 active:scale-95"
             >
-              <Users size={18} strokeWidth={3} /> {t('driver.create_order.buttons.select_client')}
+              <Users size={18} strokeWidth={2} /> {t('driver.create_order.buttons.select_client')}
             </button>
             <button
               onClick={() => navigate('/livreur')}
-              className="w-full border border-border bg-white hover:bg-gray-50 text-text-secondary rounded-xl py-3.5 text-xs font-black uppercase tracking-widest transition-colors"
+              className="w-full border border-border bg-surface hover:bg-background text-text-secondary rounded-xl py-3 text-xs font-semibold transition-colors"
             >
               {t('driver.create_order.buttons.back_dashboard')}
             </button>
@@ -226,7 +226,6 @@ export default function CreateOrder() {
     setIsFinalizing(true);
 
     try {
-      // 1. COMPRESSION
       setFinalizeStatus('compressing');
       const withCompressed = await Promise.all(articles.map(async (article) => {
         if (!article.photos.length) return article;
@@ -239,35 +238,35 @@ export default function CreateOrder() {
         return { ...article, photos: compressed };
       }));
 
-      // 2. UPLOAD
       setFinalizeStatus('uploading');
       const withUrls = await Promise.all(withCompressed.map(async (article) => {
         if (!article.photos.length) return { ...article, uploadedUrls: [] };
-        const formData = new FormData();
-        article.photos.forEach(p => formData.append('images', p.file));
-        const urls = await dispatch(uploadImages(formData)).unwrap();
+        const filesToUpload = article.photos.map(p => p.file);
+        const uploadResults = await dispatch(uploadImages(filesToUpload)).unwrap();
+        const urls = Array.isArray(uploadResults) 
+          ? uploadResults.map(r => typeof r === 'string' ? r : r.imageUrl) 
+          : [];
         return { ...article, uploadedUrls: urls };
       }));
 
-      // 3. CREATE ORDER
       setFinalizeStatus('creating');
       await dispatch(createOrder({
         clientId: pendingClient.id,
         tapis: withUrls.map(a => {
           const finalPrice = a.pricingMode === 'MANUAL'
-            ? parseFloat(a.prixEstime)
-            : parseFloat(a.prixFinal) || parseFloat(a.prixCalcule);
+            ? (parseFloat(a.prixEstime) || 0)
+            : (parseFloat(a.prixFinal) || parseFloat(a.prixCalcule) || 0);
           return {
             nom: a.carpetTypeNom,
             description: a.notes,
             prixUnitaire: finalPrice,
-            quantite: parseInt(a.quantite),
+            quantite: parseInt(a.quantite) || 1,
             imageUrls: a.uploadedUrls,
             mainImageIndex: a.photos.findIndex(p => p.isPrincipal) >= 0 ? a.photos.findIndex(p => p.isPrincipal) : 0,
             carpetTypeId: a.carpetTypeId,
-            largeur: a.pricingMode === 'SIZE_BASED' ? parseFloat(a.largeur) || null : null,
-            hauteur: a.pricingMode === 'SIZE_BASED' ? parseFloat(a.hauteur) || null : null,
-            prixCalcule: a.pricingMode === 'SIZE_BASED' ? parseFloat(a.prixCalcule) || null : null,
+            largeur: a.pricingMode === 'SIZE_BASED' ? (parseFloat(a.largeur) || 0) : 0,
+            hauteur: a.pricingMode === 'SIZE_BASED' ? (parseFloat(a.hauteur) || 0) : 0,
+            prixCalcule: a.pricingMode === 'SIZE_BASED' ? (parseFloat(a.prixCalcule) || 0) : 0,
             prixFinal: finalPrice,
             modeTarification: a.pricingMode,
           };
@@ -285,50 +284,48 @@ export default function CreateOrder() {
     }
   };
 
-  // ─── RENDER ─────────────────────────────────────────────────────────────────
-
   return (
-    <div className="min-h-screen bg-[#F8F9FA] animate-fade-in pb-32">
+    <div className="min-h-screen bg-background animate-fade-in pb-32">
 
       {/* TOPBAR */}
-      <div className="fixed top-0 start-0 end-0 md:start-16 lg:start-64 z-[60] bg-white border-b border-border h-14 px-6 flex items-center justify-between shadow-sm">
+      <div className="fixed top-0 start-0 end-0 md:start-16 lg:start-64 z-[60] bg-surface border-b border-border h-14 px-6 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 rounded-xl hover:bg-gray-100 flex items-center justify-center transition-colors text-text-secondary"
+            className="w-9 h-9 rounded-lg hover:bg-background flex items-center justify-center transition-colors text-text-secondary"
           >
-            <ArrowLeft size={20} className="rtl:rotate-180" />
+            <ArrowLeft size={18} className="rtl:rotate-180" />
           </button>
-          <h2 className="text-lg font-black text-text-primary tracking-tight uppercase">{t('driver.create_order.title')}</h2>
+          <h2 className="text-base font-bold text-text-primary tracking-tight">{t('driver.create_order.title')}</h2>
         </div>
         <div className="flex items-center gap-3">
-          <button className="w-9 h-9 flex items-center justify-center text-text-muted hover:text-primary-500 transition-colors relative">
-            <Info size={20} />
-            <span className="absolute top-2 end-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          <button className="w-8 h-8 flex items-center justify-center text-text-muted hover:text-primary-500 transition-colors relative">
+            <Info size={18} />
+            <span className="absolute top-1.5 end-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-surface"></span>
           </button>
-          <div className="w-9 h-9 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-black text-xs border border-primary-200">
+          <div className="w-8 h-8 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-500 flex items-center justify-center font-bold text-[10px] border border-primary-500/20">
             {pendingClient.name?.[0]?.toUpperCase()}
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto pt-20 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto pt-16 px-4 sm:px-6">
 
         {/* CLIENT SUMMARY */}
-        <div className="bg-white rounded-2xl shadow-card p-4 mb-4 mt-2 animate-in slide-in-from-top duration-500">
-          <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">{t('driver.create_order.client_details')}</p>
+        <div className="bg-surface rounded-2xl shadow-card p-5 mb-5 mt-4 animate-in slide-in-from-top duration-500 border border-border/40">
+          <p className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider mb-4">{t('driver.create_order.client_details')}</p>
           <div className="flex items-start gap-4 text-start">
-            <div className="w-12 h-12 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center shrink-0 shadow-sm">
-              <UserCircle size={24} strokeWidth={2} />
+            <div className="w-12 h-12 bg-primary-500/10 text-primary-600 dark:text-primary-500 rounded-2xl flex items-center justify-center shrink-0 border border-primary-500/20">
+              <UserCircle size={24} />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-base font-bold text-text-primary tracking-tight uppercase truncate leading-tight">{pendingClient.name}</h3>
-              <div className="flex flex-col gap-1 mt-2">
-                <div className="flex items-center gap-2 text-text-muted text-xs font-medium">
+              <h3 className="text-base font-bold text-text-primary tracking-tight leading-tight">{pendingClient.name}</h3>
+              <div className="flex flex-col gap-2 mt-3">
+                <div className="flex items-center gap-2.5 text-text-secondary text-xs font-medium">
                   <Phone size={14} className="text-primary-500 shrink-0" />
                   <span className="truncate">{pendingClient.phones?.[0]?.phoneNumber}</span>
                 </div>
-                <div className="flex items-start gap-2 text-text-muted text-xs font-medium">
+                <div className="flex items-start gap-2.5 text-text-secondary text-xs font-medium">
                   <MapPin size={14} className="text-primary-500 shrink-0 mt-0.5" />
                   <span className="line-clamp-2 leading-relaxed">
                     {pendingClient.addresses?.[0]?.address || t('driver.create_order.unknown_address')}
@@ -340,61 +337,63 @@ export default function CreateOrder() {
         </div>
 
         {/* ARTICLES SECTION */}
-        <div className="flex items-baseline justify-between mb-4 px-1">
-          <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('driver.create_order.articles.title')}</h3>
-          <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('driver.create_order.articles.count', { count: articles.length })}</span>
+        <div className="flex items-center justify-between mb-5 px-1">
+          <h3 className="text-lg font-bold text-text-primary tracking-tight">{t('driver.create_order.articles.title')}</h3>
+          <span className="text-[11px] font-bold text-text-muted uppercase tracking-widest">{t('driver.create_order.articles.count', { count: articles.length })}</span>
         </div>
 
         {articles.map((article, index) => (
-          <div key={article.id} className="bg-white rounded-2xl shadow-card p-4 mb-4 animate-in slide-in-from-bottom duration-500">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[10px] font-black text-primary-500 bg-primary-50 px-2 py-1 rounded-lg uppercase tracking-widest">{t('driver.create_order.article_label')} {index + 1}</span>
+          <div key={article.id} className="bg-surface rounded-2xl shadow-card p-5 mb-5 animate-in slide-in-from-bottom duration-500 border border-border/40">
+            <div className="flex items-center justify-between mb-5">
+              <span className="text-[11px] font-bold text-primary-600 dark:text-primary-500 bg-primary-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wide border border-primary-500/20">{t('driver.create_order.article_label')} {index + 1}</span>
             </div>
 
             {/* ── TYPE SELECTION ─────────────────────────────────────────── */}
-            <div className="space-y-1.5 mb-4 text-start">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-wider px-1">{t('driver.create_order.articles.type_label')}</label>
-              <select
-                value={article.carpetTypeId || ''}
-                onChange={(e) => handleTypeChange(index, e.target.value)}
-                className="w-full bg-gray-50 border border-border rounded-xl px-3 py-3 text-xs font-bold focus:bg-white focus:border-primary-400 outline-none appearance-none uppercase h-[48px]"
-              >
-                <option value="">{t('driver.create_order.articles.choose_type')}</option>
-                {carpetTypes.map(t => (
-                  <option key={t.id} value={t.id}>{t.nom} — {t.prixParM2} DH/m²</option>
-                ))}
-                {!carpetTypes.length && (
-                  <option disabled>{t('driver.create_order.articles.no_types')}</option>
-                )}
-              </select>
+            <div className="space-y-2 mb-5 text-start">
+              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.type_label')}</label>
+              <div className="relative">
+                <select
+                  value={article.carpetTypeId || ''}
+                  onChange={(e) => handleTypeChange(index, e.target.value)}
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-semibold focus:bg-surface focus:border-primary-400 outline-none appearance-none h-[52px] text-text-primary"
+                >
+                  <option value="">{t('driver.create_order.articles.choose_type')}</option>
+                  {carpetTypes.map(t => (
+                    <option key={t.id} value={t.id}>{t.nom} — {t.prixParM2} DH/m²</option>
+                  ))}
+                  {!carpetTypes.length && (
+                    <option disabled>{t('driver.create_order.articles.no_types')}</option>
+                  )}
+                </select>
+              </div>
             </div>
 
             {/* ── PRICING MODE TOGGLE ────────────────────────────────────── */}
-            <div className="mb-4 text-start">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-wider px-1 mb-2 block">{t('driver.create_order.articles.pricing_mode')}</label>
-              <div className="grid grid-cols-2 gap-2">
+            <div className="mb-5 text-start">
+              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1 mb-2.5 block">{t('driver.create_order.articles.pricing_mode')}</label>
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => handlePricingModeChange(index, 'SIZE_BASED')}
-                  className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                  className={`flex items-center justify-center gap-2.5 py-3 rounded-xl text-xs font-bold border transition-all ${
                     article.pricingMode === 'SIZE_BASED'
-                      ? 'bg-primary-500 text-white border-primary-500 shadow-sm'
-                      : 'bg-gray-50 text-text-muted border-border hover:border-primary-300'
+                      ? 'bg-primary-500 text-white border-primary-500 shadow-md shadow-primary-500/10'
+                      : 'bg-background text-text-secondary border-border hover:border-primary-200'
                   }`}
                 >
-                  <Ruler size={13} />
+                  <Ruler size={14} />
                   {t('driver.create_order.articles.by_size')}
                 </button>
                 <button
                   type="button"
                   onClick={() => handlePricingModeChange(index, 'MANUAL')}
-                  className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                  className={`flex items-center justify-center gap-2.5 py-3 rounded-xl text-xs font-bold border transition-all ${
                     article.pricingMode === 'MANUAL'
-                      ? 'bg-primary-500 text-white border-primary-500 shadow-sm'
-                      : 'bg-gray-50 text-text-muted border-border hover:border-primary-300'
+                      ? 'bg-primary-500 text-white border-primary-500 shadow-md shadow-primary-500/10'
+                      : 'bg-background text-text-secondary border-border hover:border-primary-200'
                   }`}
                 >
-                  <DollarSign size={13} />
+                  <DollarSign size={14} />
                   {t('driver.create_order.articles.manual')}
                 </button>
               </div>
@@ -402,10 +401,10 @@ export default function CreateOrder() {
 
             {/* ── SIZE-BASED MODE ────────────────────────────────────────── */}
             {article.pricingMode === 'SIZE_BASED' && (
-              <div className="mb-4 space-y-3 text-start">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-black text-text-muted uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.width')}</label>
+              <div className="mb-5 space-y-4 text-start">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.width')}</label>
                     <input
                       type="number"
                       step="0.01"
@@ -413,11 +412,11 @@ export default function CreateOrder() {
                       placeholder="Ex: 2.00"
                       value={article.largeur}
                       onChange={(e) => handleDimensionChange(index, 'largeur', e.target.value)}
-                      className="w-full bg-gray-50 border border-border rounded-xl px-3 py-3 text-xs font-bold focus:bg-white focus:border-primary-400 outline-none h-[48px]"
+                      className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-semibold focus:bg-surface focus:border-primary-400 outline-none h-[52px] text-text-primary"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-black text-text-muted uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.height')}</label>
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.height')}</label>
                     <input
                       type="number"
                       step="0.01"
@@ -425,33 +424,33 @@ export default function CreateOrder() {
                       placeholder="Ex: 3.00"
                       value={article.hauteur}
                       onChange={(e) => handleDimensionChange(index, 'hauteur', e.target.value)}
-                      className="w-full bg-gray-50 border border-border rounded-xl px-3 py-3 text-xs font-bold focus:bg-white focus:border-primary-400 outline-none h-[48px]"
+                      className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-semibold focus:bg-surface focus:border-primary-400 outline-none h-[52px] text-text-primary"
                     />
                   </div>
                 </div>
 
                 {article.prixCalcule && (
-                  <div className="bg-blue-50 border border-blue-100 rounded-2xl p-3 space-y-3 text-start">
+                  <div className="bg-primary-500/10 border border-primary-500/20 rounded-2xl p-4 space-y-4 text-start">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <Ruler size={13} className="text-blue-600" />
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-primary-500/20 rounded-lg flex items-center justify-center">
+                          <Ruler size={14} className="text-primary-600 dark:text-primary-400" />
                         </div>
                         <div>
-                          <p className="text-[9px] font-black text-blue-500 uppercase tracking-widest">{t('driver.create_order.articles.labels.calculated_price')}</p>
-                          <p className="text-[10px] font-bold text-blue-400">
+                          <p className="text-[10px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider">{t('driver.create_order.articles.labels.calculated_price')}</p>
+                          <p className="text-[11px] font-semibold text-text-muted">
                             {article.largeur}m × {article.hauteur}m × {article.pricePerM2} DH/m²
                           </p>
                         </div>
                       </div>
-                      <div className="bg-white px-3 py-1.5 rounded-xl border border-blue-200">
-                        <span className="text-lg font-black text-blue-600">{article.prixCalcule}</span>
-                        <span className="text-[9px] font-black text-blue-400 ms-1">DH</span>
+                      <div className="bg-surface px-3.5 py-1.5 rounded-xl border border-border shadow-sm">
+                        <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{article.prixCalcule}</span>
+                        <span className="text-[11px] font-bold text-text-muted ms-1">DH</span>
                       </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-[9px] font-black text-blue-500 uppercase tracking-widest px-1">{t('driver.create_order.articles.labels.final_price')}</label>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.final_price')}</label>
                       <div className="relative">
                         <input
                           type="number"
@@ -459,17 +458,17 @@ export default function CreateOrder() {
                           min="0"
                           value={article.prixFinal}
                           onChange={(e) => updateArticle(index, 'prixFinal', e.target.value)}
-                          className="w-full bg-white border border-blue-200 rounded-xl px-3 py-2.5 pe-10 text-sm font-black focus:border-primary-400 outline-none h-[44px] text-text-primary"
+                          className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-base font-bold focus:border-primary-400 outline-none h-[48px] text-text-primary shadow-sm"
                         />
-                        <span className="absolute end-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-text-muted">DH</span>
+                        <span className="absolute end-4 top-1/2 -translate-y-1/2 text-xs font-bold text-text-muted">DH</span>
                       </div>
                     </div>
 
                     {article.prixFinal && article.prixCalcule &&
                       parseFloat(article.prixFinal) !== parseFloat(article.prixCalcule) && (
-                        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mt-2">
-                          <AlertTriangle size={12} className="text-amber-500 shrink-0" />
-                          <span className="text-[9px] font-black text-amber-700 uppercase tracking-widest">
+                        <div className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2 mt-2">
+                          <AlertTriangle size={13} className="text-amber-500 shrink-0" />
+                          <span className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wide">
                             {t('driver.create_order.articles.pricing_warning.modified', {
                               type: parseFloat(article.prixFinal) < parseFloat(article.prixCalcule) ? t('driver.create_order.articles.pricing_warning.discount') : t('driver.create_order.articles.pricing_warning.extra'),
                               diff: Math.abs(parseFloat(article.prixCalcule) - parseFloat(article.prixFinal)).toFixed(2)
@@ -484,8 +483,8 @@ export default function CreateOrder() {
 
             {/* ── MANUAL MODE ───────────────────────────────────────────── */}
             {article.pricingMode === 'MANUAL' && (
-              <div className="space-y-1.5 mb-4 text-start">
-                <label className="text-[10px] font-black text-text-muted uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.estimated_price')}</label>
+              <div className="space-y-2 mb-5 text-start">
+                <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.estimated_price')}</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -494,66 +493,66 @@ export default function CreateOrder() {
                     placeholder={t('driver.create_order.articles.placeholders.manual_price')}
                     value={article.prixEstime}
                     onChange={(e) => updateArticle(index, 'prixEstime', e.target.value)}
-                    className="w-full bg-gray-50 border border-border rounded-xl px-3 py-3 text-xs font-bold focus:bg-white focus:border-primary-400 outline-none h-[48px]"
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-semibold focus:bg-surface focus:border-primary-400 outline-none h-[52px] text-text-primary"
                   />
-                  <span className="absolute end-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-text-muted">DH</span>
+                  <span className="absolute end-4 top-1/2 -translate-y-1/2 text-xs font-bold text-text-muted">DH</span>
                 </div>
               </div>
             )}
 
             {/* ── QUANTITY ───────────────────────────────────────────────── */}
-            <div className="space-y-1.5 mb-4 text-start">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.quantity')}</label>
-              <div className="flex items-center border border-border rounded-xl overflow-hidden h-[48px] bg-gray-50">
+            <div className="space-y-2 mb-5 text-start">
+              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.quantity')}</label>
+              <div className="flex items-center border border-border rounded-xl overflow-hidden h-[52px] bg-background">
                 <button
                   onClick={() => updateArticle(index, 'quantite', Math.max(1, article.quantite - 1))}
-                  className="flex-1 h-full hover:bg-white flex items-center justify-center transition-all bg-gray-100/50"
+                  className="flex-1 h-full hover:bg-surface flex items-center justify-center transition-all bg-background/50"
                 >
-                  <Minus size={18} strokeWidth={3} className="text-text-secondary" />
+                  <Minus size={18} strokeWidth={2.5} className="text-text-secondary" />
                 </button>
-                <div className="w-16 text-center font-black text-base text-text-primary bg-white h-full flex items-center justify-center border-x border-border/50">
+                <div className="w-20 text-center font-bold text-base text-text-primary bg-surface h-full flex items-center justify-center border-x border-border/50">
                   {article.quantite}
                 </div>
                 <button
                   onClick={() => updateArticle(index, 'quantite', article.quantite + 1)}
-                  className="flex-1 h-full hover:bg-white flex items-center justify-center transition-all bg-gray-100/50"
+                  className="flex-1 h-full hover:bg-surface flex items-center justify-center transition-all bg-background/50"
                 >
-                  <Plus size={18} strokeWidth={3} className="text-text-secondary" />
+                  <Plus size={18} strokeWidth={2.5} className="text-text-secondary" />
                 </button>
               </div>
             </div>
 
             {/* ── NOTES ─────────────────────────────────────────────────── */}
-            <div className="space-y-1.5 mb-4 text-start">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.notes')}</label>
+            <div className="space-y-2 mb-5 text-start">
+              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.notes')}</label>
               <textarea
                 rows={2}
                 placeholder={t('driver.create_order.articles.placeholders.notes')}
                 value={article.notes}
                 onChange={(e) => updateArticle(index, 'notes', e.target.value)}
-                className="w-full bg-gray-50 border border-border rounded-xl px-3 py-3 text-xs font-bold focus:bg-white outline-none resize-none shadow-sm min-h-[60px]"
+                className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-medium focus:bg-surface focus:border-primary-400 outline-none resize-none shadow-sm min-h-[70px] transition-all text-text-primary"
               />
             </div>
 
             {/* ── PHOTOS ────────────────────────────────────────────────── */}
-            <div className="space-y-2 text-start">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.photos', { count: article.photos.length })}</label>
-              <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+            <div className="space-y-3 text-start">
+              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.photos', { count: article.photos.length })}</label>
+              <div className="flex gap-3 overflow-x-auto pb-3 no-scrollbar">
                 {article.photos.map((photo, pIdx) => (
                   <div
                     key={pIdx}
                     onClick={() => setMainPhoto(index, pIdx)}
-                    className={`w-28 h-24 rounded-2xl object-cover shrink-0 cursor-pointer relative overflow-hidden group border-2 transition-all ${photo.isPrincipal ? 'border-primary-500' : 'border-transparent'}`}
+                    className={`w-28 h-24 rounded-2xl object-cover shrink-0 cursor-pointer relative overflow-hidden group border-2 transition-all ${photo.isPrincipal ? 'border-primary-500 shadow-md' : 'border-transparent hover:border-primary-500/30'}`}
                   >
                     <img src={photo.preview} alt="photo" className="w-full h-full object-cover" />
                     <button
                       onClick={(e) => { e.stopPropagation(); handleRemovePhoto(index, pIdx); }}
-                      className="absolute top-1 end-1 w-6 h-6 rounded-lg bg-black/60 flex items-center justify-center text-white"
+                      className="absolute top-1.5 end-1.5 w-6 h-6 rounded-lg bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-red-500 transition-colors"
                     >
-                      <X size={14} strokeWidth={3} />
+                      <X size={14} strokeWidth={2.5} />
                     </button>
                     {photo.isPrincipal && (
-                      <div className="absolute top-1 start-1 bg-primary-500 text-white text-[7px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-tighter shadow-sm">
+                      <div className="absolute top-1.5 start-1.5 bg-primary-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm">
                         {t('driver.create_order.articles.labels.principal')}
                       </div>
                     )}
@@ -573,16 +572,16 @@ export default function CreateOrder() {
                     <button
                       type="button"
                       onClick={() => photoInputRefs.current[index]?.click()}
-                      className="w-28 h-24 border-2 border-dashed border-border rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-gray-50/50 shrink-0 hover:border-primary-400 hover:bg-primary-50/30 transition-all"
+                      className="w-28 h-24 border-2 border-dashed border-border rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-background hover:border-primary-400 hover:bg-primary-500/5 transition-all group"
                     >
-                      <Camera size={20} className="text-text-muted mb-1" />
-                      <span className="text-[9px] font-black text-text-muted uppercase tracking-widest">Photo</span>
+                      <Camera size={22} className="text-text-muted mb-1.5 group-hover:text-primary-500 transition-colors" />
+                      <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest group-hover:text-primary-600 dark:group-hover:text-primary-400">Photo</span>
                     </button>
                   </>
                 )}
               </div>
               {!article.carpetTypeId && (
-                <p className="text-[10px] font-bold text-text-muted text-center py-2 italic rtl:text-start">
+                <p className="text-[11px] font-medium text-text-muted text-center py-2 opacity-70">
                   {t('driver.create_order.articles.pricing_warning.prompt')}
                 </p>
               )}
@@ -592,9 +591,9 @@ export default function CreateOrder() {
             {articles.length > 1 && (
               <button
                 onClick={() => handleRemoveArticle(article.id)}
-                className="mt-4 flex items-center justify-center gap-2 text-red-500 text-[10px] font-black uppercase tracking-widest py-3 border-t border-gray-50"
+                className="mt-6 w-full flex items-center justify-center gap-2 text-red-500 text-[11px] font-bold uppercase tracking-widest py-3 border-t border-border/50 hover:text-red-600 transition-colors"
               >
-                <Trash2 size={14} /> {t('driver.create_order.articles.actions.delete')}
+                <Trash2 size={15} /> {t('driver.create_order.articles.actions.delete')}
               </button>
             )}
           </div>
@@ -603,49 +602,50 @@ export default function CreateOrder() {
         {/* ADD ARTICLE BUTTON */}
         <button
           onClick={handleAddArticle}
-          className="w-full border-2 border-dashed border-border py-6 flex flex-col items-center justify-center gap-2 rounded-2xl text-text-muted hover:border-primary-500 hover:bg-primary-50/30 hover:text-primary-600 transition-all"
+          className="w-full border-2 border-dashed border-border py-8 flex flex-col items-center justify-center gap-2.5 rounded-2xl text-text-muted hover:border-primary-500 hover:bg-primary-500/5 hover:text-primary-600 dark:hover:text-primary-400 transition-all group mb-8"
         >
-          <Plus size={24} strokeWidth={3} />
-          <span className="text-[10px] font-black uppercase tracking-widest">{t('driver.create_order.buttons.add_article')}</span>
+          <div className="w-10 h-10 bg-background rounded-full flex items-center justify-center group-hover:bg-primary-500/10 transition-colors">
+            <Plus size={24} strokeWidth={2.5} />
+          </div>
+          <span className="text-[11px] font-bold uppercase tracking-widest">{t('driver.create_order.buttons.add_article')}</span>
         </button>
       </div>
 
       {/* STICKY BOTTOM BAR */}
-      <div className="fixed bottom-[64px] pb-safe md:bottom-0 start-0 end-0 md:start-16 lg:start-64 z-[110] bg-white/95 backdrop-blur-md border-t border-border/80 px-4 pt-4 sm:pb-4 flex flex-col items-stretch gap-4 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
-        <div className="flex items-center justify-between px-2">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('driver.create_order.footer.articles', { count: totalUnits })}</span>
+      <div className="fixed bottom-[64px] pb-safe md:bottom-0 start-0 end-0 md:start-16 lg:start-64 z-[110] flex justify-center px-4 sm:px-6">
+        <div className="w-full max-w-4xl bg-surface/95 backdrop-blur-lg border-t border-x border-border rounded-t-2xl shadow-[0_-12px_40px_rgba(0,0,0,0.1)] py-3 md:py-4 px-5 flex flex-col items-stretch gap-2.5">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-[11px] font-bold text-text-secondary uppercase tracking-widest">{t('driver.create_order.footer.articles', { count: totalUnits })}</span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">{t('driver.create_order.footer.total')}</span>
+              <span className="text-2xl font-bold text-primary-500 tracking-tighter leading-none">{totalEstime.toFixed(0)}</span>
+              <span className="text-[10px] font-bold text-text-muted uppercase">DH</span>
+            </div>
           </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('driver.create_order.footer.total')}</span>
-            <span className="text-2xl font-black text-primary-500 tracking-tighter leading-none">{totalEstime.toFixed(0)}</span>
-            <span className="text-[10px] font-black text-text-muted uppercase">DH</span>
-          </div>
-        </div>
 
-        <button
-          onClick={handleFinalizeOrder}
-          disabled={loading.createOrder || isFinalizing}
-          className="w-full bg-primary-500 hover:bg-primary-600 text-white rounded-2xl py-4 text-sm font-black uppercase tracking-[0.1em] shadow-lg shadow-primary-500/20 flex items-center justify-center gap-3 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          {isFinalizing ? (
-            <>
-              <Loader2 className="animate-spin" size={20} />
-              <span>
-                {finalizeStatus === 'compressing' ? t('driver.create_order.status.compressing') :
-                 finalizeStatus === 'uploading' ? t('driver.create_order.status.uploading') :
-                 t('driver.create_order.status.creating')}
-              </span>
-            </>
-          ) : (
-            <>
-              <CheckCircle size={20} strokeWidth={3} />
-              {t('driver.create_order.finalize_btn')}
-            </>
-          )}
-        </button>
+          <button
+            onClick={handleFinalizeOrder}
+            disabled={loading.createOrder || isFinalizing}
+            className="w-full bg-primary-500 hover:bg-primary-600 text-white rounded-xl py-3.5 text-sm font-bold shadow-lg shadow-primary-500/10 flex items-center justify-center gap-2.5 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+          >
+            {isFinalizing ? (
+              <>
+                <Loader2 className="animate-spin" size={18} />
+                <span className="tracking-wide text-xs">
+                  {finalizeStatus === 'compressing' ? t('driver.create_order.status.compressing') :
+                   finalizeStatus === 'uploading' ? t('driver.create_order.status.uploading') :
+                   t('driver.create_order.status.creating')}
+                </span>
+              </>
+            ) : (
+              <>
+                <CheckCircle size={18} strokeWidth={2.5} />
+                <span className="tracking-wide">{t('driver.create_order.finalize_btn')}</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
 }
-

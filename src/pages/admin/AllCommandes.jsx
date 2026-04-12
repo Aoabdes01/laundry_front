@@ -1,13 +1,16 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
   ClipboardList, Search, Loader2, Download,
   Filter, Calendar, X, RefreshCw, FileText,
-  Clock, Users, Phone, Package, ChevronRight
+  Clock, Users, Phone, Package, ChevronRight,
+  MoreVertical, CheckCircle2, AlertCircle, LayoutGrid, List,
+  Truck, User, MapPin, Calculator, Hash, CreditCard
 } from 'lucide-react';
-import { fetchAllCommandes, downloadCommandesCsv } from '../../store/admin/adminThunk';
+import { fetchAllCommandes, downloadCommandesCsv, fetchCommandeById } from '../../store/admin/adminThunk';
 import { selectAllCommandes, selectAdminLoading } from '../../store/admin/adminSelectors';
+import { clearSelectedCommande } from '../../store/admin/adminSlice';
 import { StatusBadge } from '../../components/StatusBadge';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -15,14 +18,11 @@ import { useTranslation } from 'react-i18next';
 const formatDateTime = (dateStr, lng) => {
   if (!dateStr) return { date: 'N/A', time: '' };
   const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return {
-    date: 'N/A', time: ''
-  };
+  if (isNaN(d.getTime())) return { date: 'N/A', time: '' };
   return {
     date: d.toLocaleDateString(lng === 'ar' ? 'ar-MA' : 'fr-FR', {
       day: '2-digit',
-      month: 'short',
-      year: 'numeric'
+      month: 'short'
     }),
     time: d.toLocaleTimeString(lng === 'ar' ? 'ar-MA' : 'fr-FR', {
       hour: '2-digit',
@@ -37,13 +37,16 @@ export default function AllCommandes() {
   const navigate = useNavigate();
   const commandes = useSelector(selectAllCommandes);
   const loading = useSelector(selectAdminLoading);
+  const { selectedCommande: drawerData } = useSelector(s => s.admin);
 
-  // Filters State
+  // UI State
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
   const [dateDebut, setDateDebut] = useState('');
   const [dateFin, setDateFin] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState('list');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const loadData = useCallback(() => {
     const params = {
@@ -56,9 +59,7 @@ export default function AllCommandes() {
   }, [dispatch, search, status, dateDebut, dateFin]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      loadData();
-    }, 500);
+    const timer = setTimeout(() => loadData(), 500);
     return () => clearTimeout(timer);
   }, [loadData]);
 
@@ -71,374 +72,293 @@ export default function AllCommandes() {
     }
   };
 
-  const clearFilters = () => {
-    setSearch('');
-    setStatus('all');
-    setDateDebut('');
-    setDateFin('');
+  const openQuickView = (id) => {
+    dispatch(fetchCommandeById(id));
+    setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+    dispatch(clearSelectedCommande());
   };
 
   const getClientDisplayName = (order) => {
-    return order.client?.name || order.clientNom || order.client?.nom || 'Client #' + (order.client?.id || order.clientId || '?');
+    return order.client?.name || order.clientNom || 'Client #' + (order.client?.id || order.clientId || '?');
   };
 
-  const getClientPhone = (order) => {
-    return order.client?.phones?.[0]?.phoneNumber
-      || order.client?.telephone
-      || order.client?.telephones?.[0]?.numero
-      || order.numeroTelephone
-      || 'N/A';
+  const getClientPhone = (client) => {
+    if (!client) return 'N/A';
+    if (client.phone) return client.phone;
+    if (client.telephone) return client.telephone;
+    if (Array.isArray(client.phones) && client.phones.length > 0) {
+      return client.phones[0].phoneNumber || client.phones[0].phone || 'N/A';
+    }
+    return 'N/A';
   };
 
-  const getInitials = (name) => {
-    if (!name) return '?';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-  };
-
-  const getAvatarColor = (name) => {
-    const colors = ['bg-blue-100 text-blue-600', 'bg-emerald-100 text-emerald-600', 'bg-amber-100 text-amber-600', 'bg-indigo-100 text-indigo-600', 'bg-rose-100 text-rose-600', 'bg-purple-100 text-purple-600'];
-    const index = name ? name.length % colors.length : 0;
-    return colors[index];
-  };
-
-  // KPI Calculations
   const totalAmount = Array.isArray(commandes) ? commandes.reduce((acc, c) => acc + (c.montantTotal || 0), 0) : 0;
-  const pendingCount = Array.isArray(commandes) ? commandes.filter(c => c.status === 'en_attente').length : 0;
+  const urgentCount = Array.isArray(commandes) ? commandes.filter(c => ['en_attente', 'retournee'].includes(c.status?.toLowerCase())).length : 0;
 
   return (
-    <div className="space-y-6 pb-12 animate-fade-in">
+    <div className="space-y-6 pb-12 animate-fade-in text-start relative overflow-hidden">
 
       {/* HEADER SECTION */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="text-start">
-          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">{t('admin.orders.title')}</h1>
-          <p className="text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">{t('admin.orders.subtitle')}</p>
+        <div>
+          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">Gestion des Commandes</h1>
+          <p className="text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">Suivi et administration du flux de production</p>
         </div>
-        <button
-          onClick={handleExportCSV}
-          className="flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary-500/20 hover:bg-primary-700 transition-all active:scale-95"
-        >
-          <Download size={16} />
-          <span>{t('admin.orders.export_csv')}</span>
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleExportCSV}
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-surface border border-border/50 text-text-primary rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm hover:bg-background transition-all active:scale-95"
+          >
+            <Download size={16} />
+            Exporter CSV
+          </button>
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${showFilters ? 'bg-primary-500 text-white shadow-lg' : 'bg-surface border border-border/50 text-text-primary'}`}
+          >
+            <Filter size={16} />
+            Filtres
+          </button>
+        </div>
       </div>
 
-      {/* MINI KPI ROW */}
+      {/* KPI ROW */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-surface p-5 rounded-2xl border border-border/50 shadow-sm flex items-center gap-4 group hover:border-primary-200 transition-colors">
-          <div className="w-11 h-11 rounded-xl bg-primary-50 text-primary-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <ClipboardList size={22} />
+        {[
+          { label: 'Total Commandes', value: commandes?.length || 0, icon: ClipboardList, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+          { label: 'Valeur Totale', value: `${totalAmount.toLocaleString()} DH`, icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+          { label: 'Actions Urgentes', value: urgentCount, icon: AlertCircle, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+          { label: 'Volume Articles', value: commandes?.reduce((acc, c) => acc + (c.commandeTapis?.length || 0), 0) || 0, icon: Package, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+        ].map((kpi, i) => (
+          <div key={i} className="bg-surface p-4 rounded-2xl border border-border/50 shadow-sm flex items-center gap-4 transition-all hover:shadow-md">
+            <div className={`w-10 h-10 rounded-xl ${kpi.bg} ${kpi.color} flex items-center justify-center shrink-0`}>
+              <kpi.icon size={20} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider truncate">{kpi.label}</p>
+              <p className="text-lg font-black text-text-primary tracking-tight truncate">{kpi.value}</p>
+            </div>
           </div>
-          <div className="text-start">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.orders.kpi.global')}</p>
-            <p className="text-xl font-black text-text-primary tracking-tight">{commandes?.length || 0}</p>
-          </div>
+        ))}
+      </div>
+
+      {/* SEARCH & FILTERS */}
+      <div className="flex flex-col md:flex-row gap-4 items-center">
+        <div className="relative flex-1 w-full group">
+          <Search size={18} className="absolute start-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary-500 transition-colors" />
+          <input
+            type="text"
+            placeholder="Rechercher par numéro, client..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-surface border border-border/50 rounded-2xl ps-12 pe-4 py-3.5 text-sm font-bold text-text-primary focus:ring-4 focus:ring-primary-500/5 focus:border-primary-500 transition-all outline-none"
+          />
         </div>
-        <div className="bg-surface p-5 rounded-2xl border border-border/50 shadow-sm flex items-center gap-4 group hover:border-emerald-200 transition-colors">
-          <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <RefreshCw size={22} />
-          </div>
-          <div className="text-start">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.orders.kpi.value')}</p>
-            <p className="text-xl font-black text-text-primary tracking-tight">{totalAmount.toLocaleString()} <span className="text-[10px] text-text-muted font-bold">{t('admin.orders.kpi.unit_dh')}</span></p>
-          </div>
-        </div>
-        <div className="bg-surface p-5 rounded-2xl border border-border/50 shadow-sm flex items-center gap-4 group hover:border-amber-200 transition-colors">
-          <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Clock size={22} />
-          </div>
-          <div className="text-start">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.orders.kpi.urgent')}</p>
-            <p className="text-xl font-black text-text-primary tracking-tight">{pendingCount}</p>
-          </div>
-        </div>
-        <div className="bg-surface p-5 rounded-2xl border border-border/50 shadow-sm flex items-center gap-4 group hover:border-indigo-200 transition-colors">
-          <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Users size={22} />
-          </div>
-          <div className="text-start">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.orders.kpi.volumes')}</p>
-            <p className="text-xl font-black text-text-primary tracking-tight">
-              {commandes?.reduce((acc, c) => acc + (c.commandeTapis?.reduce((sum, item) => sum + (item.quantite || 1), 0) || 0), 0) || 0} <span className="text-[10px] text-text-muted font-bold">ARC</span>
-            </p>
-          </div>
+        <div className="flex bg-background p-1 rounded-2xl border border-border/50 shrink-0">
+          <button onClick={() => setViewMode('list')} className={`p-2 rounded-xl transition-all ${viewMode === 'list' ? 'bg-surface text-primary-600 shadow-sm border border-border/50' : 'text-text-muted'}`}><List size={20}/></button>
+          <button onClick={() => setViewMode('grid')} className={`p-2 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-surface text-primary-600 shadow-sm border border-border/50' : 'text-text-muted'}`}><LayoutGrid size={20}/></button>
         </div>
       </div>
 
-      {/* FILTERS SECTION */}
-      <div className="bg-surface rounded-2xl border border-border/50 shadow-card overflow-hidden">
-        <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 items-center bg-gray-50/20">
-          <div className="relative flex-1 w-full">
-            <Search size={18} className="absolute start-3 top-1/2 -translate-y-1/2 text-text-muted" />
-            <input
-              type="text"
-              placeholder={t('admin.orders.search_placeholder')}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-background border border-border rounded-xl ps-10 pe-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none placeholder:text-text-muted placeholder:font-normal text-start"
-            />
+      {showFilters && (
+        <div className="bg-surface rounded-[2rem] border border-border/50 p-6 md:p-8 shadow-card grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 animate-in slide-in-from-top-4 duration-300">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest block">Statut</label>
+            <select value={status} onChange={(e) => setStatus(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-xs font-bold text-text-primary outline-none focus:border-primary-500">
+              <option value="all">Tous les statuts</option>
+              {['EN_ATTENTE', 'VALIDEE', 'EN_TRAITEMENT', 'PRETE', 'LIVREE', 'PAYEE', 'ANNULEE', 'RETOURNEE'].map(s => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
+            </select>
           </div>
-          <div className="flex gap-2 w-full md:w-auto">
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${showFilters ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20' : 'bg-background text-text-secondary border border-border hover:bg-border/30'}`}
-            >
-              <Filter size={16} />
-              <span>{t('admin.orders.advanced_filters')}</span>
-              {(status !== 'all' || dateDebut || dateFin) && <div className="w-1.5 h-1.5 rounded-full bg-current ms-1" />}
-            </button>
-            <button
-              onClick={loadData}
-              disabled={loading}
-              className="px-4 py-3 bg-background border border-border text-text-secondary rounded-xl hover:bg-border/30 transition-all disabled:opacity-50"
-            >
-              <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
-            </button>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest block">Du</label>
+            <input type="date" value={dateDebut} onChange={(e) => setDateDebut(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-xs font-bold text-text-primary outline-none focus:border-primary-500" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest block">Au</label>
+            <input type="date" value={dateFin} onChange={(e) => setDateFin(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-xs font-bold text-text-primary outline-none focus:border-primary-500" />
+          </div>
+          <div className="flex items-end">
+            <button onClick={() => { setSearch(''); setStatus('all'); setDateDebut(''); setDateFin(''); }} className="w-full bg-background hover:bg-red-50 dark:hover:bg-red-500/10 text-red-500 border border-border rounded-xl py-2.5 text-[10px] font-black uppercase tracking-widest transition-all">Réinitialiser</button>
           </div>
         </div>
+      )}
 
-        {/* EXPANDABLE FILTERS */}
-        {showFilters && (
-          <div className="p-8 bg-gray-50/50 border-b border-border grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate-slide-down">
-            <div className="space-y-3 text-start">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] block">{t('admin.orders.filter_labels.status')}</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="w-full bg-surface border border-border/80 rounded-xl px-4 py-2.5 text-xs font-black uppercase tracking-tighter outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 transition-all"
-              >
-                {[
-                  { value: 'all', label: t('admin.orders.status_options.all') },
-                  { value: 'en_attente', label: t('status.en_attente') },
-                  { value: 'validee', label: t('status.validee') },
-                  { value: 'en_traitement', label: t('status.en_traitement') },
-                  { value: 'prete', label: t('status.prete') },
-                  { value: 'livree', label: t('status.livree') },
-                  { value: 'payee', label: t('status.payee') },
-                  { value: 'annulee', label: t('status.annulee') },
-                  { value: 'retournee', label: t('status.retournee') }
-                ].map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-              </select>
-            </div>
-            <div className="space-y-3 text-start">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] block">{t('admin.orders.filter_labels.from')}</label>
-              <div className="relative">
-                <Calendar size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                <input
-                  type="date"
-                  value={dateDebut}
-                  onChange={(e) => setDateDebut(e.target.value)}
-                  className="w-full bg-surface border border-border/80 rounded-xl ps-10 pe-4 py-2.5 text-xs font-black outline-none focus:border-primary-500 transition-all"
-                />
-              </div>
-            </div>
-            <div className="space-y-3 text-start">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] block">{t('admin.orders.filter_labels.to')}</label>
-              <div className="relative">
-                <Calendar size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                <input
-                  type="date"
-                  value={dateFin}
-                  onChange={(e) => setDateFin(e.target.value)}
-                  className="w-full bg-surface border border-border/80 rounded-xl ps-10 pe-4 py-2.5 text-xs font-black outline-none focus:border-primary-500 transition-all"
-                />
-              </div>
-            </div>
-            <div className="flex items-end">
-              <button
-                onClick={clearFilters}
-                className="flex-1 bg-white border-2 border-dashed border-border text-text-secondary px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:border-primary-300 hover:text-primary-600 transition-all flex items-center justify-center gap-2 group"
-              >
-                <X size={14} className="group-hover:rotate-90 transition-transform duration-300" />
-                {t('admin.orders.filter_labels.reset')}
-              </button>
-            </div>
+      {/* MAIN CONTENT */}
+      <div className="bg-surface rounded-[2rem] border border-border/50 shadow-card overflow-hidden">
+        {loading && !commandes?.length ? (
+          <div className="py-32 flex flex-col items-center gap-4">
+            <Loader2 size={40} className="animate-spin text-primary-500" />
+            <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Chargement des commandes...</p>
           </div>
-        )}
-
-        {/* MOBILE CARDS VIEW */}
-        <div className="lg:hidden divide-y divide-border/30 bg-white">
-          {loading && Array.isArray(commandes) && commandes.length === 0 ? (
-            <div className="py-20 text-center">
-              <Loader2 size={32} className="animate-spin text-primary-500 mx-auto mb-3" />
-              <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.orders.loading_data')}</p>
-            </div>
-          ) : Array.isArray(commandes) && commandes.length > 0 ? (
-            commandes.map((c) => {
-              const { date, time } = formatDateTime(c.updatedAt || c.dateCreation || c.createdAt || c.dateDernierStatut);
-              const clientName = getClientDisplayName(c);
-
+        ) : !commandes?.length ? (
+          <div className="py-32 flex flex-col items-center text-center px-6">
+            <div className="w-20 h-20 bg-background rounded-[2rem] flex items-center justify-center mb-6 border border-dashed border-border"><ClipboardList size={32} className="text-text-muted/30" /></div>
+            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">Aucune commande</h3>
+            <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Essayez d'ajuster vos critères de recherche</p>
+          </div>
+        ) : viewMode === 'list' ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-start border-collapse">
+              <thead>
+                <tr className="bg-background/50 border-b border-border/50">
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Référence</th>
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Client</th>
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Date</th>
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Montant</th>
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">Statut</th>
+                  <th className="px-8 py-4"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/40">
+                {commandes.map((c) => {
+                  const { date, time } = formatDateTime(c.dateCreation || c.createdAt, i18n.language);
+                  return (
+                    <tr key={c.id} onClick={() => openQuickView(c.id)} className="group hover:bg-background/40 transition-all cursor-pointer">
+                      <td className="px-8 py-5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-background border border-border/50 flex items-center justify-center text-primary-500 font-black text-[10px]">#{c.numeroCommande.slice(-3)}</div>
+                          <span className="text-sm font-black text-text-primary tracking-tight">#{c.numeroCommande}</span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-5">
+                        <p className="text-sm font-black text-text-primary">{getClientDisplayName(c)}</p>
+                        <p className="text-[10px] text-text-muted font-bold uppercase tracking-tighter">{getClientPhone(c.client)}</p>
+                      </td>
+                      <td className="px-8 py-5">
+                        <p className="text-xs font-bold text-text-primary">{date}</p>
+                        <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-0.5 opacity-60">{time}</p>
+                      </td>
+                      <td className="px-8 py-5">
+                        <span className="font-black text-sm text-text-primary">{c.montantTotal} DH</span>
+                      </td>
+                      <td className="px-8 py-5 text-center"><div className="flex justify-center scale-90 group-hover:scale-100 transition-transform"><StatusBadge status={c.status} /></div></td>
+                      <td className="px-8 py-5 text-end"><button onClick={(e) => { e.stopPropagation(); navigate(`/admin/commandes/${c.id}`); }} className="w-8 h-8 rounded-lg bg-background flex items-center justify-center text-text-muted hover:text-primary-500 transition-all border border-border/50 shadow-sm active:scale-90"><ChevronRight size={18} className="rtl:rotate-180" /></button></td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+            {commandes.map((c) => {
+              const { date } = formatDateTime(c.dateCreation || c.createdAt, i18n.language);
               return (
-                <div
-                  key={c.id}
-                  onClick={() => navigate(`/admin/commandes/${c.id}`)}
-                  className="p-5 active:bg-gray-50 transition-colors"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-primary-500 border border-border/50">
-                        <FileText size={18} />
-                      </div>
-                      <div className="text-start">
-                        <p className="text-sm font-black text-text-primary tracking-tight">#{c.numeroCommande}</p>
-                        <p className="text-[9px] text-text-muted font-bold uppercase tracking-widest">{date} • {time}</p>
-                      </div>
-                    </div>
-                    <StatusBadge status={c.status} size="sm" />
+                <div key={c.id} className="bg-background/50 border border-border/50 rounded-[2rem] p-6 hover:bg-background hover:shadow-xl transition-all cursor-pointer group relative" onClick={() => openQuickView(c.id)}>
+                  <div className="flex justify-end mb-4"><StatusBadge status={c.status} size="sm" /></div>
+                  <div className="space-y-1 mb-6 text-center">
+                    <p className="text-[10px] font-black text-primary-500 uppercase tracking-widest">#{c.numeroCommande}</p>
+                    <p className="text-base font-black text-text-primary truncate">{getClientDisplayName(c)}</p>
+                    <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">{date}</p>
                   </div>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="bg-gray-50/50 p-3 rounded-xl border border-gray-100 text-start">
-                      <p className="text-[8px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.orders.card.recipient')}</p>
-                      <p className="text-xs font-black text-text-primary truncate">{clientName}</p>
-                      <p className="text-[9px] text-text-muted font-bold mt-0.5">{getClientPhone(c)}</p>
-                    </div>
-                    <div className="bg-gray-50/50 p-3 rounded-xl border border-gray-100 text-start">
-                      <p className="text-[8px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.orders.card.billing')}</p>
-                      <p className="text-xs font-black text-primary-600">{c.montantTotal?.toLocaleString()} {t('admin.orders.kpi.unit_dh')}</p>
-                      <p className="text-[9px] text-text-muted font-bold mt-0.5 uppercase">{c.modePaiement || t('admin.orders.card.cash')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-text-muted bg-gray-50 px-3 py-2 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Package size={12} />
-                      <span>{c.commandeTapis?.reduce((sum, item) => sum + (item.quantite || 1), 0) || 0} {t('admin.orders.kpi.articles')}</span>
-                    </div>
-                    <ChevronRight size={14} className="text-primary-500 rtl:rotate-180" />
+                  <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                    <div className="flex items-center gap-2 text-text-muted"><Package size={14} /><span className="text-[10px] font-bold uppercase tracking-widest">{c.commandeTapis?.length || 0} Tapis</span></div>
+                    <p className="text-sm font-black text-text-primary">{c.montantTotal} DH</p>
                   </div>
                 </div>
               );
-            })
-          ) : (
-            <div className="py-20 text-center opacity-40">
-              <ClipboardList size={40} className="mx-auto mb-3" />
-              <p className="text-[10px] font-black uppercase tracking-widest">{t('admin.orders.no_match').split('.')[0]}</p>
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* QUICK VIEW DRAWER */}
+      <div 
+        className={`fixed inset-x-0 bottom-0 z-[100] transition-all duration-500 ${isDrawerOpen ? 'visible opacity-100' : 'invisible opacity-0'}`}
+        style={{ top: 'calc(4rem + env(safe-area-inset-top))' }}
+      >
+        {/* Backdrop */}
+        <div 
+          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500 ${isDrawerOpen ? 'opacity-100' : 'opacity-0'}`} 
+          onClick={closeDrawer} 
+        />
+        
+        {/* Drawer Content */}
+        <div 
+          className={`absolute inset-y-0 end-0 w-full max-w-md bg-surface shadow-2xl z-[110] transition-transform duration-500 ease-out flex flex-col border-s border-border/50 ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        >
+          <div className="p-6 md:p-8 border-b border-border/50 flex items-center justify-between bg-background/30">
+            <div className="text-start">
+              <div className="flex items-center gap-2 mb-1">
+                <Hash size={14} className="text-primary-500" />
+                <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">Détails Rapides</span>
+              </div>
+              <h3 className="text-xl font-black text-text-primary tracking-tight">#{drawerData?.numeroCommande}</h3>
             </div>
-          )}
-        </div>
+            <button onClick={closeDrawer} className="w-10 h-10 rounded-xl bg-surface border border-border/50 flex items-center justify-center text-text-muted hover:text-red-500 transition-all shadow-sm"><X size={20}/></button>
+          </div>
 
-        {/* DESKTOP TABLE VIEW */}
-        <div className="hidden lg:block overflow-x-auto min-h-[400px]">
-          <table className="w-full text-start border-collapse">
-            <thead className="bg-gray-50/50">
-              <tr>
-                <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.orders.table.ref')}</th>
-                <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.orders.table.contact')}</th>
-                <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.orders.table.timestamp')}</th>
-                <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">{t('admin.orders.table.volume')}</th>
-                <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.orders.table.billing')}</th>
-                <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">{t('admin.orders.table.status')}</th>
-                <th className="px-6 py-4"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50 relative">
-              {loading && Array.isArray(commandes) && commandes.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="py-32 text-center">
-                    <div className="flex flex-col items-center">
-                      <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mb-4">
-                        <Loader2 size={32} className="animate-spin text-primary-500" />
-                      </div>
-                      <p className="text-xs font-black text-text-muted uppercase tracking-widest">{t('admin.orders.loading_data')}</p>
+          <div className="flex-1 overflow-y-auto p-6 pb-32 md:p-8 space-y-8">
+            {!drawerData ? (
+              <div className="py-20 flex flex-col items-center gap-4 opacity-40">
+                <Loader2 size={32} className="animate-spin text-primary-500" />
+                <p className="text-[10px] font-black uppercase tracking-widest">Récupération des données...</p>
+              </div>
+            ) : (
+              <div className="space-y-8">
+                {/* Status & Summary */}
+                <div className="flex items-center justify-between bg-background p-4 rounded-3xl border border-border/50">
+                  <StatusBadge status={drawerData.status} />
+                  <div className="text-end">
+                    <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-0.5">Total Commande</p>
+                    <p className="text-lg font-black text-primary-600">{drawerData.montantTotal} DH</p>
+                  </div>
+                </div>
+
+                {/* Client & Driver Info */}
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="p-5 bg-background rounded-[2rem] border border-border/50 flex items-start gap-4 shadow-sm">
+                    <div className="w-10 h-10 rounded-2xl bg-teal-500/10 text-teal-600 flex items-center justify-center shrink-0 border border-teal-500/20"><User size={20}/></div>
+                    <div className="min-w-0 text-start">
+                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">Client</p>
+                      <p className="text-sm font-black text-text-primary truncate">{getClientDisplayName(drawerData)}</p>
+                      <p className="text-xs font-bold text-text-muted mt-0.5">{getClientPhone(drawerData.client)}</p>
                     </div>
-                  </td>
-                </tr>
-              ) : Array.isArray(commandes) && commandes.length > 0 ? (
-                commandes.map((c) => {
-                  const { date, time } = formatDateTime(c.updatedAt || c.dateCreation || c.createdAt || c.dateDernierStatut);
-                  const clientName = getClientDisplayName(c);
+                  </div>
+                  <div className="p-5 bg-background rounded-[2rem] border border-border/50 flex items-start gap-4 shadow-sm">
+                    <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-500/20"><Truck size={20}/></div>
+                    <div className="min-w-0 text-start">
+                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">Livreur Responsable</p>
+                      <p className="text-sm font-black text-text-primary truncate">{drawerData.livreur?.name || 'Non assigné'}</p>
+                      <p className="text-xs font-bold text-text-muted mt-0.5">{drawerData.livreur?.phone || '—'}</p>
+                    </div>
+                  </div>
+                </div>
 
-                  return (
-                    <tr
-                      key={c.id}
-                      onClick={() => navigate(`/admin/commandes/${c.id}`)}
-                      className="group hover:bg-gray-50/80 transition-all cursor-pointer border-l-4 border-l-transparent hover:border-l-primary-500"
-                    >
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-2xl bg-gray-50 border border-border group-hover:bg-primary-50 group-hover:border-primary-100 flex items-center justify-center text-text-muted group-hover:text-primary-600 transition-all">
-                            <FileText size={18} />
-                          </div>
-                          <div className="text-start">
-                            <p className="text-sm font-black text-text-primary tracking-tight group-hover:text-primary-600 transition-colors">#{c.numeroCommande}</p>
-                            <div className="flex items-center gap-1.5 mt-0.5">
-                              <Package size={10} className="text-text-muted" />
-                              <span className="text-[9px] text-text-muted font-black uppercase tracking-widest">{c.id.toString().substring(0, 8)}...</span>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
+                {/* Carpet Items Mini List */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between px-2">
+                    <h4 className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Articles ({drawerData.commandeTapis?.length || 0})</h4>
+                    <Calculator size={14} className="text-text-muted" />
+                  </div>
+                  <div className="space-y-3">
+                    {drawerData.commandeTapis?.map((item, i) => (
+                      <div key={i} className="p-4 bg-background border border-border/50 rounded-2xl flex items-center justify-between hover:border-primary-200 transition-colors shadow-sm">
                         <div className="flex items-center gap-3">
-                          <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-[10px] font-black shadow-inner ${getAvatarColor(clientName)}`}>
-                            {getInitials(clientName)}
-                          </div>
-                          <div className="text-start font-black">
-                            <p className="text-sm font-black text-text-primary tracking-tight truncate max-w-[140px]">{clientName}</p>
-                            <div className="flex items-center gap-1.5 mt-0.5 group/phone">
-                              <Phone size={10} className="text-text-muted group-hover/phone:text-primary-500 transition-colors" />
-                              <p className="text-[10px] text-text-muted font-bold group-hover/phone:text-text-secondary transition-colors">{getClientPhone(c)}</p>
-                            </div>
+                          <div className="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-primary-500 border border-border/50 text-[10px] font-black">{i+1}</div>
+                          <div className="text-start">
+                            <p className="text-xs font-black text-text-primary">{item.tapis?.nom || 'Article'}</p>
+                            <p className="text-[9px] font-bold text-text-muted uppercase">{item.largeur}m × {item.longueur || item.hauteur}m</p>
                           </div>
                         </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="text-start">
-                          <p className="text-sm font-black text-text-primary tracking-tight">{date}</p>
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            <Clock size={10} className="text-text-muted" />
-                            <p className="text-[10px] text-text-muted font-bold tracking-widest opacity-80 uppercase">{time}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5 text-center">
-                        <span className="inline-flex items-center justify-center min-w-[32px] px-2 py-1.5 rounded-xl bg-gray-50 border border-border/80 text-[11px] font-black text-text-secondary shadow-sm">
-                          {c.commandeTapis?.reduce((sum, item) => sum + (item.quantite || 1), 0) || 0}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="bg-gray-50 px-3 py-2 rounded-xl border border-border/50 inline-block shadow-sm text-start">
-                          <p className="text-sm font-black text-text-primary">{c.montantTotal?.toLocaleString()} <span className="text-[10px] text-text-muted">{t('admin.orders.kpi.unit_dh')}</span></p>
-                        </div>
-                        <p className="text-[9px] text-text-muted font-black uppercase tracking-[0.1em] mt-1.5 px-1 text-start">{c.modePaiement || t('admin.orders.card.cash')}</p>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex justify-center scale-90 group-hover:scale-100 transition-transform">
-                          <StatusBadge status={c.status} />
-                        </div>
-                      </td>
-                      <td className="px-6 py-5 text-end">
-                        <div className="flex items-center justify-end">
-                          <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-text-muted group-hover:bg-primary-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-primary-500/30 transition-all active:scale-90">
-                            <ChevronRight size={18} className="rtl:rotate-180" />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan="7" className="py-32 text-center bg-gray-50/20">
-                    <div className="max-w-[200px] mx-auto opacity-40">
-                      <ClipboardList size={48} className="text-text-muted mx-auto mb-4" />
-                      <p className="text-xs font-black text-text-primary uppercase tracking-widest mb-1">{t('admin.orders.empty_db')}</p>
-                      <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest leading-relaxed">{t('admin.orders.no_match')}</p>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                        <p className="text-xs font-black text-text-primary">{item.prixFinal} DH</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-        {/* PAGINATION / FOOTER INFO */}
-        <div className="p-5 bg-gray-50/50 border-t border-border flex items-center justify-between">
-          <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.1em]">
-            {t('admin.orders.pagination.index')} <span className="text-text-primary font-black px-2 py-1 bg-white border border-border rounded-lg ms-1">01 - {commandes?.length || 0}</span>
-          </p>
-          <div className="flex gap-2">
-            <button disabled className="px-4 py-2 rounded-xl border border-border text-[10px] font-black uppercase tracking-widest opacity-50 bg-white">{t('admin.orders.pagination.prev')}</button>
-            <button disabled className="px-4 py-2 rounded-xl border border-border text-[10px] font-black uppercase tracking-widest opacity-50 bg-white shadow-sm">{t('admin.orders.pagination.next')}</button>
+                <button 
+                  onClick={() => navigate(`/admin/commandes/${drawerData.id}`)}
+                  className="w-full bg-primary-600 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary-500/20 hover:bg-primary-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                >
+                  Voir la fiche complète <ChevronRight size={14} className="rtl:rotate-180" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -115,9 +115,13 @@ export const getCarpetTypes = async () => {
 // Upload tapis images (plural)
 export const uploadFiles = async (files) => {
   const formData = new FormData();
-  files.forEach(file => {
+  // Ensure we are dealing with an array of files
+  const fileArray = Array.isArray(files) ? files : [files];
+  
+  fileArray.forEach(file => {
     formData.append('files', file);
   });
+  
   return await api.post('/livreur/tapis/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'

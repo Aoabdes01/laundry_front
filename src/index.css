@@ -3,6 +3,24 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: #F8F9FA;
+    --surface: #FFFFFF;
+    --border: #F1F3F5;
+    --text-primary: #0F172A;
+    --text-secondary: #64748B;
+    --text-muted: #94A3B8;
+  }
+
+  .dark {
+    --background: #0B1120;
+    --surface: #1E293B;
+    --border: #334155;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+  }
+
   *, *::before, *::after {
     transition-property: color, background-color, border-color, box-shadow, transform, opacity;
     transition-duration: 150ms;
@@ -50,6 +68,131 @@
   /* Animation slide up */
   .animate-slide-up {
     animation: slideUp 0.3s ease-out;
+  }
+
+  /* CUSTOM TOAST PILL STYLES */
+  .Toastify__toast-container {
+    padding: 0 !important;
+    width: max-content !important;
+    max-width: 85vw !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Center toasts on mobile (top-center) */
+  .Toastify__toast-container--top-center {
+    align-items: center !important;
+  }
+
+  /* Align toasts to the right on desktop (bottom-right) */
+  .Toastify__toast-container--bottom-right {
+    align-items: flex-end !important;
+    bottom: 24px !important;
+    right: 24px !important;
+  }
+
+  .custom-toast-pill {
+    border-radius: 9999px !important;
+    padding: 10px 24px !important;
+    min-height: 44px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid #E2E8F0 !important;
+    background: white !important;
+    margin-bottom: 12px !important;
+    width: max-content !important;
+    max-width: 100% !important;
+  }
+
+  /* Success Variant */
+  .custom-toast-pill.Toastify__toast--success {
+    background-color: #F0FDF4 !important;
+    border-color: #86EFAC !important;
+  }
+  .custom-toast-pill.Toastify__toast--success .Toastify__toast-icon svg {
+    fill: #10B981 !important;
+  }
+  .custom-toast-pill.Toastify__toast--success .Toastify__toast-body {
+    color: #065F46 !important;
+  }
+
+  /* Error Variant */
+  .custom-toast-pill.Toastify__toast--error {
+    background-color: #FEF2F2 !important;
+    border-color: #FECACA !important;
+  }
+  .custom-toast-pill.Toastify__toast--error .Toastify__toast-icon svg {
+    fill: #EF4444 !important;
+  }
+  .custom-toast-pill.Toastify__toast--error .Toastify__toast-body {
+    color: #991B1B !important;
+  }
+
+  /* Warning Variant */
+  .custom-toast-pill.Toastify__toast--warning {
+    background-color: #FFFBEB !important;
+    border-color: #FDE68A !important;
+  }
+  .custom-toast-pill.Toastify__toast--warning .Toastify__toast-icon svg {
+    fill: #F59E0B !important;
+  }
+  .custom-toast-pill.Toastify__toast--warning .Toastify__toast-body {
+    color: #92400E !important;
+  }
+
+  /* Only animate on enter */
+  .Toastify__toast--animate {
+    animation-fill-mode: both;
+  }
+
+  .Toastify__slide-enter--top-center, .Toastify__slide-enter--bottom-right {
+    animation-name: toastSlideIn;
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .Toastify__toast-body {
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1E293B !important;
+    white-space: nowrap !important;
+  }
+
+  .Toastify__close-button {
+    display: none !important;
+  }
+
+  .Toastify__toast-icon {
+    width: 18px !important;
+    margin-right: 10px !important;
+  }
+
+  @keyframes toastSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-12px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Position adjustments for mobile */
+  @media (max-width: 640px) {
+    .Toastify__toast-container--top-center {
+      top: calc(110px + env(safe-area-inset-top, 0px)) !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      margin: 0 !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .Toastify__toast-container--top-center {
+      top: calc(140px + env(safe-area-inset-top, 0px)) !important;
+    }
   }
 }
 

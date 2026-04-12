@@ -696,7 +696,8 @@
                 "no_phone": "بدون رقم",
                 "itinerary": "المسار",
                 "payment": "الدفع",
-                "details": "التفاصيل"
+                "details": "التفاصيل",
+                "gps_unavailable": "إحداثيات GPS غير متوفرة"
             },
             "payment_modal": {
                 "title": "طريقة الدفع",

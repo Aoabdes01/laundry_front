@@ -5,12 +5,11 @@ import {
   Users, Search, Loader2, ChevronRight, Phone, 
   MapPin, Calendar, RefreshCw, Star, 
   TrendingUp, ShieldAlert, ArrowUpRight,
-  ShoppingCart, SlidersHorizontal, ChevronLeft
+  ShoppingCart, SlidersHorizontal, ChevronLeft,
+  Mail, Package
 } from 'lucide-react';
 import { fetchAllClients, fetchClientStatistics } from '../../store/admin/adminThunk';
 import { selectAllClients, selectAdminLoading, selectClientStatistics } from '../../store/admin/adminSelectors';
-import { selectCurrentUser } from '../../store/auth/authSelector';
-import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 export default function AllClients() {
@@ -20,7 +19,6 @@ export default function AllClients() {
   const clients = useSelector(selectAllClients);
   const statistics = useSelector(selectClientStatistics);
   const loading = useSelector(selectAdminLoading);
-  const user = useSelector(selectCurrentUser);
 
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,50 +30,28 @@ export default function AllClients() {
   }, [dispatch, search]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      loadData();
-    }, 500);
+    const timer = setTimeout(() => loadData(), 500);
     return () => clearTimeout(timer);
   }, [loadData]);
 
-  const getInitials = (name) => {
-    if (!name) return '?'
-    return name.split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
-
   const colorArray = [
-    'bg-blue-100 text-blue-700',
-    'bg-green-100 text-green-700',
-    'bg-yellow-100 text-yellow-700',
-    'bg-purple-100 text-purple-700',
-    'bg-pink-100 text-pink-700',
-    'bg-teal-100 text-teal-700',
-  ]
+    'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+    'bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400',
+    'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400',
+    'bg-purple-100 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400',
+    'bg-pink-100 text-pink-700 dark:bg-pink-500/10 dark:text-pink-400',
+    'bg-teal-100 text-teal-700 dark:bg-teal-500/10 dark:text-teal-400',
+  ];
 
   const formatRelativeDate = (dateStr) => {
-    if (!dateStr) return t('admin.clients.not_specified')
-    const date = new Date(dateStr)
-    const now = new Date()
-    const diffDays = Math.floor(
-      (now - date) / (1000 * 60 * 60 * 24)
-    )
-    if (diffDays === 0) return t('admin.clients.relative_dates.today')
-    if (diffDays === 1) return t('admin.clients.relative_dates.yesterday')
-    if (diffDays < 7) return t('admin.clients.relative_dates.days_ago', { count: diffDays })
-    return date.toLocaleDateString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    })
-  }
-
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+    if (!dateStr) return '—';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+    if (diffDays === 0) return "Aujourd'hui";
+    if (diffDays === 1) return "Hier";
+    if (diffDays < 7) return `Il y a ${diffDays} jours`;
+    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
   };
 
   const paginatedClients = useMemo(() => {
@@ -86,266 +62,140 @@ export default function AllClients() {
 
   const totalPages = Math.ceil((clients?.length || 0) / itemsPerPage);
 
+  const getClientPhone = (client) => {
+    if (!client) return '—';
+    if (client.phone) return client.phone;
+    if (client.telephone) return client.telephone;
+    if (Array.isArray(client.phones) && client.phones.length > 0) {
+      return client.phones[0].phoneNumber || client.phones[0].phone || '—';
+    }
+    if (Array.isArray(client.telephones) && client.telephones.length > 0) {
+      return client.telephones[0].numero || client.telephones[0].phone || '—';
+    }
+    return '—';
+  };
+
   return (
-    <div className="space-y-6 pb-20 px-4 md:px-0 animate-fade-in">
+    <div className="space-y-6 pb-12 animate-fade-in text-start">
       
-      {/* PAGE HEADER */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="text-start">
-          <h1 className="text-2xl font-black text-text-primary uppercase tracking-tight">{t('admin.clients.title')}</h1>
-          <p className="text-[10px] text-text-muted mt-0.5 font-bold uppercase tracking-widest">{t('admin.clients.subtitle')}</p>
+        <div>
+          <h1 className="text-2xl font-black text-text-primary uppercase tracking-tight">Portefeuille Clients</h1>
+          <p className="text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">Suivi et fidélisation de votre clientèle</p>
         </div>
-      </div>
-
-      {/* STAT CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-surface rounded-2xl shadow-card px-5 py-4 border border-border/50 flex items-center gap-4 hover:border-primary-100 transition-colors group">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Users size={24} />
-          </div>
-          <div className="text-start">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.clients.stats.total')}</p>
-            <p className="text-2xl font-black text-text-primary tracking-tight">{statistics?.totalClients || clients?.length || 0}</p>
-          </div>
-        </div>
-        
-        <div className="bg-surface rounded-2xl shadow-card px-5 py-4 border border-border/50 flex items-center gap-4 hover:border-primary-100 transition-colors group">
-          <div className="w-12 h-12 rounded-xl bg-green-50 text-green-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <ShoppingCart size={24} />
-          </div>
-          <div className="text-start">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.clients.stats.orders_month')}</p>
-            <p className="text-2xl font-black text-text-primary tracking-tight">{statistics?.commandesCeMois || 0}</p>
-          </div>
-        </div>
-
-        <div className="bg-surface rounded-2xl shadow-card px-5 py-4 border border-border/50 flex items-center gap-4 hover:border-primary-100 transition-colors group">
-          <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <TrendingUp size={24} />
-          </div>
-          <div className="text-start">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.clients.stats.new_month')}</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-2xl font-black text-text-primary tracking-tight">{statistics?.nouveauxCeMois || 0}</p>
-              <span className="text-[10px] font-black text-green-600">+{Math.round(statistics?.pourcentageNouveaux || 0)}%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* SEARCH BAR */}
-      <div className="bg-surface border border-border rounded-2xl px-5 py-4 flex items-center gap-3 shadow-sm group focus-within:border-primary-300 focus-within:ring-4 focus-within:ring-primary-500/5 transition-all">
-        <Search size={20} className="text-text-muted group-focus-within:text-primary-500 transition-colors" />
-        <input 
-          type="text" 
-          placeholder={t('admin.clients.search_placeholder')}
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="flex-1 text-sm font-bold text-text-primary placeholder:text-text-muted placeholder:font-medium outline-none bg-transparent text-start"
-        />
-        <button className="p-1.5 text-text-muted hover:text-text-primary hover:bg-background rounded-lg transition-all">
-          <SlidersHorizontal size={18} />
+        <button onClick={loadData} className="flex items-center justify-center gap-2 px-5 py-2.5 bg-surface border border-border/50 text-text-primary rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-background transition-all shadow-sm">
+          <RefreshCw size={16} className={loading ? 'animate-spin' : ''} /> Actualiser
         </button>
       </div>
 
-      {/* TABLE SECTION */}
-      <div className="space-y-4">
-        
-        {/* Mobile card list (md:hidden) */}
-        <div className="md:hidden space-y-3">
-          {loading && paginatedClients.length === 0 ? (
-             <div className="py-10 text-center bg-white rounded-2xl border border-border/50 shadow-sm">
-                <Loader2 size={32} className="animate-spin text-primary-400 mx-auto mb-3" />
-                <p className="text-xs font-black text-text-muted uppercase tracking-widest">{t('common.loading')}</p>
-             </div>
-          ) : paginatedClients.length > 0 ? (
-            paginatedClients.map((client, index) => (
-              <div key={client.id}
-                className="bg-white rounded-2xl shadow-card p-4 border border-border hover:border-primary-200 transition-all active:scale-[0.98]"
-              >
-                {/* Top row: avatar + name + since date */}
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${colorArray[index % colorArray.length]}`}>
-                    {getInitials(client.nom || client.name)}
-                  </div>
-                   <div className="flex-1 min-w-0 text-start">
-                    <p className="text-sm font-bold text-text-primary truncate">
-                      {client.nom || client.name || 'Client #' + client.id}
-                    </p>
-                    <p className="text-[10px] text-text-muted mt-0.5 font-bold uppercase tracking-tight">
-                      {t('admin.clients.client_since')} {formatDate(client.createdAt)}
-                    </p>
-                  </div>
-                  {/* Orders count badge */}
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 ${client.totalCommandes > 0 ? 'bg-primary-100 text-primary-600' : 'bg-gray-100 text-text-muted'}`}>
-                    {client.totalCommandes || 0}
-                  </div>
-                </div>
-
-                {/* Middle row: phone */}
-                <div className="flex items-center gap-2 mb-3 text-sm text-text-secondary font-bold">
-                  <Phone className="w-3.5 h-3.5 text-text-muted flex-shrink-0"/>
-                   <span>
-                    {client.telephones?.[0]?.numero 
-                     || client.telephone 
-                     || client.phones?.[0]?.phoneNumber
-                     || t('admin.clients.not_specified')}
-                  </span>
-                </div>
-
-                {/* Bottom row: last order + action button */}
-                 <div className="flex items-center justify-between pt-3 border-t border-border">
-                  <div className="text-[10px] text-text-muted font-bold uppercase tracking-tight text-start">
-                    <span className="opacity-60">{t('admin.clients.last_order')}</span>{' '}
-                    <span className="text-text-secondary">
-                      {client.lastOrderDate ? formatRelativeDate(client.lastOrderDate) : t('admin.clients.not_specified')}
-                    </span>
-                  </div>
-                   <button
-                    onClick={() => navigate(`/admin/clients/${client.id}`)}
-                    className="flex items-center gap-1 text-primary-500 text-xs font-black uppercase tracking-widest hover:text-primary-600"
-                  >
-                    {t('admin.clients.view_orders')}
-                    <ChevronRight className="w-4 h-4 rtl:rotate-180" strokeWidth={3}/>
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="py-12 bg-white rounded-2xl border border-dashed border-border text-center">
-               <Search size={24} className="text-text-muted opacity-20 mx-auto mb-3" />
-               <p className="text-xs font-black text-text-muted uppercase tracking-widest">{t('admin.clients.no_clients')}</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        {[
+          { label: 'Total Clients', value: statistics?.totalClients || clients?.length || 0, icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+          { label: 'Commandes (Mois)', value: statistics?.commandesCeMois || 0, icon: ShoppingCart, color: 'text-green-500', bg: 'bg-green-500/10' },
+          { label: 'Nouveaux (Mois)', value: `+${statistics?.nouveauxCeMois || 0}`, icon: TrendingUp, color: 'text-orange-500', bg: 'bg-orange-500/10', sub: `${Math.round(statistics?.pourcentageNouveaux || 0)}% croissance` },
+        ].map((stat, i) => (
+          <div key={i} className="bg-surface p-5 rounded-[2rem] border border-border/50 shadow-sm flex items-center gap-5 transition-all hover:shadow-md">
+            <div className={`w-12 h-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center shrink-0`}>
+              <stat.icon size={24} />
             </div>
-          )}
-        </div>
-
-        {/* Desktop/Tablet table (hidden on mobile) */}
-        <div className="hidden md:block overflow-hidden bg-surface rounded-2xl shadow-card border border-border/50">
-          <div className="overflow-x-auto">
-            <table className="w-full text-start">
-              <thead className="bg-gray-50 border-b border-border">
-                <tr>
-                  <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.clients.table.client')}</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.clients.table.contact')}</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.clients.table.last_order')}</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.clients.table.orders')}</th>
-                  <th className="px-6 py-4 text-end text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-end">{t('admin.clients.table.actions')}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/40">
-                {loading && paginatedClients.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" className="py-20 text-center">
-                      <Loader2 size={32} className="animate-spin text-primary-400 mx-auto mb-3" />
-                      <p className="text-xs font-black text-text-muted uppercase tracking-widest">{t('admin.clients.loading_db')}</p>
-                    </td>
-                  </tr>
-                ) : paginatedClients.length > 0 ? (
-                  paginatedClients.map((client, index) => (
-                    <tr key={client.id} className="hover:bg-gray-50/50 transition-colors group">
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs ${colorArray[index % colorArray.length]}`}>
-                            {getInitials(client.name || client.nom)}
-                          </div>
-                          <div className="text-start">
-                            <p className="text-sm font-black text-text-primary tracking-tight">
-                              {client.name || client.nom || `Client #${client.id}`}
-                            </p>
-                            <p className="text-[10px] text-text-muted mt-0.5 font-bold uppercase tracking-tight">
-                              {t('admin.clients.client_since')} {formatDate(client.createdAt)}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-2 text-sm font-bold text-text-primary">
-                           <Phone size={14} className="text-text-muted" />
-                           {(client.phones && client.phones[0]?.phoneNumber) || client.telephone || '—'}
-                        </div>
-                        {client.email && (
-                          <p className="text-[10px] text-text-muted mt-1 font-bold lowercase opacity-60 truncate max-w-[200px] text-start">{client.email}</p>
-                        )}
-                      </td>
-                      <td className="px-6 py-5">
-                        <span className="text-xs font-bold text-text-secondary uppercase tracking-tight">
-                          {formatRelativeDate(client.lastOrderDate)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs
-                          ${client.totalCommandes > 0 
-                            ? 'bg-primary-100 text-primary-600' 
-                            : 'bg-gray-100 text-text-muted border border-border/50'}`}>
-                          {client.totalCommandes || 0}
-                        </div>
-                      </td>
-                       <td className="px-6 py-5 text-end">
-                        <button 
-                          onClick={() => navigate(`/admin/clients/${client.id}`)}
-                                                  className="inline-flex items-center gap-2 text-primary-500 text-[10px] font-black uppercase tracking-widest hover:text-primary-600 active:scale-95 transition-all"
-                        >
-                          {t('admin.clients.details')} <ChevronRight size={14} strokeWidth={3} className="rtl:rotate-180" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                     <td colSpan="5" className="py-24 text-center">
-                      <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-4 border border-dashed border-border opacity-30">
-                        <Search size={24} />
-                      </div>
-                      <p className="text-sm font-black text-text-primary uppercase tracking-tight">{t('admin.clients.no_results')}</p>
-                      <p className="text-[10px] text-text-muted mt-1 font-bold uppercase tracking-widest">{t('admin.clients.adjust_search')}</p>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <div>
+              <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-0.5">{stat.label}</p>
+              <p className="text-2xl font-black text-text-primary tracking-tight">{stat.value}</p>
+              {stat.sub && <p className="text-[10px] font-bold text-green-600 uppercase tracking-tighter mt-0.5">{stat.sub}</p>}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
 
-      {/* PAGINATION */}
-      {totalPages > 1 && (
-         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-4 border-t border-border/40">
-          <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">
-            {t('admin.clients.pagination.display')} <span className="text-text-primary">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="text-text-primary">{Math.min(currentPage * itemsPerPage, clients?.length || 0)}</span> {t('admin.clients.pagination.of')} <span className="text-text-primary">{clients?.length || 0}</span>
-          </p>
-          <div className="flex items-center gap-3">
-            <button               disabled={currentPage === 1}
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-surface text-[10px] font-black uppercase tracking-widest text-text-secondary hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
-            >
-              <ChevronLeft size={16} strokeWidth={3} className="rtl:rotate-180" />
-              {t('admin.clients.pagination.prev')}
-            </button>
-            <div className="flex gap-2">
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`w-10 h-10 rounded-xl text-[10px] font-black transition-all active:scale-95 ${currentPage === i + 1 ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20' : 'bg-surface border border-border text-text-secondary hover:bg-slate-50'}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-            <button               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-surface text-[10px] font-black uppercase tracking-widest text-text-secondary hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
-            >
-              {t('admin.clients.pagination.next')}
-              <ChevronRight size={16} strokeWidth={3} className="rtl:rotate-180" />
-            </button>
-          </div>
+      <div className="relative group">
+        <Search size={20} className="absolute start-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary-500 transition-colors" />
+        <input type="text" placeholder="Rechercher un client (Nom, téléphone...)" value={search} onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }} className="w-full bg-surface border border-border/50 rounded-2xl ps-12 pe-4 py-4 text-sm font-bold text-text-primary outline-none focus:ring-4 focus:ring-primary-500/5 focus:border-primary-500 transition-all shadow-sm" />
+      </div>
+
+      <div className="bg-surface rounded-[2rem] border border-border/50 shadow-card overflow-hidden">
+        <div className="hidden lg:block overflow-x-auto">
+          <table className="w-full text-start">
+            <thead>
+              <tr className="bg-background/50 border-b border-border/50">
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Client</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Contact</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Dernière Commande</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">Volume</th>
+                <th className="px-8 py-4"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/40">
+              {loading && paginatedClients.length === 0 ? (
+                <tr><td colSpan="5" className="py-20 text-center"><Loader2 size={32} className="animate-spin text-primary-500 mx-auto mb-4" /><p className="text-[10px] font-black uppercase tracking-widest opacity-40">Chargement des clients...</p></td></tr>
+              ) : paginatedClients.length > 0 ? (
+                paginatedClients.map((client, i) => (
+                  <tr key={client.id} className="group hover:bg-background/40 transition-all">
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs shadow-sm ${colorArray[i % colorArray.length]}`}>{ (client.name || client.nom || 'C')[0] }</div>
+                        <div className="text-start">
+                          <p className="text-sm font-black text-text-primary tracking-tight">{client.name || client.nom}</p>
+                          <p className="text-[9px] text-text-muted font-bold uppercase tracking-widest mt-0.5">Membre depuis {new Date(client.createdAt).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short' })}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-8 py-5">
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2 text-xs font-bold text-text-primary"><Phone size={12} className="text-text-muted" /> {getClientPhone(client)}</div>
+                        {client.email && <div className="flex items-center gap-2 text-[10px] font-bold text-text-muted opacity-60"><Mail size={10} /> {client.email}</div>}
+                      </div>
+                    </td>
+                    <td className="px-8 py-5">
+                      <span className="text-xs font-bold text-text-primary uppercase tracking-tight">{formatRelativeDate(client.lastOrderDate)}</span>
+                    </td>
+                    <td className="px-8 py-5 text-center">
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-background border border-border/50 text-xs font-black text-primary-600 shadow-sm">{client.totalCommandes || 0}</span>
+                    </td>
+                    <td className="px-8 py-5 text-end">
+                      <button onClick={() => navigate(`/admin/clients/${client.id}`)} className="w-8 h-8 rounded-lg bg-background flex items-center justify-center text-text-muted group-hover:text-primary-500 group-hover:bg-surface transition-all active:scale-90 shadow-sm border border-border/50"><ChevronRight size={18} className="rtl:rotate-180" /></button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr><td colSpan="5" className="py-20 text-center opacity-40"><Users size={48} className="mx-auto mb-4" /><p className="text-sm font-black uppercase tracking-widest">Aucun client trouvé</p></td></tr>
+              )}
+            </tbody>
+          </table>
         </div>
-      )}
+
+        {/* MOBILE CARDS */}
+        <div className="lg:hidden divide-y divide-border/30">
+          {paginatedClients.map((client, i) => (
+            <div key={client.id} onClick={() => navigate(`/admin/clients/${client.id}`)} className="p-5 active:bg-background transition-colors flex flex-col gap-4">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-lg ${colorArray[i % colorArray.length]}`}>{ (client.name || client.nom || 'C')[0] }</div>
+                  <div className="text-start">
+                    <p className="text-base font-black text-text-primary tracking-tight">{client.name || client.nom}</p>
+                    <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">Dernier passage: {formatRelativeDate(client.lastOrderDate)}</p>
+                  </div>
+                </div>
+                <div className="bg-primary-500/10 text-primary-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-primary-500/20">{client.totalCommandes || 0} CMD</div>
+              </div>
+              <div className="flex items-center gap-4 text-text-muted">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold"><Phone size={14} /> {getClientPhone(client)}</div>
+                <div className="flex items-center gap-1.5 text-[10px] font-bold truncate"><Mail size={14} /> {client.email || '—'}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* PAGINATION */}
+        {totalPages > 1 && (
+          <div className="p-6 bg-background/30 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">{currentPage} sur {totalPages} pages • {clients?.length} clients</p>
+            <div className="flex gap-2">
+              <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="px-4 py-2 rounded-xl bg-surface border border-border/50 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 active:scale-95 transition-all">Précédent</button>
+              <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="px-4 py-2 rounded-xl bg-surface border border-border/50 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 active:scale-95 transition-all">Suivant</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-

@@ -674,7 +674,8 @@
                 "no_phone": "Sans numéro",
                 "itinerary": "Itinéraire",
                 "payment": "Paiement",
-                "details": "Détails"
+                "details": "Détails",
+                "gps_unavailable": "Coordonnées GPS manquantes"
             },
             "payment_modal": {
                 "title": "Mode de paiement",

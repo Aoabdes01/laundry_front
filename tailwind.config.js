@@ -20,12 +20,12 @@ export default {
           800: '#9A3C07',
           900: '#7C2D04',
         },
-        background: '#F8F9FA',
-        surface: '#FFFFFF',
-        border: '#F1F3F5',
-        'text-primary': '#0F172A',
-        'text-secondary': '#64748B',
-        'text-muted': '#94A3B8',
+        background: 'var(--background)',
+        surface: 'var(--surface)',
+        border: 'var(--border)',
+        'text-primary': 'var(--text-primary)',
+        'text-secondary': 'var(--text-secondary)',
+        'text-muted': 'var(--text-muted)',
         // was #F8F9FC
 
         accent: {

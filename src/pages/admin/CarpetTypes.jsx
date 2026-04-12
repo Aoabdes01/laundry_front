@@ -77,239 +77,220 @@ export default function CarpetTypes() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in pb-12">
+    <div className="space-y-6 animate-fade-in pb-12 text-start">
 
       {/* PAGE HEADER */}
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 bg-primary-50 rounded-2xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-primary-500/10 rounded-2xl flex items-center justify-center border border-primary-500/20">
               <Layers size={20} className="text-primary-500" />
             </div>
             <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">{t('carpet_types.title')}</h1>
           </div>
-          <p className="text-xs text-text-muted font-medium ms-13 ps-13 text-start">
-            {t('carpet_types.subtitle')}
+          <p className="text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">
+            Gestion du catalogue de prestations et tarifs
           </p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all shadow-lg shadow-primary-500/20 active:scale-95"
+          className="flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-primary-500/20 active:scale-95"
         >
           <Plus size={16} strokeWidth={3} />
-          <span className="hidden sm:inline">{t('carpet_types.new_type')}</span>
+          <span className="hidden sm:inline">Nouveau Type</span>
         </button>
       </div>
 
       {/* ERROR */}
       {carpetTypesError && (
-        <div className="bg-red-50 border border-red-100 p-4 rounded-xl flex items-center gap-3 text-red-600">
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 p-4 rounded-xl flex items-center gap-3 text-red-600">
           <AlertCircle size={18} />
           <p className="text-sm font-semibold">{carpetTypesError}</p>
         </div>
       )}
 
-      {/* TABLE CARD */}
-      <div className="bg-white rounded-3xl shadow-card border border-border/50 overflow-hidden">
-        {/* TABLE HEADER */}
-        <div className="px-6 py-4 border-b border-border bg-gray-50/50 flex items-center justify-between">
-          <h2 className="text-sm font-black text-text-primary uppercase tracking-widest">
-            {t('carpet_types.catalog')} ({carpetTypes.length})
-          </h2>
+      {/* KPI QUICK STATS (Visible on all) */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {[
+          { label: 'Types Actifs', value: carpetTypes.filter(t => t.actif).length, icon: CheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+          { label: 'Types Masqués', value: carpetTypes.filter(t => !t.actif).length, icon: XCircle, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+          { label: 'Prix Moyen', value: `${carpetTypes.length > 0 ? Math.round(carpetTypes.reduce((acc, t) => acc + t.prixParM2, 0) / carpetTypes.length) : 0} DH`, icon: DollarSign, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+          { label: 'Total Catalogue', value: carpetTypes.length, icon: Layers, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+        ].map((kpi, i) => (
+          <div key={i} className="bg-surface p-4 rounded-2xl border border-border/50 shadow-sm flex flex-col gap-2 transition-all hover:shadow-md">
+            <div className={`w-7 h-7 rounded-lg ${kpi.bg} ${kpi.color} flex items-center justify-center`}>
+              <kpi.icon size={14} />
+            </div>
+            <div>
+              <p className="text-[8px] font-black text-text-muted uppercase tracking-widest mb-0.5">{kpi.label}</p>
+              <p className="text-sm font-black text-text-primary tracking-tight">{kpi.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* TABLE/CARD CONTAINER */}
+      <div className="bg-surface rounded-[2rem] shadow-card border border-border/50 overflow-hidden">
+        <div className="px-6 md:px-8 py-5 border-b border-border/50 bg-background/30 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
+            <h2 className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">
+              Catalogue Actif ({carpetTypes.length})
+            </h2>
+          </div>
           {carpetTypesLoading && <Loader2 size={16} className="animate-spin text-primary-400" />}
         </div>
 
-        {/* LOADING STATE */}
         {carpetTypesLoading && carpetTypes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 size={32} className="animate-spin text-primary-300 mb-3" />
-            <p className="text-xs font-black text-text-muted uppercase tracking-widest">{t('common.loading')}</p>
+          <div className="flex flex-col items-center justify-center py-24 opacity-40">
+            <Loader2 size={32} className="animate-spin mb-4 text-primary-500" />
+            <p className="text-[10px] font-black uppercase tracking-widest">{t('common.loading')}</p>
           </div>
         ) : carpetTypes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mb-4">
-              <Layers size={28} className="text-primary-300" />
+          <div className="flex flex-col items-center justify-center py-24 text-center px-6">
+            <div className="w-20 h-20 bg-background rounded-[2rem] flex items-center justify-center mb-6 border border-dashed border-border shadow-inner">
+              <Layers size={32} className="text-text-muted/30" />
             </div>
-            <p className="text-sm font-black text-text-muted uppercase tracking-widest mb-1">{t('carpet_types.no_types')}</p>
-            <p className="text-xs text-text-muted">{t('carpet_types.get_started')}</p>
-            <button
-              onClick={openCreate}
-              className="mt-4 flex items-center gap-2 bg-primary-500 text-white px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary-600 transition-all"
-            >
-              <Plus size={14} strokeWidth={3} /> {t('carpet_types.create_first')}
-            </button>
+            <p className="text-sm font-black text-text-primary uppercase tracking-widest mb-1">Aucun type de tapis</p>
+            <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest opacity-60">Commencez par ajouter votre première prestation</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-start border-collapse">
-              <thead className="bg-gray-50/40">
-                <tr>
-                  {[
-                    t('carpet_types.table.name'),
-                    t('carpet_types.table.price_m2'),
-                    t('carpet_types.table.status'),
-                    t('carpet_types.table.actions')
-                  ].map(h => (
-                    <th key={h} className="px-6 py-3.5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/40">
-                {carpetTypes.map(type => (
-                  <tr key={type.id} className="hover:bg-gray-50/40 transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-primary-50 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors">
-                          <Layers size={16} className="text-primary-500" />
-                        </div>
-                        <span className="text-sm font-bold text-text-primary text-start">{type.nom}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="inline-flex items-center gap-1.5 bg-primary-50 border border-primary-100 px-3 py-1.5 rounded-xl">
-                        <DollarSign size={12} className="text-primary-500" />
-                        <span className="text-sm font-black text-primary-600">{type.prixParM2}</span>
-                        <span className="text-[10px] font-black text-primary-400 uppercase">DH/m²</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      {type.actif ? (
-                        <div className="inline-flex items-center gap-1.5 bg-green-50 text-green-600 border border-green-100 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-                          <CheckCircle size={11} /> {t('carpet_types.active')}
-                        </div>
-                      ) : (
-                        <div className="inline-flex items-center gap-1.5 bg-gray-50 text-text-muted border border-border px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-                          <XCircle size={11} /> {t('carpet_types.inactive')}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => openEdit(type)}
-                          className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-primary-50 hover:text-primary-600 flex items-center justify-center transition-all text-text-muted border border-border/50"
-                        >
-                          <Pencil size={13} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(type.id)}
-                          disabled={deletingId === type.id}
-                          className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-red-50 hover:text-red-500 flex items-center justify-center transition-all text-text-muted border border-border/50 disabled:opacity-50"
-                        >
-                          {deletingId === type.id
-                            ? <Loader2 size={13} className="animate-spin" />
-                            : <Trash2 size={13} />}
-                        </button>
-                      </div>
-                    </td>
+          <>
+            {/* DESKTOP TABLE */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-start">
+                <thead>
+                  <tr className="bg-background/50">
+                    <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Prestation</th>
+                    <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Prix Unitaire</th>
+                    <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">Visibilité</th>
+                    <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-end">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-border/40">
+                  {carpetTypes.map(type => (
+                    <tr key={type.id} className="hover:bg-background/40 transition-colors group">
+                      <td className="px-8 py-5">
+                        <div className="flex items-center gap-4 text-start">
+                          <div className="w-10 h-10 bg-background border border-border/50 rounded-xl flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+                            <Layers size={18} className="text-primary-500" />
+                          </div>
+                          <span className="text-sm font-black text-text-primary tracking-tight">{type.nom}</span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-5 text-start">
+                        <div className="inline-flex items-center gap-2 bg-primary-500/5 px-3 py-1.5 rounded-xl border border-primary-500/10 font-black text-primary-600">
+                          <span className="text-sm">{type.prixParM2}</span>
+                          <span className="text-[10px] uppercase opacity-60">DH/m²</span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-5 text-center">
+                        <div className="flex justify-center">
+                          {type.actif ? (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-500/20"><CheckCircle size={10} /> Actif</span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-gray-50 dark:bg-background text-text-muted border border-border"><XCircle size={10} /> Masqué</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-8 py-5 text-end">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => openEdit(type)} className="w-9 h-9 rounded-xl bg-background border border-border/50 flex items-center justify-center text-text-muted hover:text-primary-500 transition-all active:scale-90 shadow-sm"><Pencil size={14}/></button>
+                          <button onClick={() => handleDelete(type.id)} disabled={deletingId === type.id} className="w-9 h-9 rounded-xl bg-background border border-border/50 flex items-center justify-center text-text-muted hover:text-red-500 transition-all active:scale-90 shadow-sm disabled:opacity-50">{deletingId === type.id ? <Loader2 size={14} className="animate-spin"/> : <Trash2 size={14}/>}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* MOBILE CARDS */}
+            <div className="md:hidden divide-y divide-border/30">
+              {carpetTypes.map(type => (
+                <div key={type.id} className="p-5 flex flex-col gap-4 active:bg-background transition-colors">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-background border border-border/50 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+                        <Layers size={18} className="text-primary-500" />
+                      </div>
+                      <div className="text-start">
+                        <p className="text-sm font-black text-text-primary leading-tight">{type.nom}</p>
+                        <div className="mt-1">
+                          {type.actif ? (
+                            <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-green-600"><CheckCircle size={8} /> Actif</span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-text-muted"><XCircle size={8} /> Masqué</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-end">
+                      <p className="text-[8px] font-black text-text-muted uppercase tracking-widest mb-0.5">Tarif Unitaire</p>
+                      <p className="text-sm font-black text-primary-600 tracking-tight">{type.prixParM2} <span className="text-[8px] font-bold opacity-60">DH/M²</span></p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-3 pt-2 border-t border-border/20">
+                    <button 
+                      onClick={() => openEdit(type)} 
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-background border border-border/50 rounded-xl text-[9px] font-black uppercase tracking-widest text-text-muted hover:text-primary-500 transition-all active:scale-95 shadow-sm"
+                    >
+                      <Pencil size={12} /> Modifier
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(type.id)} 
+                      disabled={deletingId === type.id}
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-background border border-border/50 rounded-xl text-[9px] font-black uppercase tracking-widest text-text-muted hover:text-red-500 transition-all active:scale-95 shadow-sm disabled:opacity-50"
+                    >
+                      {deletingId === type.id ? <Loader2 size={12} className="animate-spin"/> : <Trash2 size={12}/>}
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
-      {/* CREATE / EDIT MODAL */}
+      {/* MODAL */}
       {showModal && (
-        <div
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={(e) => e.target === e.currentTarget && closeModal()}
-        >
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-border">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-primary-50 rounded-xl flex items-center justify-center">
-                  <Layers size={18} className="text-primary-500" />
-                </div>
-                <h2 className="text-base font-black text-text-primary uppercase tracking-tight">
-                  {editTarget ? t('carpet_types.edit_type') : t('carpet_types.new_type')}
-                </h2>
+        <div className="fixed inset-0 z-[150] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300" onClick={(e) => e.target === e.currentTarget && closeModal()}>
+          <div className="bg-surface rounded-[2rem] shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-300 border border-border/50 overflow-hidden">
+            <div className="flex items-center justify-between px-8 py-6 border-b border-border/50 bg-background/30 text-start">
+              <div>
+                <p className="text-[10px] font-black text-primary-500 uppercase tracking-widest mb-1">Configuration</p>
+                <h2 className="text-xl font-black text-text-primary uppercase tracking-tight">{editTarget ? "Modifier Prestation" : "Nouvelle Prestation"}</h2>
               </div>
-              <button
-                onClick={closeModal}
-                className="w-8 h-8 rounded-xl hover:bg-gray-100 flex items-center justify-center transition-colors text-text-muted"
-              >
-                <X size={18} />
-              </button>
+              <button onClick={closeModal} className="w-10 h-10 rounded-xl bg-surface border border-border/50 flex items-center justify-center text-text-muted hover:text-red-500 transition-all"><X size={20}/></button>
             </div>
 
-            {/* Modal Body */}
-            <form onSubmit={handleSubmit} className="p-6 space-y-5">
-              {/* Nom */}
-              <div className="space-y-1.5 text-start">
-                <label className="text-[10px] font-black text-text-muted uppercase tracking-wider">
-                  {t('carpet_types.type_name')}
-                </label>
-                <input
-                  type="text"
-                  value={form.nom}
-                  onChange={e => setForm(f => ({ ...f, nom: e.target.value }))}
-                  placeholder="Ex: Tapis Berbère"
-                  className="w-full bg-gray-50 border border-border rounded-xl px-4 py-3 text-sm font-bold focus:bg-white focus:border-primary-400 outline-none transition-colors"
-                  required
-                />
+            <form onSubmit={handleSubmit} className="p-8 space-y-6">
+              <div className="space-y-2 text-start">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest">Nom de la prestation</label>
+                <input type="text" value={form.nom} onChange={e => setForm({...form, nom: e.target.value})} className="w-full bg-background border border-border rounded-2xl px-4 py-3.5 text-sm font-bold text-text-primary focus:ring-4 focus:ring-primary-500/5 focus:border-primary-500 outline-none transition-all" required />
               </div>
 
-              {/* Prix par m² */}
-              <div className="space-y-1.5 text-start">
-                <label className="text-[10px] font-black text-text-muted uppercase tracking-wider">
-                  {t('carpet_types.price_label')}
-                </label>
+              <div className="space-y-2 text-start">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest">Prix unitaire (m²)</label>
                 <div className="relative">
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0.01"
-                    value={form.prixParM2}
-                    onChange={e => setForm(f => ({ ...f, prixParM2: e.target.value }))}
-                    placeholder="0.00"
-                    className="w-full bg-gray-50 border border-border rounded-xl px-4 py-3 pe-16 text-sm font-bold focus:bg-white focus:border-primary-400 outline-none transition-colors"
-                    required
-                  />
-                  <span className="absolute end-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-text-muted uppercase">
-                    DH/m²
-                  </span>
+                  <input type="number" step="0.01" min="0.01" value={form.prixParM2} onChange={e => setForm({...form, prixParM2: e.target.value})} className="w-full bg-background border border-border rounded-2xl px-4 py-3.5 pe-16 text-sm font-bold text-text-primary focus:ring-4 focus:ring-primary-500/5 focus:border-primary-500 outline-none transition-all" required />
+                  <span className="absolute end-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-text-muted uppercase tracking-widest">DH/m²</span>
                 </div>
               </div>
 
-              {/* Statut toggle */}
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-border/50">
+              <div className="flex items-center justify-between p-5 bg-background rounded-3xl border border-border/50">
                 <div className="text-start">
-                  <p className="text-sm font-bold text-text-primary">{t('carpet_types.active')}</p>
-                  <p className="text-xs text-text-muted">{t('carpet_types.visible_to_driver')}</p>
+                  <p className="text-sm font-black text-text-primary uppercase tracking-tight">Visibilité active</p>
+                  <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-0.5">Visible par les livreurs</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setForm(f => ({ ...f, actif: !f.actif }))}
-                  className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none ${
-                    form.actif ? 'bg-primary-500' : 'bg-gray-300'
-                  }`}
-                >
-                  <span className={`absolute top-0.5 start-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${
-                    form.actif ? 'translate-x-6' : 'translate-x-0'
-                  }`} />
-                </button>
+                <button type="button" onClick={() => setForm({...form, actif: !form.actif})} className={`relative w-12 h-6 rounded-full transition-all duration-300 ${form.actif ? 'bg-primary-500 shadow-lg shadow-primary-500/30' : 'bg-border'}`}><div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${form.actif ? 'translate-x-7' : 'translate-x-1'}`} /></button>
               </div>
 
-              {/* Actions */}
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="flex-1 py-3 border border-border rounded-xl text-sm font-black text-text-secondary hover:bg-gray-50 uppercase tracking-widest transition-colors"
-                >
-                  {t('common.cancel')}
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="flex-1 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-black uppercase tracking-widest transition-all shadow-lg shadow-primary-500/20 flex items-center justify-center gap-2 disabled:opacity-70"
-                >
-                  {saving ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} />}
-                  {editTarget ? t('common.save') : t('carpet_types.create_first').split(' ')[0]}
-                </button>
+              <div className="flex gap-3 pt-4">
+                <button type="button" onClick={closeModal} className="flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-border text-text-secondary hover:bg-background transition-all">Annuler</button>
+                <button type="submit" disabled={saving} className="flex-1 py-4 bg-primary-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary-500/20 hover:bg-primary-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2">{saving ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} />} {editTarget ? "Sauvegarder" : "Créer"}</button>
               </div>
             </form>
           </div>
@@ -318,4 +299,3 @@ export default function CarpetTypes() {
     </div>
   );
 }
-

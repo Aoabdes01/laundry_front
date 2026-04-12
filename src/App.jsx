@@ -82,9 +82,9 @@ function App() {
           </Routes>
         </BrowserRouter>
         <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
+          position={window.innerWidth < 640 ? "top-center" : "bottom-right"}
+          autoClose={2000}
+          hideProgressBar
           newestOnTop
           closeOnClick
           rtl={false}
@@ -92,6 +92,8 @@ function App() {
           draggable
           pauseOnHover
           theme="light"
+          toastClassName="custom-toast-pill"
+          closeButton={false}
         />
       </Provider>
     </>
