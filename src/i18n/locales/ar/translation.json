@@ -140,11 +140,14 @@
       },
       "revenue_evolution": "تطور الإيرادات",
       "period_perf": "الأداء خلال الفترة المختارة",
+      "period_total": "مجموع الفترة",
+      "daily_average": "المتوسط اليومي",
       "periods": {
         "7d": "7 أيام",
         "30d": "30 يوم",
         "1y": "سنة",
-        "custom": "فترة"
+        "custom": "فترة",
+        "today": "اليوم"
       },
       "order_status": "حالة الطلبات",
       "status_groups": {
@@ -156,12 +159,15 @@
       "activity_flow": "آخر تدفقات النشاط",
       "see_all": "عرض الكل",
       "table": {
+        "order": "الطلب",
         "client": "الزبون / معلومات",
         "details": "تفاصيل الخدمة",
         "timestamp": "الطابع الزمني",
         "amount": "المبلغ",
         "status": "الحالة"
       },
+      "global": "الكل",
+      "total": "المجموع",
       "syncing": "جاري مزامنة البيانات...",
       "carpets": "سجاد"
     },

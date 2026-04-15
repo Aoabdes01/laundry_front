@@ -83,7 +83,8 @@ export default function EmployeDashboard() {
   }, [commandes, searchTerm, activeFilter, showAll, viewMode]);
 
   const stats = useMemo(() => {
-    const base = viewMode === 'active' ? commandes.filter(o => ![COMMANDE_STATUS.LIVREE, COMMANDE_STATUS.PAYEE].includes(o.status)) : [];
+    const safeCommandes = commandes || [];
+    const base = viewMode === 'active' ? safeCommandes.filter(o => ![COMMANDE_STATUS.LIVREE, COMMANDE_STATUS.PAYEE].includes(o.status)) : [];
     return [
       { key: COMMANDE_STATUS.EN_ATTENTE, label: t('workshop.stats.waiting'), count: base.filter(o => o.status === COMMANDE_STATUS.EN_ATTENTE || o.status === COMMANDE_STATUS.VALIDEE).length, filterValue: COMMANDE_STATUS.EN_ATTENTE },
       { key: COMMANDE_STATUS.EN_TRAITEMENT, label: t('workshop.stats.processing'), count: base.filter(o => o.status === COMMANDE_STATUS.EN_TRAITEMENT).length, filterValue: COMMANDE_STATUS.EN_TRAITEMENT },
@@ -91,7 +92,7 @@ export default function EmployeDashboard() {
     ];
   }, [commandes, viewMode, t]);
 
-  const overdueCount = useMemo(() => viewMode === 'active' ? commandes.filter(isPastUnfinished).length : 0, [commandes, viewMode]);
+  const overdueCount = useMemo(() => viewMode === 'active' ? (commandes || []).filter(isPastUnfinished).length : 0, [commandes, viewMode]);
 
   return (
     <div className="space-y-6 md:space-y-8 pb-16 px-4 md:px-0 animate-fade-in">
@@ -367,7 +368,7 @@ export default function EmployeDashboard() {
                <h2 className="text-sm font-black text-text-primary uppercase tracking-tight">{t('workshop.activity.title')}</h2>
             </div>
             
-            {commandes.length === 0 ? (
+            {(commandes || []).length === 0 ? (
               <div className="py-16 flex flex-col items-center text-center opacity-40">
                  <div className="w-16 h-16 rounded-2xl bg-background border border-border/50 flex items-center justify-center mb-4">
                     <RefreshCw size={28} className="text-text-muted" />
@@ -377,7 +378,7 @@ export default function EmployeDashboard() {
             ) : (
               <div className="space-y-8 relative">
                 <div className="absolute start-[19px] top-4 bottom-4 w-0.5 bg-border/50 rounded-full" />
-                {[...commandes].sort((a,b) => new Date(b.dateCreation || b.createdAt) - new Date(a.dateCreation || a.createdAt)).slice(0, 15).map((order, idx) => {
+                {[...(commandes || [])].sort((a,b) => new Date(b.dateCreation || b.createdAt) - new Date(a.dateCreation || a.createdAt)).slice(0, 15).map((order, idx) => {
                   const cfg = STATUS_CONFIG[order.status] || { label: order.status, icon: Package, accentBg: 'bg-background', accentText: 'text-text-secondary' };
                   const Icon = cfg.icon;
                   return (

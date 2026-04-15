@@ -220,7 +220,7 @@ const handleSelectUser = (user) => {
             <div className="bg-surface rounded-3xl p-5 sm:p-6 lg:p-8 border border-border/50 shadow-card">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                 <div>
-                  <h3 className="text-xl font-black text-text-primary uppercase tracking-tight">{isAddingUser ? t('admin.pro_ui.new_member') : t('admin.users.account_settings')}</h3>
+                  <h3 className="text-xl font-black text-text-primary uppercase tracking-tight">{isAddingUser ? t('admin.pro_ui.new_member') : t('admin.users.member_profile')}</h3>
                   {!isAddingUser && <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mt-1">{t('admin.pro_ui.unique_id')}: #{selectedUser?.id}</p>}
                 </div>
                 {!isAddingUser && <div className="self-start sm:self-center"><StatusBadge status={selectedUser?.isActive || selectedUser?.active ? 'VALIDEE' : 'ANNULEE'} /></div>}
@@ -233,7 +233,7 @@ const handleSelectUser = (user) => {
                     <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-background border border-border rounded-2xl px-4 py-3 text-sm font-bold text-text-primary focus:border-primary-500 outline-none transition-all shadow-sm" required />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[9px] lg:text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2"><UserCheck size={12}/> {t('admin.users.fullname')}</label>
+                    <label className="text-[9px] lg:text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2"><UserCheck size={12}/> {t('admin.users.full_name')}</label>
                     <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-background border border-border rounded-2xl px-4 py-3 text-sm font-bold text-text-primary focus:border-primary-500 outline-none transition-all shadow-sm" required />
                   </div>
                   <div className="space-y-2">
@@ -258,7 +258,7 @@ const handleSelectUser = (user) => {
                 <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
                   {(isAddingUser || isDetailView) && <button type="button" onClick={() => { setIsAddingUser(false); setIsDetailView(false); }} className="w-full sm:w-auto px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-border text-text-secondary hover:bg-background transition-all">{t('common.cancel')}</button>}
                   <button type="submit" disabled={loading} className="w-full sm:w-auto px-8 py-3 bg-primary-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary-500/20 hover:bg-primary-700 transition-all disabled:opacity-50 flex items-center justify-center">
-                    {loading ? <Loader2 size={16} className="animate-spin" /> : (isAddingUser ? t('admin.users.create_btn') : t('admin.users.update_btn'))}
+                    {loading ? <Loader2 size={16} className="animate-spin" /> : (isAddingUser ? t('admin.users.create_account') : t('admin.users.update_account'))}
                   </button>
                 </div>
               </form>
@@ -282,7 +282,7 @@ const handleSelectUser = (user) => {
                     </div>
                     {passwordError && <p className="text-[9px] font-black text-red-500 uppercase tracking-widest flex items-center gap-1"><AlertCircle size={10}/> {passwordError}</p>}
                     <div className="flex justify-end">
-                      <button type="submit" disabled={passwordLoading} className="w-full sm:w-auto px-6 py-3 bg-background border border-border text-text-primary rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-surface transition-all active:scale-95 disabled:opacity-50">{t('admin.users.reset_password_btn')}</button>
+                      <button type="submit" disabled={passwordLoading} className="w-full sm:w-auto px-6 py-3 bg-background border border-border text-text-primary rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-surface transition-all active:scale-95 disabled:opacity-50">{t('admin.users.update_password_btn')}</button>
                     </div>
                   </form>
                 </div>
@@ -298,7 +298,7 @@ const handleSelectUser = (user) => {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                   <button onClick={() => setConfirmModal({ user: selectedUser, action: selectedUser.isActive || selectedUser.active ? 'deactivate' : 'activate' })} className={`flex-1 sm:flex-none px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${selectedUser.isActive || selectedUser.active ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' : 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'}`}>
-                    {selectedUser.isActive || selectedUser.active ? t('admin.users.actions.deactivate') : t('admin.users.actions.activate')}
+                    {selectedUser.isActive || selectedUser.active ? t('admin.users.suspend') : t('admin.users.restore')}
                   </button>
                   {showInactive && (
                     <button onClick={() => setConfirmModal({ action: 'delete', user: selectedUser })} className="flex-1 sm:flex-none px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white dark:bg-background border border-red-200 text-red-600 hover:bg-red-50 transition-all">{t('common.delete')}</button>

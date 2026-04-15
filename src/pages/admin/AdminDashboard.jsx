@@ -181,27 +181,27 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         <KpiCard 
           icon={ShoppingCart} 
-          label="Commandes (Aujourd'hui)" 
+          label={t('admin.dashboard.kpi.orders_today')} 
           value={fmt(todayStats?.totalCommandesToday, i18n.language)} 
           trendValue={calculateTrend(todayStats?.totalCommandesToday, yesterdayData?.totalCommandes)}
           colorClass="bg-blue-500"
         />
         <KpiCard 
           icon={DollarSign} 
-          label="Revenus (Aujourd'hui)" 
+          label={t('admin.dashboard.kpi.revenue_today')} 
           value={<>{fmt(todayStats?.revenuesToday, i18n.language)} <span className="text-[10px] sm:text-xs font-bold text-text-muted">DH</span></>} 
           trendValue={calculateTrend(todayStats?.revenuesToday, yesterdayData?.totalRevenues)}
           colorClass="bg-green-500"
         />
         <KpiCard 
           icon={Clock} 
-          label="En Attente" 
+          label={t('admin.dashboard.kpi.pending')} 
           value={fmt(todayStats?.commandesEnAttente, i18n.language)} 
           colorClass="bg-orange-500"
         />
         <KpiCard 
           icon={RefreshCw} 
-          label="En Traitement" 
+          label={t('admin.dashboard.kpi.processing')} 
           value={fmt(todayStats?.commandesEnTraitement || 0, i18n.language)} 
           colorClass="bg-purple-500"
         />
@@ -212,17 +212,17 @@ export default function AdminDashboard() {
         <div className="md:col-span-2 lg:col-span-2 bg-surface rounded-[2rem] p-5 sm:p-6 md:p-8 shadow-card border border-border/50">
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-8">
             <div className="text-start">
-              <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.pro_ui.revenue_evolution', 'Évolution du Revenu')}</h3>
+              <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.dashboard.revenue_evolution')}</h3>
               <div className="flex items-center gap-4 mt-2">
                 <div>
-                  <p className="text-[9px] font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.period_total', 'Total Période')}</p>
+                  <p className="text-[9px] font-black text-text-muted uppercase tracking-widest">{t('admin.dashboard.period_total')}</p>
                   <p className="text-xl font-black text-primary-600">
                     {fmt(lastNDays?.reduce((acc, curr) => acc + (curr.revenusTotal || 0), 0), i18n.language)} <span className="text-xs">DH</span>
                   </p>
                 </div>
                 <div className="w-px h-8 bg-border/50" />
                 <div>
-                  <p className="text-[9px] font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.daily_average', 'Moyenne / Jour')}</p>
+                  <p className="text-[9px] font-black text-text-muted uppercase tracking-widest">{t('admin.dashboard.daily_average')}</p>
                   <p className="text-sm font-bold text-text-primary">
                     {fmt(Math.round((lastNDays?.reduce((acc, curr) => acc + (curr.revenusTotal || 0), 0) || 0) / (lastNDays?.length || 1)), i18n.language)} DH
                   </p>
@@ -361,7 +361,7 @@ export default function AdminDashboard() {
       <div className="bg-surface rounded-[2rem] shadow-card border border-border/50 overflow-hidden">
         <div className="p-6 md:p-8 border-b border-border/50 flex items-center justify-between">
           <div className="text-start">
-            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.pro_ui.recent_activities')}</h3>
+            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.dashboard.recent_orders')}</h3>
             <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-1">{t('admin.dashboard.activity_flow')}</p>
           </div>
           <button 

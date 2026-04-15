@@ -140,6 +140,8 @@
       },
       "revenue_evolution": "Évolution des Revenus",
       "period_perf": "Performance sur la période sélectionnée",
+      "period_total": "Total Période",
+      "daily_average": "Moyenne / Jour",
       "periods": {
         "7d": "7j",
         "30d": "30j",
@@ -157,12 +159,15 @@
       "activity_flow": "Derniers flux d'activité",
       "see_all": "Tout voir",
       "table": {
+        "order": "Commande",
         "client": "Client / Information",
         "details": "Détails Service",
         "timestamp": "Horodatage",
         "amount": "Montant",
         "status": "Statut"
       },
+      "global": "Global",
+      "total": "Total",
       "syncing": "Synchronisation des données...",
       "carpets": "Tapis"
     },
