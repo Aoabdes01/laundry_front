@@ -18,7 +18,8 @@
     "open_guide": "فتح الدليل",
     "support_admin": "دعم المسؤول",
     "total": "المجموع",
-    "success_msg": "تمت العملية بنجاح"
+    "success_msg": "تمت العملية بنجاح",
+    "details": "التفاصيل"
   },
   "status": {
     "en_attente": "في الانتظار",
@@ -77,6 +78,10 @@
     }
   },
   "admin": {
+    "nav": {
+      "production": "الإنتاج",
+      "sorties": "التسليم"
+    },
     "users": {
       "title": "إدارة المستخدمين",
       "new_member": "عضو جديد",

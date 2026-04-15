@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Truck, 
-  Archive, 
-  RotateCcw, 
-  Navigation2, 
+import {
+  Truck,
+  Archive,
+  RotateCcw,
+  Navigation2,
   LayoutDashboard,
   MapPin,
   Hash,
@@ -13,20 +13,20 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { 
-  fetchLivreurDashboardStats, 
-  fetchReadyOrders, 
-  fetchReadyForDelivery 
+import {
+  fetchLivreurDashboardStats,
+  fetchReadyOrders,
+  fetchReadyForDelivery
 } from '../../store/livreur/livreurThunk';
-import { 
-  selectDashboardStats, 
-  selectReadyOrders, 
+import {
+  selectDashboardStats,
+  selectReadyOrders,
   selectReadyForDelivery,
-  selectLoading 
+  selectLoading
 } from '../../store/livreur/livreurSelectors';
 
 const StatCard = ({ label, count, icon: Icon, colorClass, iconBgClass, iconColorClass, barColorClass, t, onClick }) => (
-  <button 
+  <button
     onClick={onClick}
     className={`w-full bg-surface rounded-[2rem] shadow-card p-5 border border-border/50 transition-all hover:shadow-card-hover active:scale-95 text-start group relative overflow-hidden`}
   >
@@ -95,14 +95,14 @@ const MissionTableRow = ({ mission, onNavigate, t }) => {
       </td>
       <td className="px-8 py-5 text-start">
         <span className={`inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border
-          ${isDelivery 
-            ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20' 
+          ${isDelivery
+            ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20'
             : 'bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-100 dark:border-primary-500/20'}`}>
           {isDelivery ? t('driver.dashboard.missions.badges.delivery') : t('driver.dashboard.missions.badges.collect')}
         </span>
       </td>
       <td className="px-8 py-5 text-end">
-        <button 
+        <button
           onClick={() => onNavigate(mission.id)}
           className="w-10 h-10 rounded-xl bg-background text-text-muted flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-sm active:scale-90"
         >
@@ -119,12 +119,12 @@ const MissionMobileCard = ({ mission, onNavigate, t }) => {
   const initials = getInitials(displayName, t);
 
   return (
-    <div 
+    <div
       onClick={() => onNavigate(mission.id)}
       className="bg-surface rounded-3xl shadow-card p-5 border border-border/50 active:scale-[0.98] transition-all text-start group relative overflow-hidden"
     >
       <div className={`absolute top-0 start-0 w-1.5 h-full ${isDelivery ? 'bg-emerald-500' : 'bg-primary-500'}`} />
-      
+
       <div className="flex justify-between items-start mb-5 ps-2">
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5 mb-1 opacity-60">
@@ -134,8 +134,8 @@ const MissionMobileCard = ({ mission, onNavigate, t }) => {
           <span className="text-lg font-black text-text-primary tracking-tighter">#{mission.numeroCommande}</span>
         </div>
         <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.15em] border
-          ${isDelivery 
-            ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
+          ${isDelivery
+            ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
             : 'bg-primary-50 text-primary-600 border-primary-100'}`}>
           {isDelivery ? t('driver.dashboard.missions.badges.delivery') : t('driver.dashboard.missions.badges.collect')}
         </span>
@@ -156,11 +156,11 @@ const MissionMobileCard = ({ mission, onNavigate, t }) => {
 
       <div className="flex items-center justify-between ps-2">
         <div className="flex items-center gap-2">
-           <Phone size={12} className="text-primary-500" />
-           <span className="text-[10px] font-black text-text-primary">{getClientPhone(mission.client)}</span>
+          <Phone size={12} className="text-primary-500" />
+          <span className="text-[10px] font-black text-text-primary">{getClientPhone(mission.client)}</span>
         </div>
         <div className="flex items-center gap-1 text-[10px] font-black text-primary-600 uppercase tracking-widest">
-           {t('common.details')} <ChevronRight size={14} strokeWidth={3} />
+          {t('common.details')} <ChevronRight size={14} strokeWidth={3} />
         </div>
       </div>
     </div>
@@ -178,26 +178,26 @@ const NextMissionSpotlight = ({ mission, onNavigate, t }) => {
       <div className="absolute -top-10 -right-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
         <Truck size={200} strokeWidth={1} />
       </div>
-      
+
       <div className="relative z-10">
         <div className="flex items-center gap-2 mb-6">
           <span className="bg-white/20 backdrop-blur-md text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-white/10 shadow-sm">
             {t('driver.dashboard.missions.next_mission')}
           </span>
           <div className="flex gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-white animate-bounce" style={{animationDelay: '0ms'}}></span>
-            <span className="w-1.5 h-1.5 rounded-full bg-white animate-bounce" style={{animationDelay: '150ms'}}></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-bounce" style={{ animationDelay: '0ms' }}></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-bounce" style={{ animationDelay: '150ms' }}></span>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-5 sm:gap-6 mb-8">
           <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.5rem] bg-white text-primary-600 font-black text-xl sm:text-2xl flex items-center justify-center shadow-xl border-4 border-white/20 shrink-0 uppercase">
             {initials}
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">
-               <Hash size={14} className="opacity-60" />
-               <span className="text-[10px] font-black uppercase tracking-widest opacity-80">{t('workshop.detail.labels.order')} #{mission.numeroCommande}</span>
+              <Hash size={14} className="opacity-60" />
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-80">{t('workshop.detail.labels.order')} #{mission.numeroCommande}</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-black tracking-tight truncate leading-tight">{displayName}</h3>
             <p className="text-primary-100 text-xs sm:text-sm font-bold flex items-center gap-2 mt-1 opacity-90 truncate uppercase tracking-tight">
@@ -206,7 +206,7 @@ const NextMissionSpotlight = ({ mission, onNavigate, t }) => {
           </div>
         </div>
 
-        <button 
+        <button
           onClick={() => onNavigate(mission.id)}
           className="w-full bg-white text-primary-600 font-black py-4 sm:py-5 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.97] hover:bg-primary-50 shadow-xl text-[11px] uppercase tracking-[0.15em] group/btn"
         >
@@ -222,7 +222,7 @@ export default function LivreurDashboard() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const stats = useSelector(selectDashboardStats);
   const readyOrders = useSelector(selectReadyOrders);
   const readyForDelivery = useSelector(selectReadyForDelivery);
@@ -251,10 +251,10 @@ export default function LivreurDashboard() {
 
   return (
     <div className="animate-fade-in space-y-8 pb-16 max-w-7xl mx-auto px-4 md:px-0">
-      
+
       {/* KPI GRID - Optimized for Mobile */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
-        <StatCard 
+        <StatCard
           label={t('driver.dashboard.stats.ready_delivery')}
           count={stats.commandesPretesCount}
           icon={Truck}
@@ -265,7 +265,7 @@ export default function LivreurDashboard() {
           t={t}
           onClick={() => { setActiveTab('deliveries'); }}
         />
-        <StatCard 
+        <StatCard
           label={t('driver.dashboard.stats.collect_workshop')}
           count={stats.commandesARecupererCount}
           icon={Archive}
@@ -277,7 +277,7 @@ export default function LivreurDashboard() {
           onClick={() => setActiveTab('collections')}
         />
         <div className="col-span-2 md:col-span-1">
-          <StatCard 
+          <StatCard
             label={t('driver.dashboard.stats.canceled')}
             count={stats.commandesAnnuleesCount}
             icon={RotateCcw}
@@ -303,15 +303,15 @@ export default function LivreurDashboard() {
             </h2>
             <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest opacity-60 mt-1">{t('driver.dashboard.missions.subtitle')}</p>
           </div>
-          
+
           <div className="bg-surface border border-border/50 p-1.5 rounded-[1.25rem] flex w-full sm:w-auto shadow-sm">
-            <button 
+            <button
               onClick={() => setActiveTab('deliveries')}
               className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'deliveries' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}
             >
               {t('driver.dashboard.missions.badges.delivery')} ({readyForDelivery.length})
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab('collections')}
               className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'collections' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}
             >
@@ -324,10 +324,10 @@ export default function LivreurDashboard() {
         <div className="md:hidden space-y-4">
           {filteredMissions.length > 0 ? (
             filteredMissions.map(mission => (
-              <MissionMobileCard 
-                key={mission.id} 
-                mission={mission} 
-                onNavigate={handleNavigateToMission} 
+              <MissionMobileCard
+                key={mission.id}
+                mission={mission}
+                onNavigate={handleNavigateToMission}
                 t={t}
               />
             ))
@@ -353,12 +353,12 @@ export default function LivreurDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/30">
-                 {filteredMissions.length > 0 ? (
+                {filteredMissions.length > 0 ? (
                   filteredMissions.map(mission => (
-                    <MissionTableRow 
-                      key={mission.id} 
-                      mission={mission} 
-                      onNavigate={handleNavigateToMission} 
+                    <MissionTableRow
+                      key={mission.id}
+                      mission={mission}
+                      onNavigate={handleNavigateToMission}
                       t={t}
                     />
                   ))

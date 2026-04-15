@@ -18,7 +18,8 @@
     "open_guide": "Ouvrir le guide",
     "support_admin": "Support Admin",
     "total": "Total",
-    "success_msg": "Opération effectuée avec succès !"
+    "success_msg": "Opération effectuée avec succès !",
+    "details": "Détails"
   },
   "status": {
     "en_attente": "En Attente",
@@ -77,6 +78,10 @@
     }
   },
   "admin": {
+    "nav": {
+      "production": "Production",
+      "sorties": "Sorties"
+    },
     "users": {
       "title": "Gestion Utilisateurs",
       "new_member": "Nouveau Membre",

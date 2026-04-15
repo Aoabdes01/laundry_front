@@ -71,17 +71,17 @@ export default function AdminCommandeDetail() {
           {t('common.back')}
         </button>
         <div className="flex items-center gap-2">
-           <Hash size={14} className="text-primary-500" />
-           <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.order_details')}</span>
+          <Hash size={14} className="text-primary-500" />
+          <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.order_details')}</span>
         </div>
       </div>
 
       {/* Main Header Card */}
       <div className="bg-surface rounded-[2rem] shadow-card p-6 md:p-10 border border-border/40 overflow-hidden relative group">
         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700 pointer-events-none">
-           <Package size={120} className="text-primary-500" />
+          <Package size={120} className="text-primary-500" />
         </div>
-        
+
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10 relative z-10">
           <div>
             <div className="flex items-center gap-3 mb-3">
@@ -143,7 +143,7 @@ export default function AdminCommandeDetail() {
         <div className="grid grid-cols-1 gap-4">
           {tapis.map((item, i) => {
             const etatCfg = ETAT_CONFIG[item.etat] || ETAT_CONFIG.en_attente;
-            const baseUrl = import.meta.env.VITE_API_URL;
+            const baseUrl = "http://localhost:8080";
             const getFullUrl = (img) => {
               const url = img?.imageUrl || img?.url || (typeof img === 'string' ? img : null);
               if (!url) return null;
@@ -159,11 +159,11 @@ export default function AdminCommandeDetail() {
                   {/* Left: Photos */}
                   <div className="lg:w-1/2 p-6 bg-background/30 border-b lg:border-b-0 lg:border-e border-border/50">
                     <div className="flex items-center justify-between mb-6">
-                       <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${etatCfg.accentBg} ${etatCfg.accentText} border-current/10`}>{etatCfg.label}</span>
-                       <div className="flex items-center gap-2 text-text-muted">
-                          <ImageIcon size={14} />
-                          <span className="text-[10px] font-black uppercase tracking-widest">{t('admin.pro_ui.carpet_photos')}</span>
-                       </div>
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${etatCfg.accentBg} ${etatCfg.accentText} border-current/10`}>{etatCfg.label}</span>
+                      <div className="flex items-center gap-2 text-text-muted">
+                        <ImageIcon size={14} />
+                        <span className="text-[10px] font-black uppercase tracking-widest">{t('admin.pro_ui.carpet_photos')}</span>
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -172,15 +172,15 @@ export default function AdminCommandeDetail() {
                           <p className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em]">{set.label}</p>
                           {set.imgs.length > 0 ? (
                             <div className="relative h-32 rounded-2xl overflow-hidden border-2 border-surface shadow-sm group cursor-pointer" onClick={() => { setLightboxImages(set.imgs); setLightboxIndex(0); setLightboxOpen(true); }}>
-                               <img src={set.imgs[0]} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={set.label} />
-                               <div className="absolute inset-0 bg-primary-600/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                                  <div className="w-8 h-8 rounded-full bg-white text-primary-600 flex items-center justify-center shadow-lg"><RefreshCw size={16} /></div>
-                               </div>
+                              <img src={set.imgs[0]} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={set.label} />
+                              <div className="absolute inset-0 bg-primary-600/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                <div className="w-8 h-8 rounded-full bg-white text-primary-600 flex items-center justify-center shadow-lg"><RefreshCw size={16} /></div>
+                              </div>
                             </div>
                           ) : (
                             <div className="h-32 rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center bg-background/50 opacity-40">
-                               <ImageIcon size={20} className="text-text-muted mb-2" />
-                               <span className="text-[8px] font-black uppercase">{t('common.empty')}</span>
+                              <ImageIcon size={20} className="text-text-muted mb-2" />
+                              <span className="text-[8px] font-black uppercase">{t('common.empty')}</span>
                             </div>
                           )}
                         </div>
@@ -191,37 +191,37 @@ export default function AdminCommandeDetail() {
                   {/* Right: Technical Specs */}
                   <div className="lg:w-1/2 p-8 space-y-6">
                     <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 rounded-2xl bg-primary-500/10 text-primary-600 flex items-center justify-center border border-primary-500/20"><Calculator size={24}/></div>
-                       <div className="text-start">
-                          <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.pro_ui.category')}</p>
-                          <h4 className="text-lg font-black text-text-primary uppercase tracking-tight">{item.tapis?.nom || `${t('admin.dashboard.carpets')} #${i+1}`}</h4>
-                       </div>
+                      <div className="w-12 h-12 rounded-2xl bg-primary-500/10 text-primary-600 flex items-center justify-center border border-primary-500/20"><Calculator size={24} /></div>
+                      <div className="text-start">
+                        <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.pro_ui.category')}</p>
+                        <h4 className="text-lg font-black text-text-primary uppercase tracking-tight">{item.tapis?.nom || `${t('admin.dashboard.carpets')} #${i + 1}`}</h4>
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-6 bg-background rounded-2xl p-5 border border-border/50">
-                       <div className="text-start">
-                          <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.pro_ui.dimensions')}</p>
-                          <p className="text-sm font-black text-text-primary uppercase tracking-tight">{item.largeur}m × {item.longueur || item.hauteur}m</p>
-                       </div>
-                       <div className="text-start">
-                          <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.pro_ui.total_surface')}</p>
-                          <p className="text-sm font-black text-text-primary uppercase tracking-tight">{(item.largeur * (item.longueur || item.hauteur)).toFixed(2)} m²</p>
-                       </div>
+                      <div className="text-start">
+                        <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.pro_ui.dimensions')}</p>
+                        <p className="text-sm font-black text-text-primary uppercase tracking-tight">{item.largeur}m × {item.longueur || item.hauteur}m</p>
+                      </div>
+                      <div className="text-start">
+                        <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.pro_ui.total_surface')}</p>
+                        <p className="text-sm font-black text-text-primary uppercase tracking-tight">{(item.largeur * (item.longueur || item.hauteur)).toFixed(2)} m²</p>
+                      </div>
                     </div>
 
                     <div className="flex items-center justify-between p-5 bg-primary-500/5 rounded-2xl border border-primary-500/10">
-                       <div className="text-start">
-                          <p className="text-[9px] font-black text-primary-600 uppercase tracking-widest mb-1">{t('admin.pro_ui.service_price')}</p>
-                          <p className="text-xl font-black text-primary-600">{item.prixFinal} <span className="text-[10px] font-bold">DH</span></p>
-                       </div>
-                       {item.prixFinal !== item.prixCalcule && (
-                         <div className="group relative">
-                            <AlertTriangle size={20} className="text-amber-500 animate-pulse" />
-                            <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-surface border border-border rounded-xl shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                               <p className="text-[9px] font-bold text-text-primary text-center">{t('admin.pro_ui.manual_pricing_applied')}</p>
-                            </div>
-                         </div>
-                       )}
+                      <div className="text-start">
+                        <p className="text-[9px] font-black text-primary-600 uppercase tracking-widest mb-1">{t('admin.pro_ui.service_price')}</p>
+                        <p className="text-xl font-black text-primary-600">{item.prixFinal} <span className="text-[10px] font-bold">DH</span></p>
+                      </div>
+                      {item.prixFinal !== item.prixCalcule && (
+                        <div className="group relative">
+                          <AlertTriangle size={20} className="text-amber-500 animate-pulse" />
+                          <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-surface border border-border rounded-xl shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                            <p className="text-[9px] font-bold text-text-primary text-center">{t('admin.pro_ui.manual_pricing_applied')}</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -233,15 +233,15 @@ export default function AdminCommandeDetail() {
 
       {/* Summary Footer Card */}
       <div className="bg-surface rounded-[2rem] border border-border/50 p-8 flex flex-col md:flex-row items-center justify-between gap-8 shadow-card text-center md:text-start">
-         <div className="space-y-2">
-            <h4 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.pro_ui.production_summary')}</h4>
-            <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.2em]">{tapis.length} {t('admin.dashboard.carpets')} • {tapis.reduce((s,t) => s + (t.quantite || 1), 0)} {t('admin.pro_ui.members')} • {tapis.reduce((s,t) => s + (t.largeur * (t.longueur || t.hauteur)), 0).toFixed(2)}m² Total</p>
-         </div>
-         <div className="h-12 w-px bg-border/50 hidden md:block" />
-         <div className="text-center md:text-end">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1 opacity-60">{t('admin.pro_ui.financial_status')}</p>
-            <StatusBadge status={commande.status === 'PAYEE' ? 'PAYEE' : 'VALIDEE'} />
-         </div>
+        <div className="space-y-2">
+          <h4 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.pro_ui.production_summary')}</h4>
+          <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.2em]">{tapis.length} {t('admin.dashboard.carpets')} • {tapis.reduce((s, t) => s + (t.quantite || 1), 0)} {t('admin.pro_ui.members')} • {tapis.reduce((s, t) => s + (t.largeur * (t.longueur || t.hauteur)), 0).toFixed(2)}m² Total</p>
+        </div>
+        <div className="h-12 w-px bg-border/50 hidden md:block" />
+        <div className="text-center md:text-end">
+          <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1 opacity-60">{t('admin.pro_ui.financial_status')}</p>
+          <StatusBadge status={commande.status === 'PAYEE' ? 'PAYEE' : 'VALIDEE'} />
+        </div>
       </div>
 
       {/* Lightbox Modal */}
@@ -249,19 +249,19 @@ export default function AdminCommandeDetail() {
         <div className="fixed inset-0 z-[200] bg-black/95 flex flex-col items-center justify-center p-4 md:p-8 animate-in fade-in duration-500" onClick={e => e.target === e.currentTarget && setLightboxOpen(false)}>
           <button onClick={() => setLightboxOpen(false)} className="absolute top-6 end-6 w-12 h-12 rounded-2xl bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-all"><X size={24} /></button>
           <div className="relative max-w-5xl w-full h-full flex flex-col items-center justify-center">
-             <div className="absolute top-0 inset-x-0 flex justify-between items-center px-4 py-8">
-                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{lightboxIndex + 1} / {lightboxImages.length} IMAGES</span>
-             </div>
-             <div className="relative w-full flex items-center justify-center group">
-                {lightboxIndex > 0 && <button className="absolute start-0 w-14 h-14 rounded-2xl bg-white/5 text-white flex items-center justify-center hover:bg-white/10 transition-all" onClick={() => setLightboxIndex(i => i - 1)}><ChevronLeft size={32} /></button>}
-                <img src={lightboxImages[lightboxIndex]} className="max-w-full max-h-[70vh] object-contain rounded-3xl shadow-2xl ring-4 ring-white/5" alt="zoom" />
-                {lightboxIndex < lightboxImages.length - 1 && <button className="absolute end-0 w-14 h-14 rounded-2xl bg-white/5 text-white flex items-center justify-center hover:bg-white/10 transition-all" onClick={() => setLightboxIndex(i => i + 1)}><ChevronRight size={32} /></button>}
-             </div>
-             <div className="flex gap-3 mt-8 overflow-x-auto no-scrollbar max-w-full px-4">
-                {lightboxImages.map((img, idx) => (
-                  <img key={idx} src={img} className={`w-16 h-16 rounded-xl object-cover cursor-pointer border-2 transition-all ${idx === lightboxIndex ? 'border-primary-500 scale-110 shadow-lg' : 'border-transparent opacity-40 hover:opacity-100'}`} onClick={() => setLightboxIndex(idx)} alt="thumb" />
-                ))}
-             </div>
+            <div className="absolute top-0 inset-x-0 flex justify-between items-center px-4 py-8">
+              <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{lightboxIndex + 1} / {lightboxImages.length} IMAGES</span>
+            </div>
+            <div className="relative w-full flex items-center justify-center group">
+              {lightboxIndex > 0 && <button className="absolute start-0 w-14 h-14 rounded-2xl bg-white/5 text-white flex items-center justify-center hover:bg-white/10 transition-all" onClick={() => setLightboxIndex(i => i - 1)}><ChevronLeft size={32} /></button>}
+              <img src={lightboxImages[lightboxIndex]} className="max-w-full max-h-[70vh] object-contain rounded-3xl shadow-2xl ring-4 ring-white/5" alt="zoom" />
+              {lightboxIndex < lightboxImages.length - 1 && <button className="absolute end-0 w-14 h-14 rounded-2xl bg-white/5 text-white flex items-center justify-center hover:bg-white/10 transition-all" onClick={() => setLightboxIndex(i => i + 1)}><ChevronRight size={32} /></button>}
+            </div>
+            <div className="flex gap-3 mt-8 overflow-x-auto no-scrollbar max-w-full px-4">
+              {lightboxImages.map((img, idx) => (
+                <img key={idx} src={img} className={`w-16 h-16 rounded-xl object-cover cursor-pointer border-2 transition-all ${idx === lightboxIndex ? 'border-primary-500 scale-110 shadow-lg' : 'border-transparent opacity-40 hover:opacity-100'}`} onClick={() => setLightboxIndex(idx)} alt="thumb" />
+              ))}
+            </div>
           </div>
         </div>
       )}

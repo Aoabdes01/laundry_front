@@ -11,14 +11,14 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useTranslation } from 'react-i18next';
-import { 
-  fetchReadyForDelivery, 
-  confirmPayment, 
+import {
+  fetchReadyForDelivery,
+  confirmPayment,
   cancelDelivery,
   fetchPaymentTypes
 } from '../../store/livreur/livreurThunk';
-import { 
-  selectReadyForDelivery, 
+import {
+  selectReadyForDelivery,
   selectLoading,
   selectPaymentTypes
 } from '../../store/livreur/livreurSelectors';
@@ -93,7 +93,7 @@ const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes = [], lo
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
       <div className="relative bg-surface w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2rem] shadow-modal overflow-hidden animate-in slide-in-from-bottom sm:zoom-in-95 duration-300 border-t sm:border border-border/50 text-center">
         <div className="w-12 h-1.5 bg-border/40 rounded-full mx-auto mt-4 mb-2 sm:hidden"></div>
-        
+
         <div className="p-8 md:p-10">
           {/* ICON BOX (MATCHING ConfirmModal) */}
           <div className="w-20 h-20 bg-primary-500/10 rounded-[1.5rem] flex items-center justify-center mx-auto mb-8 shadow-inner border border-primary-100">
@@ -102,19 +102,19 @@ const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes = [], lo
 
           <h3 className="text-2xl font-black text-text-primary uppercase tracking-tight mb-2">{t('driver.ready_delivery.payment_modal.title')}</h3>
           <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-8">{t('driver.pro_ui.finalizing_transaction')}</p>
-          
+
           <div className="bg-primary-500/[0.03] rounded-2xl p-5 mb-8 border border-primary-500/10 flex justify-between items-center text-start">
-             <div>
-                <p className="text-[9px] font-black text-primary-400 uppercase tracking-[0.2em] mb-1">{t('driver.ready_delivery.payment_modal.order_prefix')}</p>
-                <span className="text-lg font-black text-text-primary tracking-tighter">#{order?.numeroCommande}</span>
-             </div>
-             <div className="text-end">
-                <p className="text-[9px] font-black text-primary-400 uppercase tracking-[0.2em] mb-1">{t('driver.pro_ui.total_to_collect')}</p>
-                <div className="flex items-baseline justify-end gap-1">
-                   <span className="text-2xl font-black text-primary-600 tracking-tighter">{order?.montantTotal}</span>
-                   <span className="text-[10px] font-black text-primary-600/60 uppercase">DH</span>
-                </div>
-             </div>
+            <div>
+              <p className="text-[9px] font-black text-primary-400 uppercase tracking-[0.2em] mb-1">{t('driver.ready_delivery.payment_modal.order_prefix')}</p>
+              <span className="text-lg font-black text-text-primary tracking-tighter">#{order?.numeroCommande}</span>
+            </div>
+            <div className="text-end">
+              <p className="text-[9px] font-black text-primary-400 uppercase tracking-[0.2em] mb-1">{t('driver.pro_ui.total_to_collect')}</p>
+              <div className="flex items-baseline justify-end gap-1">
+                <span className="text-2xl font-black text-primary-600 tracking-tighter">{order?.montantTotal}</span>
+                <span className="text-[10px] font-black text-primary-600/60 uppercase">DH</span>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-3 mb-10">
@@ -133,14 +133,14 @@ const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes = [], lo
           </div>
 
           <div className="flex flex-col gap-3">
-            <button 
-              onClick={() => onConfirm(selectedType)} 
-              disabled={!selectedType || loading} 
+            <button
+              onClick={() => onConfirm(selectedType)}
+              disabled={!selectedType || loading}
               className="w-full bg-primary-600 text-white rounded-[1.5rem] py-5 text-[11px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary-500/20 flex items-center justify-center gap-3 hover:bg-primary-700 disabled:opacity-50 transition-all active:scale-95"
             >
               {loading ? <Loader2 className="animate-spin" size={20} /> : <><CheckCircle2 size={18} strokeWidth={3} /> {t('driver.ready_delivery.payment_modal.confirm_btn')}</>}
             </button>
-            <button 
+            <button
               onClick={onClose}
               disabled={loading}
               className="w-full bg-background border border-border/50 text-text-muted rounded-2xl py-5 text-[11px] font-black uppercase tracking-[0.2em] transition-all active:scale-95 hover:bg-surface"
@@ -156,7 +156,7 @@ const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes = [], lo
 
 const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized, isSelected, onSelect, navigate }) => {
   const { t } = useTranslation();
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+  const baseUrl = "http://localhost:8080";
   const allPhotos = useMemo(() => {
     const photos = [];
     const tapisList = order.commandeTapis || [];
@@ -175,24 +175,24 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized, isSe
   };
 
   return (
-    <div 
-      className={`relative bg-surface rounded-[2rem] shadow-card overflow-hidden border transition-all animate-in slide-in-from-bottom duration-300 group cursor-pointer ${isSelected ? 'border-primary-500 ring-1 ring-primary-500/30 shadow-2xl scale-[1.02]' : 'border-border/50 hover:border-primary-200'}`} 
+    <div
+      className={`relative bg-surface rounded-[2rem] shadow-card overflow-hidden border transition-all animate-in slide-in-from-bottom duration-300 group cursor-pointer ${isSelected ? 'border-primary-500 ring-1 ring-primary-500/30 shadow-2xl scale-[1.02]' : 'border-border/50 hover:border-primary-200'}`}
       onClick={() => onSelect(order.id)}
     >
       {isOptimized && order._stopNumber && <div className="absolute top-5 start-5 z-20 w-10 h-10 rounded-xl bg-primary-500 text-white text-base font-black flex items-center justify-center shadow-lg border-2 border-surface shadow-primary-500/30"><span className="tracking-tighter">#{order._stopNumber}</span></div>}
-      
+
       <div className="flex flex-col">
         <div className="p-6 pb-0 flex justify-between items-start gap-4">
           <div className="min-w-0 text-start flex-1 ps-2">
-             <div className="flex items-center gap-2 mb-1 opacity-60">
-                <Hash size={12} className="text-primary-500" />
-                <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{order.numeroCommande}</span>
-             </div>
-             <h3 className="text-xl font-black text-text-primary tracking-tighter truncate leading-tight">{order.client?.nom || order.client?.name || 'Client'}</h3>
+            <div className="flex items-center gap-2 mb-1 opacity-60">
+              <Hash size={12} className="text-primary-500" />
+              <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{order.numeroCommande}</span>
+            </div>
+            <h3 className="text-xl font-black text-text-primary tracking-tighter truncate leading-tight">{order.client?.nom || order.client?.name || 'Client'}</h3>
           </div>
           <div className="flex flex-col items-end gap-2 shrink-0">
-             <span className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-100 dark:border-emerald-500/20 shadow-sm">{t('status.prete')}</span>
-             {order._legDistance && (<div className="flex items-center gap-1.5 text-primary-600 font-black text-xs tracking-tighter bg-primary-50 px-2 py-0.5 rounded-lg border border-primary-100"><Navigation size={12} fill="currentColor" className="rtl:rotate-180" />{order._legDistance} km</div>)}
+            <span className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-100 dark:border-emerald-500/20 shadow-sm">{t('status.prete')}</span>
+            {order._legDistance && (<div className="flex items-center gap-1.5 text-primary-600 font-black text-xs tracking-tighter bg-primary-50 px-2 py-0.5 rounded-lg border border-primary-100"><Navigation size={12} fill="currentColor" className="rtl:rotate-180" />{order._legDistance} km</div>)}
           </div>
         </div>
 
@@ -203,51 +203,51 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized, isSe
           </div>
           <div className="flex-1 min-w-0 text-start flex flex-col justify-center gap-3">
             <div className="flex items-start gap-2.5 text-text-muted">
-               <MapPin size={16} className="text-primary-500 shrink-0 mt-0.5" />
-               <p className="text-xs font-bold leading-relaxed line-clamp-2 uppercase tracking-tight italic">{address || t('driver.ready_delivery.card.no_address')}</p>
+              <MapPin size={16} className="text-primary-500 shrink-0 mt-0.5" />
+              <p className="text-xs font-bold leading-relaxed line-clamp-2 uppercase tracking-tight italic">{address || t('driver.ready_delivery.card.no_address')}</p>
             </div>
             <div className="flex items-center gap-2.5">
-               <div className="w-8 h-8 rounded-lg bg-primary-500/10 text-primary-600 flex items-center justify-center shrink-0">
-                  <Phone size={14} strokeWidth={3} className="rtl:rotate-180" />
-               </div>
-               <a href={`tel:${order.client?.phones?.[0]?.phoneNumber}`} onClick={(e) => e.stopPropagation()} className="text-sm font-black text-text-primary hover:text-primary-500 transition-colors tracking-tight">{order.client?.phones?.[0]?.phoneNumber || '—'}</a>
+              <div className="w-8 h-8 rounded-lg bg-primary-500/10 text-primary-600 flex items-center justify-center shrink-0">
+                <Phone size={14} strokeWidth={3} className="rtl:rotate-180" />
+              </div>
+              <a href={`tel:${order.client?.phones?.[0]?.phoneNumber}`} onClick={(e) => e.stopPropagation()} className="text-sm font-black text-text-primary hover:text-primary-500 transition-colors tracking-tight">{order.client?.phones?.[0]?.phoneNumber || '—'}</a>
             </div>
           </div>
         </div>
 
         <div className="px-6 pb-6 grid grid-cols-2 gap-4">
           <div className="bg-background/40 rounded-2xl p-4 border border-border/40 text-start group-hover:bg-background/60 transition-colors">
-             <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1.5 opacity-60">{t('driver.pro_ui.total_to_collect')}</p>
-             <div className="flex items-baseline gap-1">
-                <span className="text-xl font-black text-text-primary tracking-tighter">{order.montantTotal}</span>
-                <span className="text-[10px] font-black text-text-muted uppercase opacity-40">DH</span>
-             </div>
+            <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1.5 opacity-60">{t('driver.pro_ui.total_to_collect')}</p>
+            <div className="flex items-baseline gap-1">
+              <span className="text-xl font-black text-text-primary tracking-tighter">{order.montantTotal}</span>
+              <span className="text-[10px] font-black text-text-muted uppercase opacity-40">DH</span>
+            </div>
           </div>
           <div className="bg-background/40 rounded-2xl p-4 border border-border/40 text-start group-hover:bg-background/60 transition-colors">
-             <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1.5 opacity-60">{t('driver.pro_ui.time_status')}</p>
-             <div className="flex items-center gap-2 text-emerald-600">
-                <Clock size={14} strokeWidth={3} />
-                <span className="text-xs font-black uppercase tracking-tighter">{t('driver.pro_ui.available_time_status')}</span>
-             </div>
+            <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1.5 opacity-60">{t('driver.pro_ui.time_status')}</p>
+            <div className="flex items-center gap-2 text-emerald-600">
+              <Clock size={14} strokeWidth={3} />
+              <span className="text-xs font-black uppercase tracking-tighter">{t('driver.pro_ui.available_time_status')}</span>
+            </div>
           </div>
         </div>
 
         <div className="px-6 pb-6 flex gap-3">
           <div className="flex-1 flex gap-2">
-             <button onClick={(e) => { e.stopPropagation(); handleItinerary('google'); }} className="flex-1 h-14 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-primary-500/20 active:scale-95 group/btn">
-                <Navigation size={18} fill="currentColor" className="rtl:rotate-180 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                GPS
-             </button>
-             <button onClick={(e) => { e.stopPropagation(); navigate(`/livreur/delivery/${order.id}`); }} className="w-14 h-14 bg-background hover:bg-surface text-text-muted hover:text-primary-500 border border-border/50 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-sm">
-                <Eye size={22} />
-             </button>
+            <button onClick={(e) => { e.stopPropagation(); handleItinerary('google'); }} className="flex-1 h-14 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-primary-500/20 active:scale-95 group/btn">
+              <Navigation size={18} fill="currentColor" className="rtl:rotate-180 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+              GPS
+            </button>
+            <button onClick={(e) => { e.stopPropagation(); navigate(`/livreur/delivery/${order.id}`); }} className="w-14 h-14 bg-background hover:bg-surface text-text-muted hover:text-primary-500 border border-border/50 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-sm">
+              <Eye size={22} />
+            </button>
           </div>
           <button onClick={(e) => { e.stopPropagation(); onPay(order); }} className="flex-1 h-14 bg-surface hover:bg-background text-text-primary border border-border/50 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2.5 transition-all active:scale-95 shadow-sm">
-             <CreditCard size={18} />
-             {t('driver.pro_ui.collect_payment')}
+            <CreditCard size={18} />
+            {t('driver.pro_ui.collect_payment')}
           </button>
           <button onClick={(e) => { e.stopPropagation(); onCancel(order); }} className="w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all border border-red-100 dark:border-red-500/20 active:scale-95 shrink-0 shadow-sm">
-             <X size={24} strokeWidth={3} />
+            <X size={24} strokeWidth={3} />
           </button>
         </div>
       </div>
@@ -271,7 +271,7 @@ export default function ReadyForDelivery() {
   const [travelMode, setTravelMode] = useState('driving-car'); const [livreurPosition, setLivreurPosition] = useState(null); const watchIdRef = useRef(null);
 
   useEffect(() => {
-    if ("geolocation" in navigator) { watchIdRef.current = navigator.geolocation.watchPosition((p) => setLivreurPosition({ lat: p.coords.latitude, lng: p.coords.longitude }), () => {}, { enableHighAccuracy: true }); }
+    if ("geolocation" in navigator) { watchIdRef.current = navigator.geolocation.watchPosition((p) => setLivreurPosition({ lat: p.coords.latitude, lng: p.coords.longitude }), () => { }, { enableHighAccuracy: true }); }
     return () => { if (watchIdRef.current !== null && "geolocation" in navigator) navigator.geolocation.clearWatch(watchIdRef.current); };
   }, []);
 
@@ -333,15 +333,15 @@ export default function ReadyForDelivery() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-32 animate-fade-in px-4 md:px-0 text-start">
       <style>{leafletStyles}</style>
-      
+
       <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mt-2">
         <div>
-           <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">{t('driver.ready_delivery.title')}</h1>
-           <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest opacity-60 mt-1">{t('driver.ready_delivery.subtitle')}</p>
+          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">{t('driver.ready_delivery.title')}</h1>
+          <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest opacity-60 mt-1">{t('driver.ready_delivery.subtitle')}</p>
         </div>
         <div className="bg-primary-500/10 border border-primary-500/20 rounded-2xl px-5 py-2.5 flex items-center gap-3 shadow-sm shrink-0">
-           <ShoppingBag className="text-primary-500" size={20} strokeWidth={2.5} />
-           <p className="text-sm font-black text-primary-600 tracking-wide leading-none">{t('driver.ready_delivery.orders_count', { count: orders.length })}</p>
+          <ShoppingBag className="text-primary-500" size={20} strokeWidth={2.5} />
+          <p className="text-sm font-black text-primary-600 tracking-wide leading-none">{t('driver.ready_delivery.orders_count', { count: orders.length })}</p>
         </div>
       </div>
 
@@ -360,20 +360,20 @@ export default function ReadyForDelivery() {
             {mapMarkers.map((marker, idx) => (<Marker key={idx} position={[marker.lat, marker.lng]} icon={createNumberedIcon(marker.stopNumber, selectedOrderId === marker.orderId)}><Popup>{t('driver.pro_ui.stop_number')} #{marker.stopNumber}</Popup></Marker>))}
           </MapContainer>
         </div>
-        
+
         <button onClick={() => setForceFit(prev => prev + 1)} className="absolute top-6 right-6 z-[10] w-12 h-12 bg-surface/90 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl flex items-center justify-center text-text-primary hover:text-primary-500 transition-all active:scale-90 shadow-primary-500/10" title={t('driver.pro_ui.recenter_map')}><Target size={24} strokeWidth={2.5} /></button>
-        
+
         <div className="absolute bottom-6 left-6 right-6 z-[10] bg-surface/90 backdrop-blur-xl border border-border/50 p-5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex items-center justify-between gap-6 animate-in slide-in-from-bottom duration-700">
           <div className="min-w-0">
-             <div className="flex items-center gap-2.5 mb-1.5 text-start">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
-                <h4 className="font-black text-[10px] text-text-primary uppercase tracking-[0.2em]">{t('driver.ready_delivery.actions.launch')}</h4>
-             </div>
-             <p className="text-text-muted text-xs font-black uppercase tracking-tighter truncate text-start">{optimized ? `${totalDistance} ${t('driver.pro_ui.km_approx')} ${totalDuration} ${t('driver.pro_ui.minutes')}` : t('driver.ready_delivery.subtitle')}</p>
+            <div className="flex items-center gap-2.5 mb-1.5 text-start">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+              <h4 className="font-black text-[10px] text-text-primary uppercase tracking-[0.2em]">{t('driver.ready_delivery.actions.launch')}</h4>
+            </div>
+            <p className="text-text-muted text-xs font-black uppercase tracking-tighter truncate text-start">{optimized ? `${totalDistance} ${t('driver.pro_ui.km_approx')} ${totalDuration} ${t('driver.pro_ui.minutes')}` : t('driver.ready_delivery.subtitle')}</p>
           </div>
           <div className="flex gap-3">
-             <button onClick={() => optimizeRoute(travelMode)} className="w-12 h-12 flex items-center justify-center bg-background border border-border/50 rounded-2xl text-text-muted hover:text-primary-500 transition-all shadow-sm"><RotateCcw size={20} className={isOptimizing ? 'animate-spin' : ''} strokeWidth={2.5} /></button>
-             <button onClick={() => { const list = optimized ? optimizedOrders.filter(o => o.client?.addresses?.[0]?.latitude) : orders.filter(o => o.client?.addresses?.[0]?.latitude); if (!list.length) return; const url = `https://www.google.com/maps/dir/${livreurPosition ? livreurPosition.lat+','+livreurPosition.lng : ''}/${list.map(o => o.client.addresses[0].latitude+','+o.client.addresses[0].longitude).join('/')}`; window.open(url, '_blank'); }} className="bg-primary-600 hover:bg-primary-700 text-white rounded-2xl px-6 h-12 text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-primary-500/20 flex items-center gap-3 active:scale-95"><ExternalLink size={18} strokeWidth={2.5} /> {t('common.google', 'Google')}</button>
+            <button onClick={() => optimizeRoute(travelMode)} className="w-12 h-12 flex items-center justify-center bg-background border border-border/50 rounded-2xl text-text-muted hover:text-primary-500 transition-all shadow-sm"><RotateCcw size={20} className={isOptimizing ? 'animate-spin' : ''} strokeWidth={2.5} /></button>
+            <button onClick={() => { const list = optimized ? optimizedOrders.filter(o => o.client?.addresses?.[0]?.latitude) : orders.filter(o => o.client?.addresses?.[0]?.latitude); if (!list.length) return; const url = `https://www.google.com/maps/dir/${livreurPosition ? livreurPosition.lat + ',' + livreurPosition.lng : ''}/${list.map(o => o.client.addresses[0].latitude + ',' + o.client.addresses[0].longitude).join('/')}`; window.open(url, '_blank'); }} className="bg-primary-600 hover:bg-primary-700 text-white rounded-2xl px-6 h-12 text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-primary-500/20 flex items-center gap-3 active:scale-95"><ExternalLink size={18} strokeWidth={2.5} /> {t('common.google', 'Google')}</button>
           </div>
         </div>
       </div>
@@ -383,7 +383,7 @@ export default function ReadyForDelivery() {
       </div>
 
       <PaymentModal isOpen={paymentModal.isOpen} order={paymentModal.order} paymentTypes={paymentTypes} loading={loading.payment} onClose={() => setPaymentModal({ isOpen: false, order: null })} onConfirm={handleConfirmPayment} />
-      
+
       <ConfirmModal
         isOpen={cancelModalOpen}
         onClose={() => setCancelModalOpen(false)}
@@ -403,9 +403,9 @@ export default function ReadyForDelivery() {
             <button className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-md hover:bg-red-500 flex items-center justify-center transition-all active:scale-90 border border-white/10 shadow-lg" onClick={() => setLightboxOpen(false)}><X size={24} strokeWidth={3} className="text-white" /></button>
           </div>
           <div className="relative flex items-center justify-center w-full h-full p-4 md:p-12">
-            {lightboxIndex > 0 && (<button className="absolute left-4 md:left-8 w-14 h-14 rounded-2xl bg-white/5 hover:bg-white/10 backdrop-blur-md flex items-center justify-center transition-all z-[210] border border-white/5 shadow-2xl" onClick={() => setLightboxIndex(i => i - 1)}><ChevronLeft className="w-10 h-10 text-white" strokeWidth={3}/></button>)}
+            {lightboxIndex > 0 && (<button className="absolute left-4 md:left-8 w-14 h-14 rounded-2xl bg-white/5 hover:bg-white/10 backdrop-blur-md flex items-center justify-center transition-all z-[210] border border-white/5 shadow-2xl" onClick={() => setLightboxIndex(i => i - 1)}><ChevronLeft className="w-10 h-10 text-white" strokeWidth={3} /></button>)}
             <div className="max-w-full max-h-full flex items-center justify-center"><img src={lightboxImages[lightboxIndex]} className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl animate-in zoom-in-95 duration-500" alt="zoom" /></div>
-            {lightboxIndex < lightboxImages.length - 1 && (<button className="absolute right-4 md:right-8 w-14 h-14 rounded-2xl bg-white/5 hover:bg-white/10 backdrop-blur-md flex items-center justify-center transition-all z-[210] border border-white/5 shadow-2xl" onClick={() => setLightboxIndex(i => i + 1)}><ChevronRight className="w-10 h-10 text-white" strokeWidth={3}/></button>)}
+            {lightboxIndex < lightboxImages.length - 1 && (<button className="absolute right-4 md:right-8 w-14 h-14 rounded-2xl bg-white/5 hover:bg-white/10 backdrop-blur-md flex items-center justify-center transition-all z-[210] border border-white/5 shadow-2xl" onClick={() => setLightboxIndex(i => i + 1)}><ChevronRight className="w-10 h-10 text-white" strokeWidth={3} /></button>)}
           </div>
         </div>
       )}
