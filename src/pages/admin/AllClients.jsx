@@ -80,19 +80,19 @@ export default function AllClients() {
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-text-primary uppercase tracking-tight">Portefeuille Clients</h1>
-          <p className="text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">Suivi et fidélisation de votre clientèle</p>
+          <h1 className="text-2xl font-black text-text-primary uppercase tracking-tight">{t('admin.pro_ui.client_portfolio')}</h1>
+          <p className="text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">{t('admin.clients.subtitle')}</p>
         </div>
         <button onClick={loadData} className="flex items-center justify-center gap-2 px-5 py-2.5 bg-surface border border-border/50 text-text-primary rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-background transition-all shadow-sm">
-          <RefreshCw size={16} className={loading ? 'animate-spin' : ''} /> Actualiser
+          <RefreshCw size={16} className={loading ? 'animate-spin' : ''} /> {t('admin.pro_ui.refresh')}
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         {[
-          { label: 'Total Clients', value: statistics?.totalClients || clients?.length || 0, icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-          { label: 'Commandes (Mois)', value: statistics?.commandesCeMois || 0, icon: ShoppingCart, color: 'text-green-500', bg: 'bg-green-500/10' },
-          { label: 'Nouveaux (Mois)', value: `+${statistics?.nouveauxCeMois || 0}`, icon: TrendingUp, color: 'text-orange-500', bg: 'bg-orange-500/10', sub: `${Math.round(statistics?.pourcentageNouveaux || 0)}% croissance` },
+          { label: t('admin.clients.stats.total'), value: statistics?.totalClients || clients?.length || 0, icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+          { label: t('admin.clients.stats.orders_month'), value: statistics?.commandesCeMois || 0, icon: ShoppingCart, color: 'text-green-500', bg: 'bg-green-500/10' },
+          { label: t('admin.clients.stats.new_month'), value: `+${statistics?.nouveauxCeMois || 0}`, icon: TrendingUp, color: 'text-orange-500', bg: 'bg-orange-500/10', sub: `${Math.round(statistics?.pourcentageNouveaux || 0)}% ${t('admin.pro_ui.growth')}` },
         ].map((stat, i) => (
           <div key={i} className="bg-surface p-5 rounded-[2rem] border border-border/50 shadow-sm flex items-center gap-5 transition-all hover:shadow-md">
             <div className={`w-12 h-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center shrink-0`}>
@@ -109,7 +109,7 @@ export default function AllClients() {
 
       <div className="relative group">
         <Search size={20} className="absolute start-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary-500 transition-colors" />
-        <input type="text" placeholder="Rechercher un client (Nom, téléphone...)" value={search} onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }} className="w-full bg-surface border border-border/50 rounded-2xl ps-12 pe-4 py-4 text-sm font-bold text-text-primary outline-none focus:ring-4 focus:ring-primary-500/5 focus:border-primary-500 transition-all shadow-sm" />
+        <input type="text" placeholder={t('admin.clients.search_placeholder')} value={search} onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }} className="w-full bg-surface border border-border/50 rounded-2xl ps-12 pe-4 py-4 text-sm font-bold text-text-primary outline-none focus:ring-4 focus:ring-primary-500/5 focus:border-primary-500 transition-all shadow-sm" />
       </div>
 
       <div className="bg-surface rounded-[2rem] border border-border/50 shadow-card overflow-hidden">
@@ -117,16 +117,16 @@ export default function AllClients() {
           <table className="w-full text-start">
             <thead>
               <tr className="bg-background/50 border-b border-border/50">
-                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Client</th>
-                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Contact</th>
-                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Dernière Commande</th>
-                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">Volume</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.clients.table.client')}</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.clients.table.contact')}</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.clients.table.last_order')}</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">{t('admin.clients.table.orders')}</th>
                 <th className="px-8 py-4"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/40">
               {loading && paginatedClients.length === 0 ? (
-                <tr><td colSpan="5" className="py-20 text-center"><Loader2 size={32} className="animate-spin text-primary-500 mx-auto mb-4" /><p className="text-[10px] font-black uppercase tracking-widest opacity-40">Chargement des clients...</p></td></tr>
+                <tr><td colSpan="5" className="py-20 text-center"><Loader2 size={32} className="animate-spin text-primary-500 mx-auto mb-4" /><p className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('admin.clients.loading_db')}</p></td></tr>
               ) : paginatedClients.length > 0 ? (
                 paginatedClients.map((client, i) => (
                   <tr key={client.id} className="group hover:bg-background/40 transition-all">
@@ -135,7 +135,7 @@ export default function AllClients() {
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs shadow-sm ${colorArray[i % colorArray.length]}`}>{ (client.name || client.nom || 'C')[0] }</div>
                         <div className="text-start">
                           <p className="text-sm font-black text-text-primary tracking-tight">{client.name || client.nom}</p>
-                          <p className="text-[9px] text-text-muted font-bold uppercase tracking-widest mt-0.5">Membre depuis {new Date(client.createdAt).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short' })}</p>
+                          <p className="text-[9px] text-text-muted font-bold uppercase tracking-widest mt-0.5">{t('admin.pro_ui.member_since')} {new Date(client.createdAt).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short' })}</p>
                         </div>
                       </div>
                     </td>
@@ -157,7 +157,7 @@ export default function AllClients() {
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan="5" className="py-20 text-center opacity-40"><Users size={48} className="mx-auto mb-4" /><p className="text-sm font-black uppercase tracking-widest">Aucun client trouvé</p></td></tr>
+                <tr><td colSpan="5" className="py-20 text-center opacity-40"><Users size={48} className="mx-auto mb-4" /><p className="text-sm font-black uppercase tracking-widest">{t('admin.clients.no_clients')}</p></td></tr>
               )}
             </tbody>
           </table>
@@ -172,7 +172,7 @@ export default function AllClients() {
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-lg ${colorArray[i % colorArray.length]}`}>{ (client.name || client.nom || 'C')[0] }</div>
                   <div className="text-start">
                     <p className="text-base font-black text-text-primary tracking-tight">{client.name || client.nom}</p>
-                    <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">Dernier passage: {formatRelativeDate(client.lastOrderDate)}</p>
+                    <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">{t('admin.pro_ui.last_visit')}: {formatRelativeDate(client.lastOrderDate)}</p>
                   </div>
                 </div>
                 <div className="bg-primary-500/10 text-primary-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-primary-500/20">{client.totalCommandes || 0} CMD</div>
@@ -188,10 +188,10 @@ export default function AllClients() {
         {/* PAGINATION */}
         {totalPages > 1 && (
           <div className="p-6 bg-background/30 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">{currentPage} sur {totalPages} pages • {clients?.length} clients</p>
+            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">{currentPage} {t('admin.pro_ui.page_of')} {totalPages} {t('admin.pro_ui.pages')} • {clients?.length} {t('admin.nav.clients').toLowerCase()}</p>
             <div className="flex gap-2">
-              <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="px-4 py-2 rounded-xl bg-surface border border-border/50 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 active:scale-95 transition-all">Précédent</button>
-              <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="px-4 py-2 rounded-xl bg-surface border border-border/50 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 active:scale-95 transition-all">Suivant</button>
+              <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="px-4 py-2 rounded-xl bg-surface border border-border/50 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 active:scale-95 transition-all">{t('admin.clients.pagination.prev')}</button>
+              <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="px-4 py-2 rounded-xl bg-surface border border-border/50 text-[10px] font-black uppercase tracking-widest disabled:opacity-30 active:scale-95 transition-all">{t('admin.clients.pagination.next')}</button>
             </div>
           </div>
         )}

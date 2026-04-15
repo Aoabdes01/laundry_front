@@ -72,7 +72,7 @@ export default function ClientCommandes() {
         </button>
         <div className="flex items-center gap-2">
            <Hash size={14} className="text-primary-500" />
-           <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">Historique Client</span>
+           <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.order_log')}</span>
         </div>
       </div>
 
@@ -131,7 +131,7 @@ export default function ClientCommandes() {
         <div className="flex items-center justify-between px-4">
           <h3 className="text-sm font-black text-text-primary uppercase tracking-[0.2em] flex items-center gap-3">
             <Package size={18} className="text-primary-500" />
-            Journal des Commandes
+            {t('admin.pro_ui.order_log')}
           </h3>
         </div>
 
@@ -171,11 +171,11 @@ export default function ClientCommandes() {
                   <div className="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 border-border/40 pt-4 md:pt-0">
                     <div className="flex items-center gap-8">
                       <div className="text-center md:text-end">
-                        <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-0.5">Articles</p>
-                        <p className="text-xs font-black text-text-primary">{c.commandeTapis?.length || 0} Unités</p>
+                        <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.orders.kpi.articles')}</p>
+                        <p className="text-xs font-black text-text-primary">{c.commandeTapis?.length || 0} {t('admin.orders.kpi.articles')}</p>
                       </div>
                       <div className="text-center md:text-end">
-                        <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-0.5">Facturation</p>
+                        <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.orders.table.billing')}</p>
                         <p className="text-sm font-black text-primary-600 tracking-tight">{c.montantTotal?.toLocaleString()} DH</p>
                       </div>
                     </div>
@@ -194,12 +194,12 @@ export default function ClientCommandes() {
       {clientCommandes.length > 0 && (
         <div className="bg-surface rounded-[2rem] border border-border/50 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm text-center md:text-start opacity-80">
            <div className="space-y-1">
-              <h4 className="text-sm font-black text-text-primary uppercase tracking-widest">Synthèse Commerciale</h4>
-              <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.2em]">Volume Total: {clientCommandes.reduce((acc, c) => acc + (c.commandeTapis?.length || 0), 0)} Articles Traités</p>
+              <h4 className="text-sm font-black text-text-primary uppercase tracking-widest">{t('admin.pro_ui.commercial_synthesis')}</h4>
+              <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.2em]">Volume Total: {clientCommandes.reduce((acc, c) => acc + (c.commandeTapis?.length || 0), 0)} {t('admin.orders.kpi.articles')}</p>
            </div>
            <div className="flex items-center gap-3 text-emerald-600">
               <TrendingUp size={18} />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Client Actif & Fidèle</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t('admin.pro_ui.active_loyal')}</span>
            </div>
         </div>
       )}

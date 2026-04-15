@@ -197,7 +197,7 @@ export default function CanceledDeliveries() {
     return orders.filter(order =>
       order.client?.nom?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.client?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.numeroCommande.toString().includes(searchQuery)
+      order.numeroCommande?.toString().includes(searchQuery)
     ).sort((a, b) => (b.id || 0) - (a.id || 0));
   }, [orders, searchQuery]);
 
@@ -284,8 +284,8 @@ export default function CanceledDeliveries() {
             <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mb-5 shadow-inner border border-border/50">
               <XCircle size={32} className="text-text-muted opacity-25" />
             </div>
-            <h3 className="text-lg font-bold text-text-primary tracking-tight">{t('driver.canceled_deliveries.empty_title')}</h3>
-            <p className="text-sm font-medium text-text-muted mt-2 text-center px-8">{t('driver.canceled_deliveries.empty_desc')}</p>
+            <h3 className="text-lg font-bold text-text-primary tracking-tight">{t('driver.canceled_deliveries.empty.title')}</h3>
+            <p className="text-sm font-medium text-text-muted mt-2 text-center px-8">{t('driver.canceled_deliveries.empty.desc')}</p>
           </div>
         )}
       </div>

@@ -10,6 +10,7 @@ export const selectSeenNotificationIds = (state) => state.livreur.seenNotificati
 export const selectCurrentOrder = (state) => state.livreur.currentOrder
 export const selectDashboardStats = (state) => state.livreur.dashboardStats
 export const selectPaymentTypes = (state) => state.livreur.paymentTypes
+export const selectCarpetTypes = (state) => state.livreur.carpetTypes
 export const selectCanceledDeliveries = (state) => state.livreur.canceledDeliveries
 
 // Loading selectors

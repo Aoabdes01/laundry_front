@@ -23,6 +23,7 @@ import DeliveryDetails from './pages/livreur/DeliveryDetails'
 import EmployeDashboard from './pages/employe/EmployeDashboard'
 import CommandeDetail from './pages/employe/CommandeDetail'
 import ReturnedOrders from './pages/employe/ReturnedOrders'
+import NotificationsPage from './pages/admin/NotificationsPage'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import SuspendedAccount from './pages/errors/SuspendedAccount'
@@ -45,6 +46,7 @@ function App() {
 
               <Route element={<Layout />}>
                 <Route path="/" element={<Login />} />
+                <Route path="/notifications" element={<NotificationsPage />} />
 
                 <Route element={<RequireAuth allowedRoles={["admin"]} />}>
                   <Route path='/admin/dashboard' element={<AdminDashboard />} />

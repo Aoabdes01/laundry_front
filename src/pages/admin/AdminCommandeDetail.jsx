@@ -72,7 +72,7 @@ export default function AdminCommandeDetail() {
         </button>
         <div className="flex items-center gap-2">
            <Hash size={14} className="text-primary-500" />
-           <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">Détails de Commande</span>
+           <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.order_details')}</span>
         </div>
       </div>
 
@@ -86,13 +86,13 @@ export default function AdminCommandeDetail() {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <StatusBadge status={commande.status} />
-              <span className="text-[10px] font-black text-text-muted uppercase tracking-widest opacity-60">Créée le {formatDate(commande.dateCreation)}</span>
+              <span className="text-[10px] font-black text-text-muted uppercase tracking-widest opacity-60">{t('admin.pro_ui.created_at')} {formatDate(commande.dateCreation)}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-text-primary tracking-tight truncate">#{commande.numeroCommande}</h1>
           </div>
           {commande.montantTotal != null && (
             <div className="bg-primary-600 rounded-3xl p-5 sm:p-6 text-white shadow-xl shadow-primary-500/20 text-center min-w-[160px] md:min-w-[180px]">
-              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] opacity-70 mb-1">Montant Total</p>
+              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] opacity-70 mb-1">{t('admin.orders.kpi.value')}</p>
               <div className="flex items-baseline justify-center gap-1">
                 <span className="text-2xl sm:text-3xl font-black tracking-tight">{commande.montantTotal}</span>
                 <span className="text-[10px] sm:text-xs font-bold uppercase opacity-60">DH</span>
@@ -104,12 +104,12 @@ export default function AdminCommandeDetail() {
         {/* Info Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 relative z-10">
           {[
-            { icon: User, label: "Livreur", value: commande.livreur?.name, color: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' },
-            { icon: User, label: "Client", value: getClientDisplayName(commande), color: 'bg-teal-500/10 text-teal-600 dark:text-teal-400' },
-            { icon: Phone, label: "Téléphone", value: clientPhone, color: 'bg-orange-500/10 text-orange-600 dark:text-orange-400', isLink: clientPhone !== '—', href: `tel:${clientPhone}` },
-            { icon: CalendarDays, label: "Livraison Prévue", value: commande.dateLivraison ? formatDate(commande.dateLivraison) : 'Non planifiée', color: 'bg-gray-500/10 text-text-muted' },
-            { icon: CreditCard, label: "Paiement", value: commande.modePaiement || 'Non défini', color: 'bg-rose-500/10 text-rose-600 dark:text-rose-400' },
-            { icon: MapPin, label: "Adresse", value: commande.client?.address || (Array.isArray(commande.client?.addresses) && commande.client.addresses[0]?.fullAddress), color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400', fullWidth: true },
+            { icon: User, label: t('admin.orders.details.labels.driver'), value: commande.livreur?.name, color: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' },
+            { icon: User, label: t('admin.orders.details.labels.client'), value: getClientDisplayName(commande), color: 'bg-teal-500/10 text-teal-600 dark:text-teal-400' },
+            { icon: Phone, label: t('admin.orders.details.labels.phone'), value: clientPhone, color: 'bg-orange-500/10 text-orange-600 dark:text-orange-400', isLink: clientPhone !== '—', href: `tel:${clientPhone}` },
+            { icon: CalendarDays, label: t('admin.orders.details.labels.expected_delivery'), value: commande.dateLivraison ? formatDate(commande.dateLivraison) : t('admin.orders.details.labels.not_planned'), color: 'bg-gray-500/10 text-text-muted' },
+            { icon: CreditCard, label: t('admin.orders.details.labels.payment'), value: commande.modePaiement || t('admin.orders.details.labels.not_defined'), color: 'bg-rose-500/10 text-rose-600 dark:text-rose-400' },
+            { icon: MapPin, label: t('admin.pro_ui.address'), value: commande.client?.address || (Array.isArray(commande.client?.addresses) && commande.client.addresses[0]?.fullAddress), color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400', fullWidth: true },
           ].filter(r => r.value).map((row, i) => {
             const Icon = row.icon;
             return (
@@ -136,7 +136,7 @@ export default function AdminCommandeDetail() {
         <div className="flex items-center justify-between px-4">
           <h3 className="text-sm font-black text-text-primary uppercase tracking-[0.2em] flex items-center gap-3">
             <Package size={18} className="text-primary-500" />
-            Articles détaillés ({tapis.length})
+            {t('admin.pro_ui.detailed_articles')} ({tapis.length})
           </h3>
         </div>
 
@@ -162,12 +162,12 @@ export default function AdminCommandeDetail() {
                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${etatCfg.accentBg} ${etatCfg.accentText} border-current/10`}>{etatCfg.label}</span>
                        <div className="flex items-center gap-2 text-text-muted">
                           <ImageIcon size={14} />
-                          <span className="text-[10px] font-black uppercase tracking-widest">Photos du Tapis</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest">{t('admin.pro_ui.carpet_photos')}</span>
                        </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                      {[{ label: "AVANT", imgs: avantImages }, { label: "APRÈS", imgs: apresImages }].map((set, idx) => (
+                      {[{ label: t('workshop.detail.sections.before'), imgs: avantImages }, { label: t('workshop.detail.sections.after'), imgs: apresImages }].map((set, idx) => (
                         <div key={idx} className="space-y-3 text-center">
                           <p className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em]">{set.label}</p>
                           {set.imgs.length > 0 ? (
@@ -180,7 +180,7 @@ export default function AdminCommandeDetail() {
                           ) : (
                             <div className="h-32 rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center bg-background/50 opacity-40">
                                <ImageIcon size={20} className="text-text-muted mb-2" />
-                               <span className="text-[8px] font-black uppercase">Vide</span>
+                               <span className="text-[8px] font-black uppercase">{t('common.empty')}</span>
                             </div>
                           )}
                         </div>
@@ -193,32 +193,32 @@ export default function AdminCommandeDetail() {
                     <div className="flex items-center gap-4">
                        <div className="w-12 h-12 rounded-2xl bg-primary-500/10 text-primary-600 flex items-center justify-center border border-primary-500/20"><Calculator size={24}/></div>
                        <div className="text-start">
-                          <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-0.5">Catégorie</p>
-                          <h4 className="text-lg font-black text-text-primary uppercase tracking-tight">{item.tapis?.nom || `Tapis Type #${i+1}`}</h4>
+                          <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.pro_ui.category')}</p>
+                          <h4 className="text-lg font-black text-text-primary uppercase tracking-tight">{item.tapis?.nom || `${t('admin.dashboard.carpets')} #${i+1}`}</h4>
                        </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-6 bg-background rounded-2xl p-5 border border-border/50">
                        <div className="text-start">
-                          <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">Dimensions</p>
+                          <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.pro_ui.dimensions')}</p>
                           <p className="text-sm font-black text-text-primary uppercase tracking-tight">{item.largeur}m × {item.longueur || item.hauteur}m</p>
                        </div>
                        <div className="text-start">
-                          <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">Surface Totale</p>
+                          <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.pro_ui.total_surface')}</p>
                           <p className="text-sm font-black text-text-primary uppercase tracking-tight">{(item.largeur * (item.longueur || item.hauteur)).toFixed(2)} m²</p>
                        </div>
                     </div>
 
                     <div className="flex items-center justify-between p-5 bg-primary-500/5 rounded-2xl border border-primary-500/10">
                        <div className="text-start">
-                          <p className="text-[9px] font-black text-primary-600 uppercase tracking-widest mb-1">Prix de la prestation</p>
+                          <p className="text-[9px] font-black text-primary-600 uppercase tracking-widest mb-1">{t('admin.pro_ui.service_price')}</p>
                           <p className="text-xl font-black text-primary-600">{item.prixFinal} <span className="text-[10px] font-bold">DH</span></p>
                        </div>
                        {item.prixFinal !== item.prixCalcule && (
                          <div className="group relative">
                             <AlertTriangle size={20} className="text-amber-500 animate-pulse" />
                             <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-surface border border-border rounded-xl shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                               <p className="text-[9px] font-bold text-text-primary text-center">Tarification manuelle appliquée</p>
+                               <p className="text-[9px] font-bold text-text-primary text-center">{t('admin.pro_ui.manual_pricing_applied')}</p>
                             </div>
                          </div>
                        )}
@@ -234,12 +234,12 @@ export default function AdminCommandeDetail() {
       {/* Summary Footer Card */}
       <div className="bg-surface rounded-[2rem] border border-border/50 p-8 flex flex-col md:flex-row items-center justify-between gap-8 shadow-card text-center md:text-start">
          <div className="space-y-2">
-            <h4 className="text-lg font-black text-text-primary uppercase tracking-tight">Récapitulatif de Production</h4>
-            <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.2em]">{tapis.length} Tapis • {tapis.reduce((s,t) => s + (t.quantite || 1), 0)} Unités • {tapis.reduce((s,t) => s + (t.largeur * (t.longueur || t.hauteur)), 0).toFixed(2)}m² Total</p>
+            <h4 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.pro_ui.production_summary')}</h4>
+            <p className="text-[10px] text-text-muted font-bold uppercase tracking-[0.2em]">{tapis.length} {t('admin.dashboard.carpets')} • {tapis.reduce((s,t) => s + (t.quantite || 1), 0)} {t('admin.pro_ui.members')} • {tapis.reduce((s,t) => s + (t.largeur * (t.longueur || t.hauteur)), 0).toFixed(2)}m² Total</p>
          </div>
          <div className="h-12 w-px bg-border/50 hidden md:block" />
          <div className="text-center md:text-end">
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1 opacity-60">Statut Financier</p>
+            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1 opacity-60">{t('admin.pro_ui.financial_status')}</p>
             <StatusBadge status={commande.status === 'PAYEE' ? 'PAYEE' : 'VALIDEE'} />
          </div>
       </div>

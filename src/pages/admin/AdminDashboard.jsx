@@ -161,8 +161,8 @@ export default function AdminDashboard() {
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 text-start">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-text-primary tracking-tight uppercase">Tableau de Bord</h1>
-          <p className="text-[10px] sm:text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">Aperçu des performances de votre blanchisserie</p>
+          <h1 className="text-xl sm:text-2xl font-black text-text-primary tracking-tight uppercase">{t('admin.dashboard.title')}</h1>
+          <p className="text-[10px] sm:text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">{t('admin.dashboard.overview_desc')}</p>
         </div>
         <button 
           onClick={() => {
@@ -173,7 +173,7 @@ export default function AdminDashboard() {
           className="flex items-center justify-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-surface border border-border/50 text-text-primary rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-background transition-all active:scale-95 shadow-sm"
         >
           <RefreshCw size={14} className={`${loading ? 'animate-spin' : ''} sm:w-4 sm:h-4`} />
-          <span className="truncate">Rafraîchir les données</span>
+          <span className="truncate">{t('admin.dashboard.last_data')}</span>
         </button>
       </div>
 
@@ -212,17 +212,17 @@ export default function AdminDashboard() {
         <div className="md:col-span-2 lg:col-span-2 bg-surface rounded-[2rem] p-5 sm:p-6 md:p-8 shadow-card border border-border/50">
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-8">
             <div className="text-start">
-              <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">Évolution du Revenu</h3>
+              <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.pro_ui.revenue_evolution', 'Évolution du Revenu')}</h3>
               <div className="flex items-center gap-4 mt-2">
                 <div>
-                  <p className="text-[9px] font-black text-text-muted uppercase tracking-widest">Total Période</p>
+                  <p className="text-[9px] font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.period_total', 'Total Période')}</p>
                   <p className="text-xl font-black text-primary-600">
                     {fmt(lastNDays?.reduce((acc, curr) => acc + (curr.revenusTotal || 0), 0), i18n.language)} <span className="text-xs">DH</span>
                   </p>
                 </div>
                 <div className="w-px h-8 bg-border/50" />
                 <div>
-                  <p className="text-[9px] font-black text-text-muted uppercase tracking-widest">Moyenne / Jour</p>
+                  <p className="text-[9px] font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.daily_average', 'Moyenne / Jour')}</p>
                   <p className="text-sm font-bold text-text-primary">
                     {fmt(Math.round((lastNDays?.reduce((acc, curr) => acc + (curr.revenusTotal || 0), 0) || 0) / (lastNDays?.length || 1)), i18n.language)} DH
                   </p>
@@ -297,19 +297,19 @@ export default function AdminDashboard() {
         {/* STATUS PIE CHART */}
         <div className="bg-surface rounded-[2rem] p-6 md:p-8 shadow-card border border-border/50">
           <div className="mb-8">
-            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">Répartition des Commandes</h3>
+            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.dashboard.order_status')}</h3>
             <div className="flex bg-background p-1 rounded-2xl border border-border/50 mt-4">
               <button 
                 onClick={() => setStatutPeriod('today')}
                 className={`flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${statutPeriod === 'today' ? 'bg-surface text-primary-600 shadow-sm border border-border/50' : 'text-text-muted'}`}
               >
-                Aujourd'hui
+                {t('admin.dashboard.periods.today')}
               </button>
               <button 
                 onClick={() => setStatutPeriod('all')}
                 className={`flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${statutPeriod === 'all' ? 'bg-surface text-primary-600 shadow-sm border border-border/50' : 'text-text-muted'}`}
               >
-                Global
+                {t('admin.dashboard.global')}
               </button>
             </div>
           </div>
@@ -339,7 +339,7 @@ export default function AdminDashboard() {
               <span className="text-3xl font-black text-text-primary leading-none">
                 {pieData.reduce((acc, curr) => acc + curr.value, 0)}
               </span>
-              <span className="text-[10px] text-text-muted font-black uppercase tracking-widest mt-1">Total</span>
+              <span className="text-[10px] text-text-muted font-black uppercase tracking-widest mt-1">{t('admin.dashboard.total')}</span>
             </div>
           </div>
 
@@ -361,25 +361,25 @@ export default function AdminDashboard() {
       <div className="bg-surface rounded-[2rem] shadow-card border border-border/50 overflow-hidden">
         <div className="p-6 md:p-8 border-b border-border/50 flex items-center justify-between">
           <div className="text-start">
-            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">Activités Récentes</h3>
-            <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-1">Dernières commandes passées sur la plateforme</p>
+            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.pro_ui.recent_activities')}</h3>
+            <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-1">{t('admin.dashboard.activity_flow')}</p>
           </div>
           <button 
             onClick={() => navigate('/admin/commandes')}
             className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-background border border-border/50 text-text-primary rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-surface hover:shadow-sm transition-all"
           >
-            Tout Voir <ChevronRight size={14} className="rtl:rotate-180" />
+            {t('admin.dashboard.see_all')} <ChevronRight size={14} className="rtl:rotate-180" />
           </button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-start">
             <thead>
               <tr className="bg-background/50">
-                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">Commande</th>
-                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">Client</th>
-                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">Date</th>
-                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">Montant</th>
-                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">Statut</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.dashboard.table.order')}</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.dashboard.table.client')}</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.dashboard.table.timestamp')}</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-start">{t('admin.dashboard.table.amount')}</th>
+                <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">{t('admin.dashboard.table.status')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/40">
@@ -422,7 +422,7 @@ export default function AdminDashboard() {
                   <td colSpan="5" className="px-8 py-20 text-center">
                     <div className="flex flex-col items-center opacity-40">
                       <Loader2 size={32} className="animate-spin mb-4" />
-                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">Chargement des activités...</p>
+                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.dashboard.syncing')}</p>
                     </div>
                   </td>
                 </tr>

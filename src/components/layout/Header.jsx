@@ -1,20 +1,51 @@
 import React from 'react';
-import { LogIn, Bell, Search, Package, MoreVertical, LogOut, Languages, Moon, Sun, Clock, CheckCheck, BellOff } from 'lucide-react';
+import { Bell, Search, Package, MoreVertical, LogOut, Languages, Moon, Sun, Clock, CheckCheck, BellOff, DollarSign, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../store/auth/authSelector';
 import { logoutThunk } from '../../store/auth/authThunk';
-import { fetchPreteCount, fetchReadyOrders } from '../../store/livreur/livreurThunk';
-import { selectReadyOrders, selectSeenNotificationIds } from '../../store/livreur/livreurSelectors';
-import { markNotificationsAsSeen } from '../../store/livreur/livreurSlice';
-import { fetchPendingCount, fetchPendingOrders } from '../../store/employe/employeThunk';
-import { selectPendingOrders, selectSeenNotificationIdsEmploye } from '../../store/employe/employeSelectors';
-import { markNotificationsAsSeen as markNotificationsAsSeenEmploye } from '../../store/employe/employeSlice';
 import { toast } from 'react-toastify';
+
+// ─── Notification Imports ───────────────────────────────────────────────────
+import { 
+  fetchNotifications, 
+  markAsReadThunk, 
+  markAllAsReadThunk 
+} from '../../store/notifications/notificationThunks';
+import { 
+  selectNotifications, 
+  selectUnreadCount 
+} from '../../store/notifications/notificationSelectors';
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 const NOTIFICATION_SOUND_URL = 'https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3';
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+const getNotificationStyles = (type) => {
+  switch (type) {
+    case 'NEW_ORDER':       return { icon: Package, color: 'bg-blue-500', text: 'text-blue-600' };
+    case 'ORDER_READY':     return { icon: CheckCheck, color: 'bg-emerald-500', text: 'text-emerald-600' };
+    case 'PAYMENT_RECEIVED': return { icon: DollarSign, color: 'bg-purple-500', text: 'text-purple-600' };
+    case 'ORDER_CANCELLED':  return { icon: BellOff, color: 'bg-red-500', text: 'text-red-600' };
+    default:                return { icon: Bell, color: 'bg-primary-500', text: 'text-primary-600' };
+  }
+};
+
+const formatRelativeTime = (dateStr) => {
+  const now = new Date();
+  const date = new Date(dateStr);
+  const diffInMs = now - date;
+  const diffInMins = Math.floor(diffInMs / (1000 * 60));
+  const diffInHours = Math.floor(diffInMins / 60);
+  const diffInDays = Math.floor(diffInHours / 24);
+
+  if (diffInMins < 1) return 'À l\'instant';
+  if (diffInMins < 60) return `Il y a ${diffInMins} min`;
+  if (diffInHours < 24) return `Il y a ${diffInHours}h`;
+  if (diffInDays === 1) return 'Hier';
+  return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+};
 
 const Header = () => {
   const { t, i18n } = useTranslation();
@@ -23,8 +54,6 @@ const Header = () => {
   const location = useLocation();
   
   const user = useSelector(selectCurrentUser);
-  const isLivreur = user?.role === 'livreur';
-  const isEmploye = user?.role === 'employe';
   const isAdmin = user?.role === 'admin';
 
   // State
@@ -35,11 +64,9 @@ const Header = () => {
   const mobileMenuRef = React.useRef(null);
   const audioRef = React.useRef(new Audio(NOTIFICATION_SOUND_URL));
 
-  // Selectors
-  const readyOrders = useSelector(selectReadyOrders);
-  const seenIdsLivreur = useSelector(selectSeenNotificationIds);
-  const pendingOrders = useSelector(selectPendingOrders);
-  const seenIdsEmploye = useSelector(selectSeenNotificationIdsEmploye);
+  // Notification Selectors
+  const notifications = useSelector(selectNotifications);
+  const unreadCount = useSelector(selectUnreadCount);
 
   // Theme logic
   React.useEffect(() => {
@@ -47,41 +74,24 @@ const Header = () => {
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
-  // Notifications logic
-  const notifications = React.useMemo(() => {
-    const rawList = isLivreur ? readyOrders : (isEmploye || isAdmin ? pendingOrders : []);
-    // Professional sorting: Unread first, then by date
-    return [...rawList].sort((a, b) => {
-      const aSeen = (isLivreur ? seenIdsLivreur : seenIdsEmploye).includes(a.id);
-      const bSeen = (isLivreur ? seenIdsLivreur : seenIdsEmploye).includes(b.id);
-      if (aSeen !== bSeen) return aSeen ? 1 : -1;
-      return new Date(b.createdAt || b.dateCreation) - new Date(a.createdAt || a.dateCreation);
-    });
-  }, [isLivreur, isEmploye, isAdmin, readyOrders, pendingOrders, seenIdsLivreur, seenIdsEmploye]);
+  // Initial Fetch & Polling
+  React.useEffect(() => {
+    if (!user) return;
+    dispatch(fetchNotifications());
+    const interval = setInterval(() => {
+      dispatch(fetchNotifications());
+    }, 10000); // Poll every 10s for Pro feel
+    return () => clearInterval(interval);
+  }, [dispatch, user]);
 
-  const seenIds = isLivreur ? seenIdsLivreur : (isEmploye || isAdmin ? seenIdsEmploye : []);
-  const unreadCount = notifications.filter(order => !seenIds.includes(order.id)).length;
-
-  // Browser Notification Request
+  // Browser Notification Permission
   React.useEffect(() => {
     if ("Notification" in window && Notification.permission === "default") {
       Notification.requestPermission();
     }
   }, []);
 
-  // Poll & Title Pulse
-  React.useEffect(() => {
-    if (!user?.role) return;
-    const poll = () => {
-      if (isLivreur) { dispatch(fetchPreteCount()); dispatch(fetchReadyOrders()); }
-      else if (isEmploye || isAdmin) { dispatch(fetchPendingOrders()); }
-    };
-    poll();
-    const interval = setInterval(poll, 30000);
-    return () => clearInterval(interval);
-  }, [dispatch, user, isLivreur, isEmploye, isAdmin]);
-
-  // Tab Title Pulse Logic
+  // Tab Title Pulse
   React.useEffect(() => {
     const originalTitle = document.title;
     let pulseInterval;
@@ -95,41 +105,65 @@ const Header = () => {
     return () => { clearInterval(pulseInterval); document.title = originalTitle; };
   }, [unreadCount]);
 
-  // Toast & Sound Engine
-  const prevIds = React.useRef(new Set());
+  // Alerts Engine (Sound & Browser Popups)
+  const alertedIdsRef = React.useRef(new Set(JSON.parse(sessionStorage.getItem('alerted_notifs') || '[]')));
+  
   React.useEffect(() => {
     if (!notifications.length || !user) return;
     
-    const currentIds = new Set(notifications.map(n => n.id));
-    const newItems = notifications.filter(n => !prevIds.current.has(n.id) && !seenIds.includes(n.id));
+    // Find truly new notifications that we haven't alerted for yet in this session
+    const newItems = notifications.filter(n => !n.read && !alertedIdsRef.current.has(n.id));
 
     if (newItems.length > 0) {
-      // 1. Play Sound
-      audioRef.current.play().catch(() => {});
+      audioRef.current.play().catch(() => {}); // Audible alert
 
-      // 2. Trigger Toasts & Browser Alerts
       newItems.forEach(item => {
-        const title = isLivreur ? "Commande Prête" : "Nouvelle Commande";
-        const body = `Commande #${item.numeroCommande} est disponible.`;
-        
+        // UI Toast
         toast.info(
-          <div onClick={() => navigate(isLivreur ? '/livreur/delivery' : '/admin/dashboard')} className="cursor-pointer">
-            <p className="font-bold text-sm">{title}</p>
-            <p className="text-xs opacity-80">{body}</p>
+          <div onClick={() => { handleNotificationClick(item); setIsNotificationsOpen(false); }} className="cursor-pointer text-start">
+            <p className="font-bold text-sm">{item.title}</p>
+            <p className="text-xs opacity-80">{item.message}</p>
           </div>
         );
 
+        // System Browser Alert
         if ("Notification" in window && Notification.permission === "granted") {
-          new Notification(title, { body, icon: '/logo.png' });
+          new Notification(item.title, { body: item.message, icon: '/logo.png' });
         }
+        
+        // Mark as alerted
+        alertedIdsRef.current.add(item.id);
       });
+      
+      // Persist alerted IDs for this session to prevent re-toasts on refresh
+      sessionStorage.setItem('alerted_notifs', JSON.stringify(Array.from(alertedIdsRef.current)));
     }
-    prevIds.current = currentIds;
-  }, [notifications, user, isLivreur, navigate, seenIds]);
+  }, [notifications, user]);
 
-  const handleMarkAllSeen = () => {
-    if (isLivreur) dispatch(markNotificationsAsSeen());
-    else dispatch(markNotificationsAsSeenEmploye());
+  const toggleNotifications = () => {
+    const nextState = !isNotificationsOpen;
+    setIsNotificationsOpen(nextState);
+    
+    // AUTO-MARK AS READ: When opening the dropdown, clear the unread count
+    if (nextState && unreadCount > 0) {
+      dispatch(markAllAsReadThunk());
+    }
+  };
+
+  const handleNotificationClick = (notif) => {
+    // Smart Routing based on type
+    if (notif.type === 'NEW_ORDER' || notif.type === 'ORDER_READY' || notif.type === 'PAYMENT_RECEIVED' || notif.type === 'ORDER_DELIVERING') {
+      let target = '/admin/commandes';
+      if (user?.role === 'livreur') target = '/livreur/delivery';
+      if (user?.role === 'employe') target = '/employe/dashboard';
+      navigate(target);
+    }
+    setIsNotificationsOpen(false);
+  };
+
+  const handleMarkAllSeen = (e) => {
+    e.stopPropagation();
+    dispatch(markAllAsReadThunk());
   };
 
   const getPageTitle = () => {
@@ -164,11 +198,15 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-1 md:gap-3">
-        {/* NOTIFICATIONS */}
+        {/* NOTIFICATIONS DROPDOWN */}
         <div className="relative" ref={dropdownRef}>
-          <button onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className={`relative w-10 h-10 flex items-center justify-center rounded-xl transition-all ${isNotificationsOpen ? 'bg-primary-50 text-primary-600' : 'text-text-muted hover:bg-background'}`}>
+          <button onClick={toggleNotifications} className={`relative w-10 h-10 flex items-center justify-center rounded-xl transition-all ${isNotificationsOpen ? 'bg-primary-50 text-primary-600' : 'text-text-muted hover:bg-background'}`}>
             <Bell size={20} />
-            {unreadCount > 0 && <span className="absolute top-2 end-2 w-4 h-4 bg-primary-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border-2 border-surface animate-bounce">{unreadCount}</span>}
+            {unreadCount > 0 && (
+              <span className="absolute top-2 end-2 w-4 h-4 bg-primary-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border-2 border-surface animate-bounce">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
           </button>
 
           {isNotificationsOpen && (
@@ -187,23 +225,24 @@ const Header = () => {
 
               <div className="max-h-[60vh] overflow-y-auto divide-y divide-border/30">
                 {notifications.length > 0 ? (
-                  notifications.map((order) => {
-                    const isNew = !seenIds.includes(order.id);
+                  notifications.map((notif) => {
+                    const styles = getNotificationStyles(notif.type);
+                    const Icon = styles.icon;
                     return (
-                      <div key={order.id} onClick={() => { navigate(isLivreur ? '/livreur/delivery' : (isAdmin ? '/admin/dashboard' : '/employe/dashboard')); setIsNotificationsOpen(false); }}
-                        className={`px-6 py-4 hover:bg-background/50 cursor-pointer flex items-start gap-4 transition-all ${isNew ? 'bg-primary-500/[0.03]' : 'opacity-60'}`}>
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-all ${isNew ? 'bg-primary-500 text-white border-primary-500 shadow-lg shadow-primary-500/20 scale-110' : 'bg-background text-text-muted border-border'}`}>
-                          <Package size={18} />
+                      <div key={notif.id} onClick={() => handleNotificationClick(notif)}
+                        className={`px-6 py-4 hover:bg-background/50 cursor-pointer flex items-start gap-4 transition-all ${!notif.isRead ? 'bg-primary-500/[0.03]' : 'opacity-60'}`}>
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-all ${!notif.isRead ? `${styles.color} text-white border-transparent shadow-lg shadow-current/20 scale-110` : 'bg-background text-text-muted border-border'}`}>
+                          <Icon size={18} />
                         </div>
                         <div className="flex-1 min-w-0 text-start">
                           <div className="flex items-center justify-between mb-1">
-                            <span className={`text-[9px] font-black uppercase tracking-widest ${isNew ? 'text-primary-600' : 'text-text-muted'}`}>#{order.numeroCommande}</span>
-                            <span className="text-[8px] font-bold text-text-muted uppercase flex items-center gap-1"><Clock size={10}/> {isNew ? 'Récent' : 'Lu'}</span>
+                            <span className={`text-[9px] font-black uppercase tracking-widest ${!notif.isRead ? styles.text : 'text-text-muted'}`}>{notif.type.replace('_', ' ')}</span>
+                            <span className="text-[8px] font-bold text-text-muted uppercase flex items-center gap-1"><Clock size={10}/> {formatRelativeTime(notif.createdAt)}</span>
                           </div>
-                          <p className="text-xs font-bold text-text-primary leading-snug truncate">{isLivreur ? "Prête pour livraison" : "Nouvelle commande créée"}</p>
-                          <p className="text-[10px] text-text-muted mt-0.5 truncate">{order.client?.name || order.clientNom || 'Client externe'}</p>
+                          <p className="text-xs font-bold text-text-primary leading-snug">{notif.title}</p>
+                          <p className="text-[10px] text-text-muted mt-0.5 truncate">{notif.message}</p>
                         </div>
-                        {isNew && <div className="w-2 h-2 rounded-full bg-primary-500 mt-4 shadow-[0_0_10px_rgba(249,115,22,0.5)]" />}
+                        {!notif.isRead && <div className={`w-2 h-2 rounded-full ${styles.color} mt-4 shadow-[0_0_10px_rgba(0,0,0,0.2)]`} />}
                       </div>
                     );
                   })
@@ -214,10 +253,21 @@ const Header = () => {
                   </div>
                 )}
               </div>
+
+              {notifications.length > 0 && (
+                <button 
+                  onClick={() => { navigate('/notifications'); setIsNotificationsOpen(false); }}
+                  className="w-full py-4 bg-background/50 border-t border-border/50 text-[10px] font-black text-text-muted hover:text-primary-600 transition-colors uppercase tracking-widest flex items-center justify-center gap-2 group"
+                >
+                  Voir toutes les notifications
+                  <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+              )}
             </div>
           )}
         </div>
 
+        {/* THEME & LANG */}
         <button onClick={() => setIsDarkMode(!isDarkMode)} className="w-10 h-10 flex items-center justify-center rounded-xl text-text-muted hover:bg-background">
           {isDarkMode ? <Sun size={20} className="text-primary-500" /> : <Moon size={20} className="text-primary-500" />}
         </button>
@@ -226,6 +276,7 @@ const Header = () => {
           <Languages size={20} className="text-primary-500" />
         </button>
 
+        {/* PROFILE */}
         <div className="flex items-center gap-3 ps-3 border-l border-border/60">
           <div className="hidden lg:flex flex-col text-end">
             <span className="text-xs font-black text-text-primary uppercase tracking-tighter truncate max-w-[120px]">{user?.name}</span>
@@ -236,16 +287,17 @@ const Header = () => {
           </div>
         </div>
 
+        {/* MOBILE MENU */}
         {user && (
           <div className="md:hidden" ref={mobileMenuRef}>
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="w-9 h-9 flex items-center justify-center rounded-xl text-text-muted hover:bg-background">
               <MoreVertical size={20} />
             </button>
             {isMobileMenuOpen && (
-              <div className="absolute top-14 end-4 w-56 bg-surface rounded-2xl shadow-2xl border border-border overflow-hidden z-50">
+              <div className="absolute top-14 end-4 w-56 bg-surface rounded-2xl shadow-2xl border border-border overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
                 <div className="p-4 border-b border-border bg-background/30 text-start">
-                  <p className="text-xs font-black text-text-primary uppercase tracking-tight">{user.name}</p>
-                  <p className="text-[9px] font-bold text-text-muted uppercase tracking-widest mt-0.5">{user.role}</p>
+                  <p className="text-xs font-black text-text-primary uppercase tracking-tight">{user?.name}</p>
+                  <p className="text-[9px] font-bold text-text-muted uppercase tracking-widest mt-0.5">{user?.role}</p>
                 </div>
                 <div className="p-2">
                   <button onClick={async () => { await dispatch(logoutThunk()); navigate("/"); }} className="w-full flex items-center gap-3 px-4 py-3 text-xs font-black text-red-500 hover:bg-red-50 rounded-xl transition-colors uppercase tracking-widest">

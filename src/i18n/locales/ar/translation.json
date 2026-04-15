@@ -295,7 +295,9 @@
           "phone": "الهاتف",
           "created_at": "تاريخ الإنشاء",
           "expected_delivery": "التسليم المتوقع",
-          "payment": "الدفع"
+          "payment": "الدفع",
+          "not_planned": "غير مبرمج",
+          "not_defined": "غير محدد"
         },
         "articles": "المقالات — {{count}} سجاد",
         "modes": {
@@ -371,15 +373,15 @@
             "validate_btn": "تأكيد التسليم",
             "warning_note": "هذا الإجراء سيحدد الطلب كمسلم ومقبوض الثمن بشكل نهائي.",
             "toasts": {
-                "choose_method": "يرجى اختيار طريقة الدفع",
-                "success": "تم تأكيد التسليم بنجاح!",
-                "error": "خطأ أثناء تسجيل الدفع"
+              "choose_method": "يرجى اختيار طريقة الدفع",
+              "success": "تم تأكيد التسليم بنجاح!",
+              "error": "خطأ أثناء تسجيل الدفع"
             },
             "loading": "جاري تحميل التفاصيل...",
             "not_found": {
-                "title": "الطلب غير موجود",
-                "desc": "قد يكون الطلب قد تمت معالجته بالفعل أو لم يعد موجوداً.",
-                "back_btn": "العودة إلى التسليمات"
+              "title": "الطلب غير موجود",
+              "desc": "قد يكون الطلب قد تمت معالجته بالفعل أو لم يعد موجوداً.",
+              "back_btn": "العودة إلى التسليمات"
             }
           },
           "overdue_label": "متأخر",
@@ -457,440 +459,533 @@
         "nettoye": "تم التنظيف",
         "livre": "تم التسليم"
       }
+    },
+    "pro_ui": {
+      "quick_details": "تفاصيل سريعة",
+      "period_total": "إجمالي الفترة",
+      "daily_average": "المتوسط اليومي",
+      "recent_activities": "الأنشطة الأخيرة",
+      "client_portfolio": "محفظة الزبناء",
+      "retail_client": "زبون خاص",
+      "order_log": "سجل الطلبات",
+      "notifications_center": "مركز الإشعارات",
+      "admin_zone": "المنطقة الإدارية",
+      "archived_order": "طلب مؤرشف",
+      "bulk_actions": "إجراءات جماعية على العناصر",
+      "in_cleaning": "قيد التنظيف",
+      "all_cleaned": "الكل نظيف",
+      "unit_price": "سعر الوحدة",
+      "visibility": "الرؤية",
+      "active_catalog": "الكتالوج النشط",
+      "commercial_synthesis": "الخلاصة التجارية",
+      "active_loyal": "زبون نشط ووفي",
+      "growth": "نمو",
+      "refresh": "تحديث",
+      "member_since": "عضو منذ",
+      "last_visit": "آخر زيارة",
+      "page_of": "من",
+      "pages": "صفحات",
+      "team": "الفريق",
+      "members": "أعضاء",
+      "member_details": "تفاصيل العضو",
+      "unique_id": "معرف فريد",
+      "security_access": "الأمان والوصول",
+      "restriction_actions": "إجراءات التقييد والحذف",
+      "member_profile": "ملف العضو",
+      "new_member": "عضو جديد",
+      "order_details": "تفاصيل الطلب",
+      "created_at": "أنشئت في",
+      "address": "العنوان",
+      "detailed_articles": "العناصر المفصلة",
+      "carpet_photos": "صور السجاد",
+      "category": "الفئة",
+      "dimensions": "الأبعاد",
+      "total_surface": "المساحة الإجمالية",
+      "service_price": "سعر الخدمة",
+      "manual_pricing_applied": "تم تطبيق تسعير يدوي",
+      "production_summary": "ملخص الإنتاج",
+      "financial_status": "الوضع المالي",
+      "technical_details": "التفاصيل التقنية",
+      "standard_rate": "السعر القياسي",
+      "active_prestations": "أنواع نشطة",
+      "hidden_prestations": "أنواع مخفية",
+      "avg_price": "متوسط السعر",
+      "catalog_total": "إجمالي الكتالوج"
     }
   },
-    "errors": {
-        "suspended": {
-            "title": "حساب معلق",
-            "subtitle": "تم تعليق وصولك مؤقتًا من قبل المسؤول.",
-            "body": "لإعادة تفعيل حسابك، يرجى الاتصال بمسؤولك أو فريق PureClean.",
-            "back_to_login": "العودة لتسجيل الدخول"
-        },
-        "not_found": {
-            "title": "الصفحة غير موجودة",
-            "subtitle": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
-            "back_to_prev": "العودة للصفحة السابقة"
-        },
-        "forbidden": {
-            "title": "الدخول مرفوض",
-            "subtitle": "ليس لديك الصلاحيات اللازمة للوصول إلى هذه الصفحة.",
-            "dashboard": "لوحة التحكم"
-        }
+  "errors": {
+    "suspended": {
+      "title": "حساب معلق",
+      "subtitle": "تم تعليق وصولك مؤقتًا من قبل المسؤول.",
+      "body": "لإعادة تفعيل حسابك، يرجى الاتصال بمسؤولك أو فريق PureClean.",
+      "back_to_login": "العودة لتسجيل الدخول"
     },
-    "driver": {
-        "dashboard": {
-            "stats": {
-                "ready_delivery": "جاهزة للتسليم",
-                "collect_workshop": "للجمع من الورشة",
-                "canceled": "طلبات ملغاة",
-                "deliveries": "تسليمات الزبناء",
-                "collections": "عمليات الجمع",
-                "to_return": "للإرجاع"
-            },
-            "missions": {
-                "title": "مهام اليوم",
-                "subtitle": "قائمة الطلبات المعالجة",
-                "view_planning": "عرض كل الجدول",
-                "empty_title": "لا توجد مهام حالياً",
-                "empty_body": "ستظهر تسليماتك القادمة هنا.",
-                "badges": {
-                    "delivery": "تسليم",
-                    "collect": "جمع",
-                    "workshop_collect": "جمع من الورشة"
-                },
-                "headers": {
-                    "client": "الزبون / الوجهة",
-                    "type": "نوع المهمة"
-                },
-                "start_mission": "بدء المهمة"
-            }
-        },
-        "register_client": {
-            "title": "إدارة الزبناء",
-            "subtitle": "ابحث عن زبون موجود أو أنشئ زبوناً جديداً.",
-            "new_client_btn": "زبون جديد",
-            "search_placeholder": "البحث عن زبون بالهاتف (مثال: ...0612)",
-            "scanner": "ماسح",
-            "scanner_unavailable": "ماسح QR Code غير متوفر حالياً.",
-            "toasts": {
-                "selected": "تم اختيار الزبون {{name}}!",
-                "geo_unsupported": "الجغرافيا المكانية غير مدعومة من قبل متصفحك",
-                "gps_captured": "تم تحديد موقع GPS!",
-                "geo_error": "خطأ في تحديد الموقع: {{error}}",
-                "required_fields": "يرجى ملء جميع الحقول الإلزامية (*)",
-                "registered": "تم تسجيل واختيار الزبون!",
-                "create_error": "خطأ أثناء إنشاء الزبون"
-            },
-            "found_badge": "تم العثور على الزبون",
-            "no_address": "لا يوجد عنوان مسجل",
-            "choose_btn": "اختيار وإنشاء طلب",
-            "not_found": "لم يتم العثور على أي زبون بهذا الرقم.",
-            "form": {
-                "title": "إضافة زبون جديد",
-                "note": "ملاحظة: إنشاء زبون جديد يؤدي تلقائياً إلى إنشاء طلب.",
-                "personal_info": "المعلومات الشخصية",
-                "delivery_address": "عنوان التسليم",
-                "labels": {
-                    "fullname": "الاسم الكامل *",
-                    "phone_primary": "الهاتف الرئيسي *",
-                    "phone_secondary": "الهاتف الثانوي (اختياري)",
-                    "gps": "موقع GPS",
-                    "neighborhood": "الحي *",
-                    "street": "الزنقة / الشارع *",
-                    "building": "العمارة / الفيلا",
-                    "apartment": "الشقة",
-                    "notes": "ملاحظات للسائق"
-                },
-                "placeholders": {
-                    "fullname": "مثال: أحمد محمد",
-                    "street": "اسم الشارع",
-                    "building": "رقم العمارة",
-                    "apartment": "رقم الشقة",
-                    "notes": "تفاصيل الوصول (مثال: رنة الجرس، كود الباب...)"
-                },
-                "gps_actions": {
-                    "not_captured": "لم يتم التحديد",
-                    "capture": "تحديد",
-                    "recapture": "إعادة تحديد"
-                },
-                "submit": "تأكيد وإنشاء طلب"
-            }
-        },
-        "create_order": {
-            "title": "إنشاء طلب جديد",
-            "select_client": "اختر زبوناً",
-            "search_client": "بحث عن زبون...",
-            "steps": {
-                "title": "إنشاء طلب جديد",
-                "notice": "لإنشاء طلب، يجب أولاً اختيار أو إنشاء زبون.",
-                "step1": "البحث عن زبون موجود بالهاتف",
-                "step2": "أو إنشاء ملف زبون جديد",
-                "step3": "إضافة المواد والإنهاء"
-            },
-            "buttons": {
-                "select_client": "اختيار زبون",
-                "back_dashboard": "العودة إلى لوحة القيادة",
-                "add_article": "سجاد جديد",
-                "finalize": "إنهاء الطلب"
-            },
-            "toasts": {
-                "article_removed": "تم حذف السجادة",
-                "min_article": "يجب أن يكون هناك سجادة واحدة على الأقل",
-                "max_photos": "6 صور كحد أقصى لكل سجادة",
-                "photos_added": "تمت إضافة {{count}} صورة (صور)",
-                "photo_removed": "تم حذف الصورة",
-                "validation_error": "يرجى ملء النوع والمقاسات والثمن لكل سجادة",
-                "success": "تم إنشاء الطلب بنجاح!",
-                "error": "خطأ أثناء إنشاء الطلب"
-            },
-            "client_details": "تفاصيل الزبون",
-            "unknown_address": "عنوان غير معروف",
-            "article_label": "القطعة",
-            "footer": {
-                "articles": "القطع: {{count}}",
-                "total": "المجموع:"
-            },
-            "finalize_btn": "تأكيد الطلب",
-            "status": {
-                "compressing": "جاري تحسين الصور...",
-                "uploading": "جاري رفع الصور...",
-                "creating": "جاري إنشاء الطلب..."
-            },
-            "articles": {
-                "title": "المقالات",
-                "count": "{{count}} سجاد",
-                "type_label": "نوع السجاد *",
-                "choose_type": "اختر النوع...",
-                "no_types": "الأصناف غير متوفرة",
-                "pricing_mode": "طريقة التسعير",
-                "by_size": "بالمقاسات",
-                "manual": "ثمن يدوي",
-                "labels": {
-                    "width": "العرض (متر)",
-                    "height": "الطول (متر)",
-                    "calculated_price": "الثمن المحسوب",
-                    "final_price": "الثمن النهائي (قابل للتعديل)",
-                    "estimated_price": "الثمن التقديري (درهم) *",
-                    "quantity": "الكمية",
-                    "notes": "الحالة / ملاحظات",
-                    "photos": "الصور ({{count}}/6)",
-                    "principal": "الرئيسية"
-                },
-                "placeholders": {
-                    "notes": "بقع، تآكل، إلخ...",
-                    "manual_price": "0.00"
-                },
-                "pricing_warning": {
-                    "modified": "تم تعديل الثمن يدوياً — {{type}} بقيمة {{diff}} درهم",
-                    "discount": "تخفيض",
-                    "extra": "زيادة",
-                    "prompt": "اختر النوع لحساب الثمن تلقائياً"
-                },
-                "actions": {
-                    "delete": "حذف"
-                }
-            }
-        },
-        "delivery_details": {
-            "title": "تفاصيل التسليم",
-            "back_list": "العودة إلى القائمة",
-            "ready_badge": "جاهز للتسليم",
-            "order_number": "رقم الطلب",
-            "ready_date": "تاريخ الجاهزية",
-            "today": "اليوم",
-            "recipient": "المرسل إليه",
-            "address": "العنوان",
-            "itinerary": "المسار",
-            "no_address": "العنوان غير محدد",
-            "package_items": "محتويات الطرد",
-            "total_order": "إجمالي الطلب",
-            "payment_summary": "ملخص الدفع",
-            "payment_method_label": "طريقة الدفع المستلمة",
-            "payment_unavailable": "خطأ: طرق الدفع غير متوفرة",
-            "validate_btn": "تأكيد التسليم",
-            "warning_note": "هذا الإجراء سيحدد الطلب كمسلم ومقبوض الثمن بشكل نهائي.",
-            "toasts": {
-                "choose_method": "يرجى اختيار طريقة الدفع",
-                "success": "تم تأكيد التسليم بنجاح!",
-                "error": "خطأ أثناء تسجيل الدفع"
-            },
-            "loading": "جاري تحميل التفاصيل...",
-            "not_found": {
-                "title": "الطلب غير موجود",
-                "desc": "قد يكون الطلب قد تمت معالجته بالفعل أو لم يعد موجوداً.",
-                "back_btn": "العودة إلى التسليمات"
-            }
-        },
-        "ready_delivery": {
-            "title": "تسليمات اليوم",
-            "subtitle": "قم بتحسين مسارك وإدارة مقبوضاتك.",
-            "orders_count": "{{count}} طلبات",
-            "travel_mode": {
-                "driving": "سيارة",
-                "foot": "مشياً"
-            },
-            "status": {
-                "optimizing": "جاري تحسين المسار...",
-                "optimized": "تم التحسين",
-                "gps_missing": "موقع السائق غير متوفر — ترتيب تقريبي",
-                "min_gps": "يلزم وجود عنوانين GPS على الأقل لتحسين المسار",
-                "error": "تعذر تحسين المسار. سيتم استخدام الترتيب الافتراضي."
-            },
-            "route_info": "المسار المقدر: {{dist}} كم (~{{time}} دقيقة)",
-            "smart_route_btn": "بدء المسار الكامل",
-            "gps_checking": "جاري التحقق من GPS...",
-            "gps_error": "تعذر فتح مسار GPS",
-            "actions": {
-                "recalculate": "إعادة الحساب",
-                "reset": "إعادة ضبط",
-                "launch": "بدء المسار"
-            },
-            "empty": {
-                "title": "لا توجد طلبات جاهزة",
-                "desc": "لقد انتهيت من جميع التسليمات أو لم يتم تحديد أي طلب كجاهز بعد.",
-                "back_btn": "العودة إلى لوحة القيادة"
-            },
-            "card": {
-                "ready": "جاهز",
-                "no_address": "بدون عنوان",
-                "no_phone": "بدون رقم",
-                "itinerary": "المسار",
-                "payment": "الدفع",
-                "details": "التفاصيل",
-                "gps_unavailable": "إحداثيات GPS غير متوفرة"
-            },
-            "payment_modal": {
-                "title": "طريقة الدفع",
-                "order_prefix": "الطلب",
-                "confirm_btn": "تأكيد الدفع",
-                "success": {
-                    "title": "تم تأكيد الدفع!",
-                    "print": "طباعة الإيصال",
-                    "close": "إغلاق"
-                }
-            },
-            "cancel_modal": {
-                "title": "إلغاء التسليم",
-                "question": "هل أنت متأكد من رغبتك في إلغاء تسليم هذا الطلب؟",
-                "warning": "سيعود الطلب إلى الورشة.",
-                "keep": "الاحتفاظ بالتسليم",
-                "confirm": "تأكيد الإلغاء"
-            },
-            "toasts": {
-                "payment_success": "تم تأكيد الدفع!",
-                "cancel_success": "تم إلغاء الطلب بنجاح. سيظهر في \"الملغاة\".",
-                "cancel_error": "خطأ أثناء الإلغاء. يرجى المحاولة مرة أخرى."
-            }
-        },
-        "canceled_deliveries": {
-            "title": "الطلبات الملغاة",
-            "subtitle": "قم بإعادة السجاد غير المسلم إلى الورشة",
-            "search_placeholder": "البحث عن إلغاء...",
-            "required_action": "إجراء مطلوب",
-            "warning_note": "يجب إيداع أي طلب ملغى فعلياً في الورشة قبل تأكيد الرجوع هنا.",
-            "empty": {
-                "title": "كل شيء على ما يرام",
-                "desc": "ليس لديك أي طلبات ملغاة في انتظار العودة إلى الورشة."
-            },
-            "card": {
-                "canceled_by_client": "ألغيت من قبل الزبون",
-                "client_unknown": "زبون غير معروف",
-                "current_status": "الحالة الحالية",
-                "to_return": "للإرجاع",
-                "address_unknown": "العنوان غير معروف",
-                "carpets_count": "{{count}} سجاد",
-                "return_btn": "إرجاع للورشة",
-                "canceled_on": "ألغيت في {{date}}",
-                "validate_return": "تأكيد العودة إلى الورشة"
-            },
-            "toasts": {
-                "success": "تمت إعادة الطلب إلى الورشة",
-                "error": "خطأ أثناء الإرجاع"
-            }
-        }
+    "not_found": {
+      "title": "الصفحة غير موجودة",
+      "subtitle": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+      "back_to_prev": "العودة للصفحة السابقة"
     },
-    "workshop": {
-        "title": "ورشة المعالجة",
-        "active": "نشطة",
-        "subtitle": "إدارة عمليات المعالجة الجارية اليوم.",
-        "stats": {
-            "en_attente": "في الانتظار",
-            "en_traitement": "قيد المعالجة",
-            "pretes": "جاهزة",
-            "sorties": "تم التسليم"
-        },
-        "overdue": {
-            "title": "تأخير مطلوب !",
-            "body": "لديك {{count}} طلبات عالقة من أيام سابقة."
-        },
-        "table": {
-            "all_orders": "جميع الطلبات",
-            "today_orders": "طلبات اليوم",
-            "clear_filter": "مسح الفلتر",
-            "view_today": "عرض اليوم",
-            "view_all": "عرض الكل",
-            "no_orders_found": "لا توجد طلبات بهذا النوع",
-            "no_orders_today": "لا توجد طلبات جديدة اليوم",
-            "new_orders_appear": "الطلبات الجديدة ستظهر هنا تلقائياً.",
-            "see_all_orders": "انظر إلى جميع الطلبات السابقة",
-            "headers": {
-                "order": "الطلب",
-                "articles": "القطع",
-                "status": "الحالة",
-                "date": "التاريخ",
-                "action": "الإجراء"
-            },
-            "overdue_label": "متأخر",
-            "manage_btn": "إدارة"
-        },
-        "activity": {
-            "title": "النشاط الأخير",
-            "no_activity": "لا يوجد نشاط مسجل اليوم",
-            "transition": "تم التحول إلى {{status}}"
-        },
-        "detail": {
-            "title": "تفاصيل المعالجة",
-            "back": "الرجوع للورشة",
-            "not_found": "الطلب غير موجود",
-            "labels": {
-                "order": "الطلب رقم #",
-                "not_assigned": "غير معين",
-                "qty": "{{count}} قطع",
-                "not_defined": "غير محدد"
-            },
-            "actions": {
-                "validate": "تأكيد واستلام",
-                "start": "بدء المعالجة",
-                "ready": "تحديد كجاهز",
-                "exit": "إخراج للتسليم",
-                "redeliver": "إعادة التسليم",
-                "next_step": "المرور إلى {{label}}"
-            },
-            "toasts": {
-                "status_updated": "تم تحديث حالة الطلب بنجاح",
-                "update_error": "خطأ أثناء تحديث الحالة",
-                "item_updated": "تم تحديث حالة السجاد",
-                "images_added": "تمت إضافة الصور بنجاح",
-                "upload_error": "خطأ أثناء رفع الصور"
-            },
-            "sections": {
-                "carpet": "سجاد رقم {{index}}",
-                "before": "قبل المعالجة",
-                "after": "بعد المعالجة"
-            },
-            "progress": {
-                "title": "تقدم المعالجة",
-                "completed": "مكتمل",
-                "summary": "تم معالجة {{completed}} من أصل {{total}} قطع"
-            },
-            "logistics": {
-                "title": "البيانات والخدمات اللوجستية",
-                "driver": "السائق المسؤول",
-                "payment": "طريقة الدفع"
-            }
-        },
-        "returns": {
-            "title": "مرتجعات الورشة",
-            "subtitle": "إدارة الطلبات المرجعة من قبل السائقين.",
-            "banner": "يتم إدراج الطلبات هنا عندما يبلغ السائقون عن إلغاء أو تعذر التسليم.",
-            "empty_title": "لا توجد مرتجعات",
-            "empty_body": "جميع المرتجعات قد تمت معالجتها وإعادتها لدورة العمل.",
-            "table": {
-                "headers": {
-                    "order": "الطلب",
-                    "details": "التفاصيل",
-                    "status": "الحالة",
-                    "updated": "التحديث",
-                    "action": "تأكيد"
-                },
-                "articles": "قطع",
-                "process_btn": "معالجة",
-                "returned_on": "أعيدت في {{date}}",
-                "process_return_btn": "معالجة الطلب المرتجع"
-            }
-        }
-    },
-    "carpet_types": {
-        "title": "أنواع السجاد",
-        "subtitle": "إدارة وتسعير أنواع السجاد المختلفة المتاحة في المتجر.",
-        "new_type": "نوع جديد +",
-        "catalog": "كتالوج الأصناف",
-        "table": {
-            "name": "اسم النوع",
-            "price_m2": "السعر المرجعي / م²",
-            "status": "الحالة",
-            "actions": "الإجراءات"
-        },
-        "active": "نشط",
-        "inactive": "معطل",
-        "toasts": {
-            "fill_all": "يرجى ملء جميع الحقول المطلوبة",
-            "updated": "تم تحديث النوع بنجاح",
-            "created": "تم إنشاء النوع بنجاح",
-            "save_error": "خطأ أثناء الحفظ",
-            "delete_confirm": "هل أنت متأكد من رغبتك في حذف هذا النوع؟",
-            "deleted": "تم الحذف بنجاح",
-            "delete_error": "خطأ أثناء الحذف"
-        },
-        "modals": {
-            "add_title": "إضافة نوع سجاد جديد",
-            "edit_title": "تعديل نوع السجاد",
-            "name_label": "اسم الصنف (مثال: بربري، صوف...)",
-            "price_label": "السعر لكل متر مربع (درهم)",
-            "status_label": "حالة التوفر في النظام",
-            "cancel": "إلغاء",
-            "save": "حفظ التعديلات"
-        }
-    },
-    "clients": {
-        "not_specified": "بدون اسم"
-    },
-    "orders": {
-        "item_status": {
-            "en_attente": "في انتظار الاستلام",
-            "en_nettoyage": "قيد التنظيف",
-            "nettoye": "تم التنظيف",
-            "livre": "تم التسليم"
-        }
+    "forbidden": {
+      "title": "الدخول مرفوض",
+      "subtitle": "ليس لديك الصلاحيات اللازمة للوصول إلى هذه الصفحة.",
+      "dashboard": "لوحة التحكم"
     }
+  },
+  "driver": {
+    "dashboard": {
+      "stats": {
+        "ready_delivery": "جاهزة للتسليم",
+        "collect_workshop": "للجمع من الورشة",
+        "canceled": "طلبات ملغاة",
+        "deliveries": "تسليمات الزبناء",
+        "collections": "عمليات الجمع",
+        "to_return": "للإرجاع"
+      },
+      "missions": {
+        "title": "مهام اليوم",
+        "subtitle": "قائمة الطلبات المعالجة",
+        "view_planning": "عرض كل الجدول",
+        "empty_title": "لا توجد مهام حالياً",
+        "empty_body": "ستظهر تسليماتك القادمة هنا.",
+        "next_mission": "المهمة القادمة",
+        "start_delivery": "بدء التسليم",
+        "start_collect": "بدء الجمع",
+        "badges": {
+          "delivery": "تسليم",
+          "collect": "جمع",
+          "workshop_collect": "جمع من الورشة"
+        },
+        "headers": {
+          "client": "الزبون / الوجهة",
+          "type": "نوع المهمة"
+        },
+        "start_mission": "بدء المهمة"
+      }
+    },
+    "register_client": {
+      "title": "إدارة الزبناء",
+      "subtitle": "ابحث عن زبون موجود أو أنشئ زبوناً جديداً.",
+      "new_client_btn": "زبون جديد",
+      "search_placeholder": "البحث عن زبون بالهاتف (مثال: ...0612)",
+      "scanner": "ماسح",
+      "scanner_unavailable": "ماسح QR Code غير متوفر حالياً.",
+      "toasts": {
+        "selected": "تم اختيار الزبون {{name}}!",
+        "geo_unsupported": "الجغرافيا المكانية غير مدعومة من قبل متصفحك",
+        "gps_captured": "تم تحديد موقع GPS!",
+        "geo_error": "خطأ في تحديد الموقع: {{error}}",
+        "required_fields": "يرجى ملء جميع الحقول الإلزامية (*)",
+        "registered": "تم تسجيل واختيار الزبون!",
+        "create_error": "خطأ أثناء إنشاء الزبون"
+      },
+      "found_badge": "تم العثور على الزبون",
+      "no_address": "لا يوجد عنوان مسجل",
+      "choose_btn": "اختيار وإنشاء طلب",
+      "not_found": "لم يتم العثور على أي زبون بهذا الرقم.",
+      "form": {
+        "title": "إضافة زبون جديد",
+        "note": "ملاحظة: إنشاء زبون جديد يؤدي تلقائياً إلى إنشاء طلب.",
+        "personal_info": "المعلومات الشخصية",
+        "delivery_address": "عنوان التسليم",
+        "labels": {
+          "fullname": "الاسم الكامل *",
+          "phone_primary": "الهاتف الرئيسي *",
+          "phone_secondary": "الهاتف الثانوي (اختياري)",
+          "gps": "موقع GPS",
+          "neighborhood": "الحي *",
+          "street": "الزنقة / الشارع *",
+          "building": "العمارة / الفيلا",
+          "apartment": "الشقة",
+          "notes": "ملاحظات للسائق"
+        },
+        "placeholders": {
+          "fullname": "مثال: أحمد محمد",
+          "street": "اسم الشارع",
+          "building": "رقم العمارة",
+          "apartment": "رقم الشقة",
+          "notes": "تفاصيل الوصول (مثال: رنة الجرس، كود الباب...)"
+        },
+        "gps_actions": {
+          "not_captured": "لم يتم التحديد",
+          "capture": "تحديد",
+          "recapture": "إعادة تحديد"
+        },
+        "submit": "تأكيد وإنشاء طلب"
+      }
+    },
+    "create_order": {
+      "title": "إنشاء طلب جديد",
+      "select_client": "اختر زبوناً",
+      "search_client": "بحث عن زبون...",
+      "steps": {
+        "title": "إنشاء طلب جديد",
+        "notice": "لإنشاء طلب، يجب أولاً اختيار أو إنشاء زبون.",
+        "step1": "البحث عن زبون موجود بالهاتف",
+        "step2": "أو إنشاء ملف زبون جديد",
+        "step3": "إضافة المواد والإنهاء"
+      },
+      "buttons": {
+        "select_client": "اختيار زبون",
+        "back_dashboard": "العودة إلى لوحة القيادة",
+        "add_article": "سجاد جديد",
+        "finalize": "إنهاء الطلب"
+      },
+      "toasts": {
+        "article_removed": "تم حذف السجادة",
+        "min_article": "يجب أن يكون هناك سجادة واحدة على الأقل",
+        "max_photos": "6 صور كحد أقصى لكل سجادة",
+        "photos_added": "تمت إضافة {{count}} صورة (صور)",
+        "photo_removed": "تم حذف الصورة",
+        "validation_error": "يرجى ملء النوع والمقاسات والثمن لكل سجادة",
+        "success": "تم إنشاء الطلب بنجاح!",
+        "error": "خطأ أثناء إنشاء الطلب"
+      },
+      "client_details": "تفاصيل الزبون",
+      "unknown_address": "عنوان غير معروف",
+      "article_label": "القطعة",
+      "footer": {
+        "articles": "القطع: {{count}}",
+        "total": "المجموع:"
+      },
+      "finalize_btn": "تأكيد الطلب",
+      "status": {
+        "compressing": "جاري تحسين الصور...",
+        "uploading": "جاري رفع الصور...",
+        "creating": "جاري إنشاء الطلب..."
+      },
+      "articles": {
+        "title": "المقالات",
+        "count": "{{count}} سجاد",
+        "type_label": "نوع السجاد *",
+        "choose_type": "اختر النوع...",
+        "no_types": "الأصناف غير متوفرة",
+        "pricing_mode": "طريقة التسعير",
+        "by_size": "بالمقاسات",
+        "manual": "ثمن يدوي",
+        "labels": {
+          "width": "العرض (متر)",
+          "height": "الطول (متر)",
+          "calculated_price": "الثمن المحسوب",
+          "final_price": "الثمن النهائي (قابل للتعديل)",
+          "estimated_price": "الثمن التقديري (درهم) *",
+          "quantity": "الكمية",
+          "notes": "الحالة / ملاحظات",
+          "photos": "الصور ({{count}}/6)",
+          "principal": "الرئيسية"
+        },
+        "placeholders": {
+          "notes": "بقع، تآكل، إلخ...",
+          "manual_price": "0.00"
+        },
+        "pricing_warning": {
+          "modified": "تم تعديل الثمن يدوياً — {{type}} بقيمة {{diff}} درهم",
+          "discount": "تخفيض",
+          "extra": "زيادة",
+          "prompt": "اختر النوع لحساب الثمن تلقائياً"
+        },
+        "actions": {
+          "delete": "حذف"
+        }
+      }
+    },
+    "delivery_details": {
+      "title": "تفاصيل التسليم",
+      "back_list": "العودة إلى القائمة",
+      "ready_badge": "جاهز للتسليم",
+      "order_number": "رقم الطلب",
+      "ready_date": "تاريخ الجاهزية",
+      "today": "اليوم",
+      "recipient": "المرسل إليه",
+      "address": "العنوان",
+      "itinerary": "المسار",
+      "directions": "فتح في الخرائط",
+      "no_address": "العنوان غير محدد",
+      "package_items": "محتويات الطرد",
+      "total_order": "إجمالي الطلب",
+      "payment_summary": "ملخص الدفع",
+      "payment_method_label": "طريقة الدفع المستلمة",
+      "payment_unavailable": "خطأ: طرق الدفع غير متوفرة",
+      "validate_btn": "تأكيد التسليم",
+      "warning_note": "هذا الإجراء سيحدد الطلب كمسلم ومقبوض الثمن بشكل نهائي.",
+      "toasts": {
+        "choose_method": "يرجى اختيار طريقة الدفع",
+        "success": "تم تأكيد التسليم بنجاح!",
+        "error": "خطأ أثناء تسجيل الدفع"
+      },
+      "loading": "جاري تحميل التفاصيل...",
+      "not_found": {
+        "title": "الطلب غير موجود",
+        "desc": "قد يكون الطلب قد تمت معالجته بالفعل أو لم يعد موجوداً.",
+        "back_btn": "العودة إلى التسليمات"
+      }
+    },
+    "ready_delivery": {
+      "title": "تسليمات اليوم",
+      "subtitle": "قم بتحسين مسارك وإدارة مقبوضاتك.",
+      "orders_count": "{{count}} طلبات",
+      "travel_mode": {
+        "driving": "سيارة",
+        "foot": "مشياً"
+      },
+      "status": {
+        "optimizing": "جاري تحسين المسار...",
+        "optimized": "تم التحسين",
+        "gps_missing": "موقع السائق غير متوفر — ترتيب تقريبي",
+        "min_gps": "يلزم وجود عنوانين GPS على الأقل لتحسين المسار",
+        "error": "تعذر تحسين المسار. سيتم استخدام الترتيب الافتراضي."
+      },
+      "route_info": "المسار المقدر: {{dist}} كم (~{{time}} دقيقة)",
+      "smart_route_btn": "بدء المسار الكامل",
+      "gps_checking": "جاري التحقق من GPS...",
+      "gps_error": "تعذر فتح مسار GPS",
+      "actions": {
+        "recalculate": "إعادة الحساب",
+        "reset": "إعادة ضبط",
+        "launch": "بدء المسار"
+      },
+      "empty": {
+        "title": "لا توجد طلبات جاهزة",
+        "desc": "لقد انتهيت من جميع التسليمات أو لم يتم تحديد أي طلب كجاهز بعد.",
+        "back_btn": "العودة إلى لوحة القيادة"
+      },
+      "card": {
+        "ready": "جاهز",
+        "no_address": "بدون عنوان",
+        "no_phone": "بدون رقم",
+        "itinerary": "المسار",
+        "payment": "الدفع",
+        "details": "التفاصيل",
+        "gps_unavailable": "إحداثيات GPS غير متوفرة"
+      },
+      "payment_modal": {
+        "title": "طريقة الدفع",
+        "order_prefix": "الطلب",
+        "confirm_btn": "تأكيد الدفع",
+        "success": {
+          "title": "تم تأكيد الدفع!",
+          "print": "طباعة الإيصال",
+          "close": "إغلاق"
+        }
+      },
+      "cancel_modal": {
+        "title": "إلغاء التسليم",
+        "question": "هل أنت متأكد من رغبتك في إلغاء تسليم هذا الطلب؟",
+        "warning": "سيعود الطلب إلى الورشة.",
+        "keep": "الاحتفاظ بالتسليم",
+        "confirm": "تأكيد الإلغاء"
+      },
+      "toasts": {
+        "payment_success": "تم تأكيد الدفع!",
+        "cancel_success": "تم إلغاء الطلب بنجاح. سيظهر في \"الملغاة\".",
+        "cancel_error": "خطأ أثناء الإلغاء. يرجى المحاولة مرة أخرى."
+      }
+    },
+    "canceled_deliveries": {
+      "title": "الطلبات الملغاة",
+      "subtitle": "قم بإعادة السجاد غير المسلم إلى الورشة",
+      "search_placeholder": "البحث عن إلغاء...",
+      "required_action": "إجراء مطلوب",
+      "warning_note": "يجب إيداع أي طلب ملغى فعلياً في الورشة قبل تأكيد الرجوع هنا.",
+      "empty": {
+        "title": "كل شيء على ما يرام",
+        "desc": "ليس لديك أي طلبات ملغاة في انتظار العودة إلى الورشة."
+      },
+      "card": {
+        "canceled_by_client": "ألغيت من قبل الزبون",
+        "client_unknown": "زبون غير معروف",
+        "current_status": "الحالة الحالية",
+        "to_return": "للإرجاع",
+        "address_unknown": "العنوان غير معروف",
+        "carpets_count": "{{count}} سجاد",
+        "return_btn": "إرجاع للورشة",
+        "canceled_on": "ألغيت في {{date}}",
+        "validate_return": "تأكيد العودة إلى الورشة"
+      },
+      "toasts": {
+        "success": "تمت إعادة الطلب إلى الورشة",
+        "error": "خطأ أثناء الإرجاع"
+      }
+    },
+    "pro_ui": {
+      "active_collection": "جلسة جمع نشطة",
+      "current_client": "الزبون الحالي",
+      "active_account": "حساب نشط",
+      "estimated_total": "التقدير الإجمالي",
+      "available_time_status": "متاح",
+      "time_status": "حالة الوقت",
+      "total_to_collect": "الإجمالي للتحصيل",
+      "finalizing_transaction": "إتمام المعاملة",
+      "collect_payment": "تحصيل",
+      "recenter_map": "إعادة توسيط الخريطة",
+      "stop_number": "توقف",
+      "km_approx": "كلم • حوالي",
+      "minutes": "دقيقة",
+      "capture": "التقاط",
+      "placeholder_neighborhood": "مثال: المعاريف",
+      "placeholder_fullname": "مثال: أحمد محمد",
+      "placeholder_phone": "06 00 00 00 00",
+      "placeholder_phone_opt": "05 00 00 00 00 (اختياري)",
+      "processing": "جاري المعالجة...",
+      "uploading": "جاري إرسال الصور...",
+      "creating": "جاري الإنشاء...",
+      "dh_unit": "درهم للوحدة",
+      "client_absent": "الزبون غائب",
+      "cancel_mission": "إلغاء المهمة",
+      "items_count": "عناصر"
+    }
+  },
+  "workshop": {
+    "title": "ورشة المعالجة",
+    "active": "نشطة",
+    "subtitle": "إدارة عمليات المعالجة الجارية اليوم.",
+    "stats": {
+      "en_attente": "في الانتظار",
+      "en_traitement": "قيد المعالجة",
+      "pretes": "جاهزة",
+      "sorties": "تم التسليم"
+    },
+    "overdue": {
+      "title": "تأخير مطلوب !",
+      "body": "لديك {{count}} طلبات عالقة من أيام سابقة."
+    },
+    "table": {
+      "all_orders": "جميع الطلبات",
+      "today_orders": "طلبات اليوم",
+      "clear_filter": "مسح الفلتر",
+      "view_today": "عرض اليوم",
+      "view_all": "عرض الكل",
+      "no_orders_found": "لا توجد طلبات بهذا النوع",
+      "no_orders_today": "لا توجد طلبات جديدة اليوم",
+      "new_orders_appear": "الطلبات الجديدة ستظهر هنا تلقائياً.",
+      "see_all_orders": "انظر إلى جميع الطلبات السابقة",
+      "headers": {
+        "order": "الطلب",
+        "articles": "القطع",
+        "status": "الحالة",
+        "date": "التاريخ",
+        "action": "الإجراء"
+      },
+      "overdue_label": "متأخر",
+      "manage_btn": "إدارة"
+    },
+    "activity": {
+      "title": "النشاط الأخير",
+      "no_activity": "لا يوجد نشاط مسجل اليوم",
+      "transition": "تم التحول إلى {{status}}"
+    },
+    "detail": {
+      "title": "تفاصيل المعالجة",
+      "back": "الرجوع للورشة",
+      "not_found": "الطلب غير موجود",
+      "labels": {
+        "order": "الطلب رقم #",
+        "not_assigned": "غير معين",
+        "qty": "{{count}} قطع",
+        "not_defined": "غير محدد"
+      },
+      "actions": {
+        "validate": "تأكيد واستلام",
+        "start": "بدء المعالجة",
+        "ready": "تحديد كجاهز",
+        "exit": "إخراج للتسليم",
+        "redeliver": "إعادة التسليم",
+        "next_step": "المرور إلى {{label}}"
+      },
+      "toasts": {
+        "status_updated": "تم تحديث حالة الطلب بنجاح",
+        "update_error": "خطأ أثناء تحديث الحالة",
+        "item_updated": "تم تحديث حالة السجاد",
+        "images_added": "تمت إضافة الصور بنجاح",
+        "upload_error": "خطأ أثناء رفع الصور"
+      },
+      "sections": {
+        "carpet": "سجاد رقم {{index}}",
+        "before": "قبل المعالجة",
+        "after": "بعد المعالجة"
+      },
+      "progress": {
+        "title": "تقدم المعالجة",
+        "completed": "مكتمل",
+        "summary": "تم معالجة {{completed}} من أصل {{total}} قطع"
+      },
+      "logistics": {
+        "title": "البيانات والخدمات اللوجستية",
+        "driver": "السائق المسؤول",
+        "payment": "طريقة الدفع"
+      }
+    },
+    "returns": {
+      "title": "مرتجعات الورشة",
+      "subtitle": "إدارة الطلبات المرجعة من قبل السائقين.",
+      "banner": "يتم إدراج الطلبات هنا عندما يبلغ السائقون عن إلغاء أو تعذر التسليم.",
+      "empty_title": "لا توجد مرتجعات",
+      "empty_body": "جميع المرتجعات قد تمت معالجتها وإعادتها لدورة العمل.",
+      "table": {
+        "headers": {
+          "order": "الطلب",
+          "details": "التفاصيل",
+          "status": "الحالة",
+          "updated": "التحديث",
+          "action": "تأكيد"
+        },
+        "articles": "قطع",
+        "process_btn": "معالجة",
+        "returned_on": "أعيدت في {{date}}",
+        "process_return_btn": "معالجة الطلب المرتجع"
+      }
+    },
+    "pro_ui": {
+      "today_handover": "خروجات اليوم",
+      "handover_history": "سجل الخروجات",
+      "handover_registry": "سجل الخروج",
+      "empty_registry": "السجل فارغ حاليا",
+      "verify": "تحقق",
+      "archived_order_desc": "تم تسليم هذا الطلب بالفعل للسائق.",
+      "add": "إضافة",
+      "empty_slot": "فارغ"
+    }
+  },
+  "carpet_types": {
+    "title": "أنواع السجاد",
+    "subtitle": "إدارة وتسعير أنواع السجاد المختلفة المتاحة في المتجر.",
+    "new_type": "نوع جديد +",
+    "catalog": "كتالوج الأصناف",
+    "table": {
+      "name": "اسم النوع",
+      "price_m2": "السعر المرجعي / م²",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "active": "نشط",
+    "inactive": "معطل",
+    "toasts": {
+      "fill_all": "يرجى ملء جميع الحقول المطلوبة",
+      "updated": "تم تحديث النوع بنجاح",
+      "created": "تم إنشاء النوع بنجاح",
+      "save_error": "خطأ أثناء الحفظ",
+      "delete_confirm": "هل أنت متأكد من رغبتك في حذف هذا النوع؟",
+      "deleted": "تم الحذف بنجاح",
+      "delete_error": "خطأ أثناء الحذف"
+    },
+    "modals": {
+      "add_title": "إضافة نوع سجاد جديد",
+      "edit_title": "تعديل نوع السجاد",
+      "name_label": "اسم الصنف (مثال: بربري، صوف...)",
+      "price_label": "السعر لكل متر مربع (درهم)",
+      "status_label": "حالة التوفر في النظام",
+      "cancel": "إلغاء",
+      "save": "حفظ التعديلات"
+    }
+  },
+  "clients": {
+    "not_specified": "بدون اسم"
+  },
+  "orders": {
+    "item_status": {
+      "en_attente": "في انتظار الاستلام",
+      "en_nettoyage": "قيد التنظيف",
+      "nettoye": "تم التنظيف",
+      "livre": "تم التسليم"
+    }
+  }
 }

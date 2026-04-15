@@ -4,6 +4,7 @@ import adminReducer from './admin/adminSlice'
 import livreurReducer from './livreur/livreurSlice'
 import employeReducer from './employe/employeSlice'
 import statisticsReducer from './statistics/statisticsSlice'
+import notificationReducer from './notifications/notificationSlice'
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         livreur: livreurReducer,
         employe: employeReducer,
         statistics: statisticsReducer,
+        notifications: notificationReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

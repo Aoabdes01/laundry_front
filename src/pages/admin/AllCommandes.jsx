@@ -105,8 +105,8 @@ export default function AllCommandes() {
       {/* HEADER SECTION */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">Gestion des Commandes</h1>
-          <p className="text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">Suivi et administration du flux de production</p>
+          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">{t('admin.orders.title')}</h1>
+          <p className="text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">{t('admin.orders.subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -114,14 +114,14 @@ export default function AllCommandes() {
             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-surface border border-border/50 text-text-primary rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm hover:bg-background transition-all active:scale-95"
           >
             <Download size={16} />
-            Exporter CSV
+            {t('admin.orders.export_csv')}
           </button>
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${showFilters ? 'bg-primary-500 text-white shadow-lg' : 'bg-surface border border-border/50 text-text-primary'}`}
           >
             <Filter size={16} />
-            Filtres
+            {t('admin.orders.advanced_filters')}
           </button>
         </div>
       </div>
@@ -129,10 +129,10 @@ export default function AllCommandes() {
       {/* KPI ROW */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Total Commandes', value: commandes?.length || 0, icon: ClipboardList, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-          { label: 'Valeur Totale', value: `${totalAmount.toLocaleString()} DH`, icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-          { label: 'Actions Urgentes', value: urgentCount, icon: AlertCircle, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-          { label: 'Volume Articles', value: commandes?.reduce((acc, c) => acc + (c.commandeTapis?.length || 0), 0) || 0, icon: Package, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+          { label: t('admin.orders.kpi.global'), value: commandes?.length || 0, icon: ClipboardList, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+          { label: t('admin.orders.kpi.value'), value: `${totalAmount.toLocaleString()} DH`, icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+          { label: t('admin.orders.kpi.urgent'), value: urgentCount, icon: AlertCircle, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+          { label: t('admin.orders.kpi.volumes'), value: commandes?.reduce((acc, c) => acc + (c.commandeTapis?.length || 0), 0) || 0, icon: Package, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
         ].map((kpi, i) => (
           <div key={i} className="bg-surface p-4 rounded-2xl border border-border/50 shadow-sm flex items-center gap-4 transition-all hover:shadow-md">
             <div className={`w-10 h-10 rounded-xl ${kpi.bg} ${kpi.color} flex items-center justify-center shrink-0`}>
@@ -152,7 +152,7 @@ export default function AllCommandes() {
           <Search size={18} className="absolute start-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary-500 transition-colors" />
           <input
             type="text"
-            placeholder="Rechercher par numéro, client..."
+            placeholder={t('admin.orders.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-surface border border-border/50 rounded-2xl ps-12 pe-4 py-3.5 text-sm font-bold text-text-primary focus:ring-4 focus:ring-primary-500/5 focus:border-primary-500 transition-all outline-none"
@@ -167,22 +167,22 @@ export default function AllCommandes() {
       {showFilters && (
         <div className="bg-surface rounded-[2rem] border border-border/50 p-6 md:p-8 shadow-card grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 animate-in slide-in-from-top-4 duration-300">
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest block">Statut</label>
+            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest block">{t('admin.orders.filter_labels.status')}</label>
             <select value={status} onChange={(e) => setStatus(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-xs font-bold text-text-primary outline-none focus:border-primary-500">
-              <option value="all">Tous les statuts</option>
-              {['EN_ATTENTE', 'VALIDEE', 'EN_TRAITEMENT', 'PRETE', 'LIVREE', 'PAYEE', 'ANNULEE', 'RETOURNEE'].map(s => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
+              <option value="all">{t('admin.orders.status_options.all')}</option>
+              {['EN_ATTENTE', 'VALIDEE', 'EN_TRAITEMENT', 'PRETE', 'LIVREE', 'PAYEE', 'ANNULEE', 'RETOURNEE'].map(s => <option key={s} value={s}>{t(`status.${s.toLowerCase()}`)}</option>)}
             </select>
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest block">Du</label>
+            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest block">{t('admin.orders.filter_labels.from')}</label>
             <input type="date" value={dateDebut} onChange={(e) => setDateDebut(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-xs font-bold text-text-primary outline-none focus:border-primary-500" />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest block">Au</label>
+            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest block">{t('admin.orders.filter_labels.to')}</label>
             <input type="date" value={dateFin} onChange={(e) => setDateFin(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-xs font-bold text-text-primary outline-none focus:border-primary-500" />
           </div>
           <div className="flex items-end">
-            <button onClick={() => { setSearch(''); setStatus('all'); setDateDebut(''); setDateFin(''); }} className="w-full bg-background hover:bg-red-50 dark:hover:bg-red-500/10 text-red-500 border border-border rounded-xl py-2.5 text-[10px] font-black uppercase tracking-widest transition-all">Réinitialiser</button>
+            <button onClick={() => { setSearch(''); setStatus('all'); setDateDebut(''); setDateFin(''); }} className="w-full bg-background hover:bg-red-50 dark:hover:bg-red-500/10 text-red-500 border border-border rounded-xl py-2.5 text-[10px] font-black uppercase tracking-widest transition-all">{t('admin.orders.filter_labels.reset')}</button>
           </div>
         </div>
       )}
@@ -192,24 +192,24 @@ export default function AllCommandes() {
         {loading && !commandes?.length ? (
           <div className="py-32 flex flex-col items-center gap-4">
             <Loader2 size={40} className="animate-spin text-primary-500" />
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Chargement des commandes...</p>
+            <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.loading_data')}</p>
           </div>
         ) : !commandes?.length ? (
           <div className="py-32 flex flex-col items-center text-center px-6">
             <div className="w-20 h-20 bg-background rounded-[2rem] flex items-center justify-center mb-6 border border-dashed border-border"><ClipboardList size={32} className="text-text-muted/30" /></div>
-            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">Aucune commande</h3>
-            <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Essayez d'ajuster vos critères de recherche</p>
+            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.orders.empty_db')}</h3>
+            <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">{t('admin.orders.no_match')}</p>
           </div>
         ) : viewMode === 'list' ? (
           <div className="overflow-x-auto">
             <table className="w-full text-start border-collapse">
               <thead>
                 <tr className="bg-background/50 border-b border-border/50">
-                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Référence</th>
-                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Client</th>
-                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Date</th>
-                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Montant</th>
-                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">Statut</th>
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.table.ref')}</th>
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.table.contact')}</th>
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.table.timestamp')}</th>
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.table.billing')}</th>
+                  <th className="px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] text-center">{t('admin.orders.table.status')}</th>
                   <th className="px-8 py-4"></th>
                 </tr>
               </thead>
@@ -285,7 +285,7 @@ export default function AllCommandes() {
             <div className="text-start">
               <div className="flex items-center gap-2 mb-1">
                 <Hash size={14} className="text-primary-500" />
-                <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">Détails Rapides</span>
+                <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.quick_details')}</span>
               </div>
               <h3 className="text-xl font-black text-text-primary tracking-tight">#{drawerData?.numeroCommande}</h3>
             </div>
@@ -296,7 +296,7 @@ export default function AllCommandes() {
             {!drawerData ? (
               <div className="py-20 flex flex-col items-center gap-4 opacity-40">
                 <Loader2 size={32} className="animate-spin text-primary-500" />
-                <p className="text-[10px] font-black uppercase tracking-widest">Récupération des données...</p>
+                <p className="text-[10px] font-black uppercase tracking-widest">{t('admin.orders.loading_data')}</p>
               </div>
             ) : (
               <div className="space-y-8">
@@ -304,7 +304,7 @@ export default function AllCommandes() {
                 <div className="flex items-center justify-between bg-background p-4 rounded-3xl border border-border/50">
                   <StatusBadge status={drawerData.status} />
                   <div className="text-end">
-                    <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-0.5">Total Commande</p>
+                    <p className="text-[9px] font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.orders.card.billing')}</p>
                     <p className="text-lg font-black text-primary-600">{drawerData.montantTotal} DH</p>
                   </div>
                 </div>
@@ -314,7 +314,7 @@ export default function AllCommandes() {
                   <div className="p-5 bg-background rounded-[2rem] border border-border/50 flex items-start gap-4 shadow-sm">
                     <div className="w-10 h-10 rounded-2xl bg-teal-500/10 text-teal-600 flex items-center justify-center shrink-0 border border-teal-500/20"><User size={20}/></div>
                     <div className="min-w-0 text-start">
-                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">Client</p>
+                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.orders.table.client')}</p>
                       <p className="text-sm font-black text-text-primary truncate">{getClientDisplayName(drawerData)}</p>
                       <p className="text-xs font-bold text-text-muted mt-0.5">{getClientPhone(drawerData.client)}</p>
                     </div>
@@ -322,8 +322,8 @@ export default function AllCommandes() {
                   <div className="p-5 bg-background rounded-[2rem] border border-border/50 flex items-start gap-4 shadow-sm">
                     <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-500/20"><Truck size={20}/></div>
                     <div className="min-w-0 text-start">
-                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">Livreur Responsable</p>
-                      <p className="text-sm font-black text-text-primary truncate">{drawerData.livreur?.name || 'Non assigné'}</p>
+                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.orders.details.labels.driver')}</p>
+                      <p className="text-sm font-black text-text-primary truncate">{drawerData.livreur?.name || t('admin.orders.details.labels.not_assigned', 'Non assigné')}</p>
                       <p className="text-xs font-bold text-text-muted mt-0.5">{drawerData.livreur?.phone || '—'}</p>
                     </div>
                   </div>
@@ -332,7 +332,7 @@ export default function AllCommandes() {
                 {/* Carpet Items Mini List */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between px-2">
-                    <h4 className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Articles ({drawerData.commandeTapis?.length || 0})</h4>
+                    <h4 className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.details.articles', { count: drawerData.commandeTapis?.length || 0 })}</h4>
                     <Calculator size={14} className="text-text-muted" />
                   </div>
                   <div className="space-y-3">
@@ -341,7 +341,7 @@ export default function AllCommandes() {
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-primary-500 border border-border/50 text-[10px] font-black">{i+1}</div>
                           <div className="text-start">
-                            <p className="text-xs font-black text-text-primary">{item.tapis?.nom || 'Article'}</p>
+                            <p className="text-xs font-black text-text-primary">{item.tapis?.nom || t('admin.dashboard.carpets')}</p>
                             <p className="text-[9px] font-bold text-text-muted uppercase">{item.largeur}m × {item.longueur || item.hauteur}m</p>
                           </div>
                         </div>
@@ -355,7 +355,7 @@ export default function AllCommandes() {
                   onClick={() => navigate(`/admin/commandes/${drawerData.id}`)}
                   className="w-full bg-primary-600 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary-500/20 hover:bg-primary-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
                 >
-                  Voir la fiche complète <ChevronRight size={14} className="rtl:rotate-180" />
+                  {t('admin.pro_ui.see_full_sheet', 'Voir la fiche complète')} <ChevronRight size={14} className="rtl:rotate-180" />
                 </button>
               </div>
             )}
