@@ -23,6 +23,15 @@ const initialState = {
     inactiveUsers: [],
     currentUser: null,
     commandes: [],
+    commandesPagination: {
+        totalElements: 0,
+        totalPages: 0,
+        currentPage: 0,
+        pageSize: 20,
+        isLast: true,
+        totalValue: 0,
+        totalVolumes: 0,
+    },
     selectedCommande: null,
     clients: [],
     clientCommandes: [],
@@ -227,7 +236,22 @@ const adminSlice = createSlice({
             })
             .addCase(fetchAllCommandes.fulfilled, (state, action) => {
                 state.loading = false;
-                state.commandes = action.payload;
+                const { content, totalElements, totalPages, currentPage, pageSize, last, totalValue, totalVolumes } = action.payload;
+                // Page 0 = new filter/search → replace. Page > 0 = Load More → append.
+                if (currentPage === 0) {
+                    state.commandes = content;
+                } else {
+                    state.commandes = [...state.commandes, ...content];
+                }
+                state.commandesPagination = {
+                    totalElements,
+                    totalPages,
+                    currentPage,
+                    pageSize,
+                    isLast: last,
+                    totalValue,
+                    totalVolumes,
+                };
             })
             .addCase(fetchAllCommandes.rejected, (state, action) => {
                 state.loading = false;

@@ -143,7 +143,7 @@ export default function AdminCommandeDetail() {
         <div className="grid grid-cols-1 gap-4">
           {tapis.map((item, i) => {
             const etatCfg = ETAT_CONFIG[item.etat] || ETAT_CONFIG.en_attente;
-            const baseUrl = "http://localhost:8080";
+            const baseUrl = "http://localhost:8080" || import.meta.env.VITE_API_URL;
             const getFullUrl = (img) => {
               const url = img?.imageUrl || img?.url || (typeof img === 'string' ? img : null);
               if (!url) return null;

@@ -100,7 +100,7 @@ export default function DeliveryDetails() {
     );
   }
 
-  const baseUrl = "http://localhost:8080";
+  const baseUrl = "http://localhost:8080" || import.meta.env.VITE_API_URL;
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-fade-in pb-20 px-4 md:px-0 text-start">
@@ -219,7 +219,7 @@ export default function DeliveryDetails() {
                       <div className="text-start">
                         <p className="text-sm font-black text-text-primary group-hover:text-primary-600 transition-colors tracking-tight leading-tight">{item.tapis?.nom}</p>
                         <p className="text-[10px] font-bold text-text-muted mt-1 uppercase tracking-widest">
-                          {item.quantite} Unités • {item.prixUnitaire.toFixed(0)} DH/U
+                          {t('driver.delivery_details.unit_price_format', { qty: item.quantite, price: item.prixUnitaire.toFixed(0) })}
                           {item.largeur && ` • ${item.largeur}x${item.hauteur}m`}
                         </p>
                       </div>
@@ -296,8 +296,8 @@ export default function DeliveryDetails() {
                         type="button"
                         onClick={() => setPaymentMethod(opt.id)}
                         className={`flex items-center justify-between px-6 py-5 rounded-2xl border-2 transition-all active:scale-[0.98] ${paymentMethod === opt.id
-                            ? 'bg-primary-500/5 border-primary-500 shadow-md'
-                            : 'bg-background border-transparent hover:border-border/50'
+                          ? 'bg-primary-500/5 border-primary-500 shadow-md'
+                          : 'bg-background border-transparent hover:border-border/50'
                           }`}
                       >
                         <div className="flex items-center gap-4">

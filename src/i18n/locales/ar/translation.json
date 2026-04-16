@@ -56,7 +56,13 @@
     "order_available": "الطلب رقم #{{number}} متاح الآن.",
     "click_to_see": "انقر للمشاهدة.",
     "new_order": "📦 طلب جديد!",
-    "order_created_by": "الطلب رقم #{{number}} تم إنشاؤه بواسطة {{name}}."
+    "order_created_by": "الطلب رقم #{{number}} تم إنشاؤه بواسطة {{name}}.",
+    "notifications": {
+      "unread_count": "{{unread}} غير مقروء من إجمالي {{total}}",
+      "mark_all": "تحديد الكل كمقروء",
+      "empty": "لا توجد إشعارات",
+      "view_all": "عرض جميع الإشعارات"
+    }
   },
   "auth": {
     "login": {
@@ -718,6 +724,7 @@
       "payment_unavailable": "خطأ: طرق الدفع غير متوفرة",
       "validate_btn": "تأكيد التسليم",
       "warning_note": "هذا الإجراء سيحدد الطلب كمسلم ومقبوض الثمن بشكل نهائي.",
+      "unit_price_format": "{{qty}} وحدة • {{price}} درهم/وحدة",
       "toasts": {
         "choose_method": "يرجى اختيار طريقة الدفع",
         "success": "تم تأكيد التسليم بنجاح!",

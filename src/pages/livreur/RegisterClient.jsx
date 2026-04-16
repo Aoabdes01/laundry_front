@@ -91,11 +91,38 @@ export default function RegisterClient() {
     }, 100);
   };
 
+  const validateMoroccanPhone = (phone) => {
+    if (!phone) return true; // Optional or handled by NotBlank
+    const sanitized = phone.replace(/[\s-]/g, '');
+    
+    // Local: 0[567]XXXXXXXX
+    if (sanitized.startsWith('0')) {
+      return sanitized.length === 10 && /^[567]/.test(sanitized[1]);
+    }
+    
+    // International: +212[567]XXXXXXXX or 212[567]XXXXXXXX
+    if (sanitized.startsWith('+212')) {
+      return sanitized.length === 13 && /^[567]/.test(sanitized[4]);
+    } else if (sanitized.startsWith('212')) {
+      return sanitized.length === 12 && /^[567]/.test(sanitized[3]);
+    }
+    
+    return false;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.name || !formData.phone1 || !formData.quartier || !formData.rue) {
       return toast.warning(t('driver.register_client.toasts.required_fields'));
+    }
+
+    if (!validateMoroccanPhone(formData.phone1)) {
+      return toast.error("Format de téléphone invalide (Ex: 0612345678 ou +212612345678)");
+    }
+    
+    if (formData.phone2 && !validateMoroccanPhone(formData.phone2)) {
+      return toast.error("Format de téléphone secondaire invalide");
     }
 
     const clientData = {
@@ -243,26 +270,26 @@ export default function RegisterClient() {
                    <label className="text-[10px] font-black text-text-muted uppercase tracking-widest px-1 flex items-center gap-2">
                       <Phone size={12} /> {t('driver.register_client.form.labels.phone_primary')}
                    </label>
-                   <input 
-                     type="tel" 
-                     placeholder={t('driver.pro_ui.placeholder_phone')}
-                     value={formData.phone1}
-                     onChange={(e) => setFormData({...formData, phone1: e.target.value})}
-                     className="w-full bg-background border border-border/60 rounded-2xl px-5 py-4 text-sm font-black focus:border-primary-500 outline-none transition-all text-text-primary placeholder:text-text-muted/30"
-                   />
+                    <input 
+                      type="tel" 
+                      placeholder="Ex: 0612345678 ou +2126XXXXXXXX"
+                      value={formData.phone1}
+                      onChange={(e) => setFormData({...formData, phone1: e.target.value})}
+                      className="w-full bg-background border border-border/60 rounded-2xl px-5 py-4 text-sm font-black focus:border-primary-500 outline-none transition-all text-text-primary placeholder:text-text-muted/30"
+                    />
                 </div>
 
                 <div className="space-y-2">
                    <label className="text-[10px] font-black text-text-muted uppercase tracking-widest px-1 flex items-center gap-2">
                       <Phone size={12} className="opacity-40" /> {t('driver.register_client.form.labels.phone_secondary')}
                    </label>
-                   <input 
-                     type="tel" 
-                     placeholder={t('driver.pro_ui.placeholder_phone_opt')}
-                     value={formData.phone2}
-                     onChange={(e) => setFormData({...formData, phone2: e.target.value})}
-                     className="w-full bg-background border border-border/60 rounded-2xl px-5 py-4 text-sm font-black focus:border-primary-500 outline-none transition-all text-text-primary placeholder:text-text-muted/30"
-                   />
+                    <input 
+                      type="tel" 
+                      placeholder="Optionnel (Ex: 05XXXXXXXX)"
+                      value={formData.phone2}
+                      onChange={(e) => setFormData({...formData, phone2: e.target.value})}
+                      className="w-full bg-background border border-border/60 rounded-2xl px-5 py-4 text-sm font-black focus:border-primary-500 outline-none transition-all text-text-primary placeholder:text-text-muted/30"
+                    />
                 </div>
              </div>
           </div>

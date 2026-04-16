@@ -46,7 +46,11 @@ function App() {
 
               <Route element={<Layout />}>
                 <Route path="/" element={<Login />} />
-                <Route path="/notifications" element={<NotificationsPage />} />
+
+                {/* Notifications: accessible by any authenticated user */}
+                <Route element={<RequireAuth />}>
+                  <Route path="/notifications" element={<NotificationsPage />} />
+                </Route>
 
                 <Route element={<RequireAuth allowedRoles={["admin"]} />}>
                   <Route path='/admin/dashboard' element={<AdminDashboard />} />

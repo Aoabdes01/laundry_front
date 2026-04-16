@@ -47,17 +47,7 @@ export const updateExistingUser = createAsyncThunk(
 );
 
 
-export const fetchUserById = createAsyncThunk(
-    'admin/fetchUserById',
-    async (id, { rejectWithValue }) => {
-        try {
-            const res = await getUser(id);
-            return res.data;
-        } catch (error) {
-            return rejectWithValue(error.response?.data || error.message);
-        }
-    }
-);
+
 
 export const fetchActiveUsers = createAsyncThunk(
     'admin/fetchActiveUsers',

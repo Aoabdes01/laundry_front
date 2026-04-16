@@ -3,8 +3,7 @@ import { store } from "../store/store"
 import { logOut, setCredentials } from "../store/auth/authSlice"
 import { toast } from "react-toastify"
 
-const BASE_URL = "http://localhost:8080"
-// import.meta.env.VITE_API_URL ||
+const BASE_URL = "http://localhost:8080" || import.meta.env.VITE_API_URL
 export const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true
@@ -33,7 +32,6 @@ api.interceptors.response.use(
       if (error.response?.data?.error === "ACCOUNT_DISABLED") {
         store.dispatch(logOut())
         localStorage.removeItem('user')
-        localStorage.removeItem('token')
         window.location.href = '/compte-suspendu'
         return Promise.reject(error)
       }
@@ -71,7 +69,6 @@ api.interceptors.response.use(
       } catch (err) {
         store.dispatch(logOut())
         localStorage.removeItem('user')
-        localStorage.removeItem('token')
         window.location.href = '/'
         return Promise.reject(err)
       }

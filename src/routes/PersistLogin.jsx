@@ -32,10 +32,7 @@ const PersistLogin = () => {
           }))
         }
       } catch (err) {
-        console.log("=== Refresh failed ===", err.response?.status)
-        if (err?.response?.status !== 401) {
-          console.error("Unexpected refresh error:", err)
-        }
+        // Silent catch for token refresh failure
       } finally {
         if (isMounted) setLoading(false)
       }

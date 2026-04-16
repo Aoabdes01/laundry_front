@@ -276,7 +276,6 @@ export default function CreateOrder() {
       toast.success(t('driver.create_order.toasts.success'));
       navigate('/livreur');
     } catch (err) {
-      console.error("Finalization error:", err);
       toast.error(typeof err === 'string' ? err : t('driver.create_order.toasts.error'));
     } finally {
       setIsFinalizing(false);

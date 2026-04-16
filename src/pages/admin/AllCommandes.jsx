@@ -9,7 +9,7 @@ import {
   Truck, User, MapPin, Calculator, Hash, CreditCard
 } from 'lucide-react';
 import { fetchAllCommandes, downloadCommandesCsv, fetchCommandeById } from '../../store/admin/adminThunk';
-import { selectAllCommandes, selectAdminLoading } from '../../store/admin/adminSelectors';
+import { selectAllCommandes, selectAdminLoading, selectCommandesPagination } from '../../store/admin/adminSelectors';
 import { clearSelectedCommande } from '../../store/admin/adminSlice';
 import { StatusBadge } from '../../components/StatusBadge';
 import { toast } from 'react-toastify';
@@ -37,6 +37,7 @@ export default function AllCommandes() {
   const navigate = useNavigate();
   const commandes = useSelector(selectAllCommandes);
   const loading = useSelector(selectAdminLoading);
+  const pagination = useSelector(selectCommandesPagination);
   const { selectedCommande: drawerData } = useSelector(s => s.admin);
 
   // UI State
@@ -47,21 +48,32 @@ export default function AllCommandes() {
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState('list');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  const loadData = useCallback(() => {
+  const loadData = useCallback((page = 0) => {
     const params = {
       search: search || undefined,
       status: status !== 'all' ? status : undefined,
       dateDebut: dateDebut || undefined,
-      dateFin: dateFin || undefined
+      dateFin: dateFin || undefined,
+      page,
+      size: 20,
     };
     dispatch(fetchAllCommandes(params));
   }, [dispatch, search, status, dateDebut, dateFin]);
 
+  // When filters change, always reset to page 0
   useEffect(() => {
-    const timer = setTimeout(() => loadData(), 500);
+    setCurrentPage(0);
+    const timer = setTimeout(() => loadData(0), 500);
     return () => clearTimeout(timer);
-  }, [loadData]);
+  }, [search, status, dateDebut, dateFin, dispatch]);
+
+  const handleLoadMore = () => {
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    loadData(nextPage);
+  };
 
   const handleExportCSV = async () => {
     try {
@@ -96,8 +108,9 @@ export default function AllCommandes() {
     return 'N/A';
   };
 
-  const totalAmount = Array.isArray(commandes) ? commandes.reduce((acc, c) => acc + (c.montantTotal || 0), 0) : 0;
-  const urgentCount = Array.isArray(commandes) ? commandes.filter(c => ['en_attente', 'retournee'].includes(c.status?.toLowerCase())).length : 0;
+  const totalAmount = pagination?.totalValue ?? 0;
+  const totalVolumes = pagination?.totalVolumes ?? 0;
+  const totalElements = pagination?.totalElements ?? commandes?.length ?? 0;
 
   return (
     <div className="space-y-6 pb-12 animate-fade-in text-start relative overflow-hidden">
@@ -127,12 +140,11 @@ export default function AllCommandes() {
       </div>
 
       {/* KPI ROW */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {[
-          { label: t('admin.orders.kpi.global'), value: commandes?.length || 0, icon: ClipboardList, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+          { label: t('admin.orders.kpi.global'), value: totalElements, icon: ClipboardList, color: 'text-blue-500', bg: 'bg-blue-500/10' },
           { label: t('admin.orders.kpi.value'), value: `${totalAmount.toLocaleString()} DH`, icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-          { label: t('admin.orders.kpi.urgent'), value: urgentCount, icon: AlertCircle, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-          { label: t('admin.orders.kpi.volumes'), value: commandes?.reduce((acc, c) => acc + (c.commandeTapis?.length || 0), 0) || 0, icon: Package, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+          { label: t('admin.orders.kpi.volumes'), value: totalVolumes, icon: Package, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
         ].map((kpi, i) => (
           <div key={i} className="bg-surface p-4 rounded-2xl border border-border/50 shadow-sm flex items-center gap-4 transition-all hover:shadow-md">
             <div className={`w-10 h-10 rounded-xl ${kpi.bg} ${kpi.color} flex items-center justify-center shrink-0`}>
@@ -266,6 +278,19 @@ export default function AllCommandes() {
         )}
       </div>
 
+      {/* LOAD MORE */}
+      {!pagination?.isLast && (
+        <div className="flex justify-center pt-2">
+          <button
+            onClick={handleLoadMore}
+            disabled={loading}
+            className="flex items-center gap-2 px-8 py-3 bg-surface border border-border/50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-text-primary hover:bg-background transition-all active:scale-95 disabled:opacity-50 shadow-sm"
+          >
+            {loading ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
+            {loading ? t('admin.orders.loading_data') : `${t('admin.orders.load_more', 'Charger plus')} (${commandes?.length ?? 0} / ${totalElements})`}
+          </button>
+        </div>
+      )}
       {/* QUICK VIEW DRAWER */}
       <div 
         className={`fixed inset-x-0 bottom-0 z-[100] transition-all duration-500 ${isDrawerOpen ? 'visible opacity-100' : 'invisible opacity-0'}`}

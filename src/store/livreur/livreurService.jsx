@@ -75,20 +75,19 @@ export const getReadyDeliveries = async () => {
   return await api.get('/api/livreur/commandes/ready-for-delivery')
 }
 
-// Get canceled deliveries (alias)
+// Get canceled deliveries (canonical)
 export const getAnnulees = async () => {
-  return await api.get('/api/livreur/commandes/annulees')
+  return await api.get('/livreur/commandes/canceled-deliveries')
 }
 
-// Return to workshop (alias)
+// Return to workshop (canonical)
 export const returnToWorkshopRequest = async (orderId) => {
-  return await api.put(`/api/livreur/commandes/${orderId}/retour-atelier`)
+  return await api.patch(`/livreur/commandes/${orderId}/return`)
 }
 
-// Confirm payment (alias)
+// Confirm payment (canonical)
 export const confirmPaymentRequest = async (orderId, paymentData) => {
-  // Use the same RecordPaymentRequest format
-  return await api.post(`/api/livreur/commandes/${orderId}/confirmer-paiement`, paymentData)
+  return await api.post(`/livreur/commandes/${orderId}/payment`, paymentData)
 }
 
 // Get payment types

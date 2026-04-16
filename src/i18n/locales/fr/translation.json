@@ -56,7 +56,13 @@
     "order_available": "Commande #{{number}} est disponible.",
     "click_to_see": "Cliquez pour voir.",
     "new_order": "📦 Nouvelle commande !",
-    "order_created_by": "Commande #{{number}} créée par {{name}}."
+    "order_created_by": "Commande #{{number}} créée par {{name}}.",
+    "notifications": {
+      "unread_count": "{{unread}} non-lus sur {{total}}",
+      "mark_all": "Tout marquer",
+      "empty": "Aucune notification",
+      "view_all": "Voir toutes les notifications"
+    }
   },
   "auth": {
     "login": {
@@ -695,6 +701,7 @@
       "payment_unavailable": "Erreur: Modes de paiement non disponibles",
       "validate_btn": "VALIDER LA LIVRAISON",
       "warning_note": "Cette action marquera la commande comme livrée et encaissée définitivement.",
+      "unit_price_format": "{{qty}} Unités • {{price}} DH/U",
       "toasts": {
         "choose_method": "Veuillez choisir un mode de paiement",
         "success": "Livraison validée avec succès !",

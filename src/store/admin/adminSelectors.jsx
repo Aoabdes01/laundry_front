@@ -9,6 +9,7 @@ export const selectAdminMessage = (state) => state.admin.message;
 
 export const selectAllCommandes = (state) => state.admin.commandes;
 export const selectSelectedCommande = (state) => state.admin.selectedCommande;
+export const selectCommandesPagination = (state) => state.admin.commandesPagination;
 
 export const selectAllClients = (state) => state.admin.clients;
 export const selectClientCommandes = (state) => state.admin.clientCommandes;

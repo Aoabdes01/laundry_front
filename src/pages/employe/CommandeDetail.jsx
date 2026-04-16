@@ -22,7 +22,7 @@ import ConfirmModal from '../../components/ui/ConfirmModal';
 
 const TAPIS_IMAGE_TYPE = { BEFORE: 'BEFORE', AFTER: 'AFTER' };
 
-const BASE_URL = "http://localhost:8080"
+const BASE_URL = "http://localhost:8080" || import.meta.env.VITE_API_URL;
 
 export default function CommandeDetail() {
   const { t, i18n } = useTranslation();
@@ -174,7 +174,7 @@ export default function CommandeDetail() {
 
   return (
     <div className="pb-16 max-w-6xl mx-auto px-4 md:px-0 animate-fade-in text-start">
-
+      {/* 
       {/* HEADER & BACK */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <button
@@ -248,7 +248,7 @@ export default function CommandeDetail() {
       </div>
 
       {/* BULK ACTIONS BAR */}
-      {(pendingBulkCleaning || pendingBulkReady) && (
+      {/* {(pendingBulkCleaning || pendingBulkReady) && (
         <div className="bg-violet-50 dark:bg-violet-500/5 border border-violet-100 dark:border-violet-500/20 rounded-[2rem] p-6 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-500 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 start-0 w-1.5 h-full bg-violet-500" />
 
@@ -285,7 +285,7 @@ export default function CommandeDetail() {
             )}
           </div>
         </div>
-      )}
+      )}  */}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
@@ -392,7 +392,7 @@ export default function CommandeDetail() {
                   <span className="bg-background text-text-secondary text-[11px] font-black px-5 py-2.5 rounded-xl uppercase tracking-widest border border-border/50 shadow-sm self-start">
                     {t('workshop.detail.labels.qty', { count: ct.quantite })}
                   </span>
-                  {etatCfg?.next && !isReadOnly && (
+                  {/* {etatCfg?.next && !isReadOnly && (
                     <button
                       onClick={() => handleTapisStatusUpdate(ct.id, ct.etat)}
                       disabled={isUpdatingTapis}
@@ -401,7 +401,7 @@ export default function CommandeDetail() {
                       {isUpdatingTapis ? <Loader2 size={16} className="animate-spin" /> : <ChevronRight size={16} strokeWidth={3} className="rtl:rotate-180" />}
                       {t('workshop.detail.actions.next_step', { label: ETAT_CONFIG[etatCfg.next]?.label })}
                     </button>
-                  )}
+                  )} */}
                 </div>
               </div>
             );

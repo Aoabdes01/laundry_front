@@ -214,11 +214,11 @@ const Header = () => {
               <div className="px-6 py-5 border-b border-border/50 flex items-center justify-between bg-background/30 text-start">
                 <div>
                   <h3 className="text-xs font-black text-text-primary uppercase tracking-widest">{t('common.notifications')}</h3>
-                  <p className="text-[9px] text-text-muted font-bold uppercase tracking-tighter mt-0.5">{unreadCount} non-lus sur {notifications.length}</p>
+                  <p className="text-[9px] text-text-muted font-bold uppercase tracking-tighter mt-0.5">{t('header.notifications.unread_count', { unread: unreadCount, total: notifications.length })}</p>
                 </div>
                 {unreadCount > 0 && (
                   <button onClick={handleMarkAllSeen} className="flex items-center gap-1.5 text-[9px] font-black text-primary-600 hover:text-primary-700 uppercase tracking-widest">
-                    <CheckCheck size={12}/> Tout marquer
+                    <CheckCheck size={12}/> {t('header.notifications.mark_all')}
                   </button>
                 )}
               </div>
@@ -249,7 +249,7 @@ const Header = () => {
                 ) : (
                   <div className="py-16 text-center opacity-40">
                     <BellOff size={40} className="mx-auto mb-4" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em]">Aucune notification</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em]">{t('header.notifications.empty')}</p>
                   </div>
                 )}
               </div>
@@ -259,7 +259,7 @@ const Header = () => {
                   onClick={() => { navigate('/notifications'); setIsNotificationsOpen(false); }}
                   className="w-full py-4 bg-background/50 border-t border-border/50 text-[10px] font-black text-text-muted hover:text-primary-600 transition-colors uppercase tracking-widest flex items-center justify-center gap-2 group"
                 >
-                  Voir toutes les notifications
+                  {t('header.notifications.view_all')}
                   <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               )}
