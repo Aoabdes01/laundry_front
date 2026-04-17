@@ -89,6 +89,65 @@ const UserManagement = () => {
     }
   };
 
+  const validatePhone = (phone) => {
+    if (!phone) return true;
+    const sanitized = phone.replace(/[\s-]/g, '');
+    if (sanitized.startsWith('0')) {
+      return sanitized.length === 10 && /^[567]/.test(sanitized[1]);
+    }
+    if (sanitized.startsWith('+212')) {
+      return sanitized.length === 13 && /^[567]/.test(sanitized[4]);
+    } else if (sanitized.startsWith('212')) {
+      return sanitized.length === 12 && /^[567]/.test(sanitized[3]);
+    }
+    return false;
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setPasswordError('');
+    if (!newPassword || !confirmPassword) return setPasswordError('Veuillez remplir tous les champs');
+    if (newPassword !== confirmPassword) return setPasswordError('Les mots de passe ne correspondent pas');
+    if (newPassword.length < 6) return setPasswordError('Minimum 6 caractères');
+    setPasswordLoading(true);
+    try {
+      await dispatch(changeUserpassword({ id: selectedUser.id, password: { password: newPassword } })).unwrap();
+      toast.success("Mot de passe mis à jour avec succès");
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err) {
+      toast.error(typeof err === 'string' ? err : t('common.error'));
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    if (formData.phone && !validatePhone(formData.phone)) {
+      return toast.error("Format de numéro de téléphone invalide");
+    }
+    const { password, ...rest } = formData;
+    dispatch(updateExistingUser({ id: selectedUser.id, data: rest }));
+  };
+
+  const handleCreate = (e) => {
+    e.preventDefault();
+    if (formData.phone && !validatePhone(formData.phone)) {
+      return toast.error("Format de numéro de téléphone invalide");
+    }
+    dispatch(createNewUser(formData));
+  };
+
+  const filteredUsers = useMemo(() => {
+    const displayUsers = showInactive ? (inactiveUsers || []) : (activeUsers || []);
+    return displayUsers.filter(u => {
+      const matchesSearch = !searchQuery || u.name?.toLowerCase().includes(searchQuery.toLowerCase()) || u.email?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesRole = roleFilter === 'all' || u.role === roleFilter;
+      return matchesSearch && matchesRole;
+    });
+  }, [activeUsers, inactiveUsers, searchQuery, roleFilter, showInactive]);
+
   const handleSelectUser = (user) => {
     setSelectedUser(user);
     setIsAddingUser(false);
@@ -97,67 +156,9 @@ const UserManagement = () => {
     setNewPassword('');
     setConfirmPassword('');
     setPasswordError('');
-    const validatePhone = (phone) => {
-      if (!phone) return true;
-      const sanitized = phone.replace(/[\s-]/g, '');
-      if (sanitized.startsWith('0')) {
-        return sanitized.length === 10 && /^[567]/.test(sanitized[1]);
-      }
-      if (sanitized.startsWith('+212')) {
-        return sanitized.length === 13 && /^[567]/.test(sanitized[4]);
-      } else if (sanitized.startsWith('212')) {
-        return sanitized.length === 12 && /^[567]/.test(sanitized[3]);
-      }
-      return false;
-    };
+  };
 
-    const handleChangePassword = async (e) => {
-      e.preventDefault();
-      setPasswordError('');
-      if (!newPassword || !confirmPassword) return setPasswordError('Veuillez remplir tous les champs');
-      if (newPassword !== confirmPassword) return setPasswordError('Les mots de passe ne correspondent pas');
-      if (newPassword.length < 6) return setPasswordError('Minimum 6 caractères');
-
-      setPasswordLoading(true);
-      try {
-        await dispatch(changeUserpassword({ id: selectedUser.id, password: { password: newPassword } })).unwrap();
-        toast.success("Mot de passe mis à jour avec succès");
-        setNewPassword('');
-        setConfirmPassword('');
-      } catch (err) {
-        toast.error(typeof err === 'string' ? err : t('common.error'));
-      } finally {
-        setPasswordLoading(false);
-      }
-    };
-
-    const handleUpdate = (e) => {
-      e.preventDefault();
-      if (formData.phone && !validatePhone(formData.phone)) {
-        return toast.error("Format de numéro de téléphone invalide");
-      }
-      const { password, ...rest } = formData;
-      dispatch(updateExistingUser({ id: selectedUser.id, data: rest }));
-    };
-
-    const handleCreate = (e) => {
-      e.preventDefault();
-      if (formData.phone && !validatePhone(formData.phone)) {
-        return toast.error("Format de numéro de téléphone invalide");
-      }
-      dispatch(createNewUser(formData));
-    };
-
-    const filteredUsers = useMemo(() => {
-      const displayUsers = showInactive ? (inactiveUsers || []) : (activeUsers || []);
-      return displayUsers.filter(u => {
-        const matchesSearch = !searchQuery || u.name?.toLowerCase().includes(searchQuery.toLowerCase()) || u.email?.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesRole = roleFilter === 'all' || u.role === roleFilter;
-        return matchesSearch && matchesRole;
-      });
-    }, [activeUsers, inactiveUsers, searchQuery, roleFilter, showInactive]);
-
-    return (
+  return (
       <div className="flex flex-col md:flex-row gap-4 lg:gap-6 pb-12 h-full md:h-[calc(100vh-140px)] animate-fade-in text-start">
 
         {/* MOBILE HEADER - Only visible when an item is selected on mobile */}
@@ -338,8 +339,7 @@ const UserManagement = () => {
           type={confirmModal?.action === 'delete' ? 'danger' : 'warning'}
         />
       </div>
-    );
-  }
+  );
 };
 
 export default UserManagement;
