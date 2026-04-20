@@ -139,44 +139,32 @@ const buildReceiptHTML = (order, paymentTypeLabel) => {
 };
 
 export const printReceipt = (order, paymentTypeLabel) => {
-  const orderNum = order.numeroCommande || order.id;
   const html = buildReceiptHTML(order, paymentTypeLabel);
 
-  // Store original title to restore it later
-  const originalTitle = document.title;
-  // Set main document title to order number (this pre-fills the filename in the print dialog)
-  document.title = orderNum;
+  // Ouvre une nouvelle fenêtre (popup) pour l'impression
+  // C'est la méthode la plus fiable sur iOS/Android
+  const printWindow = window.open('', '_blank', 'width=400,height=600');
+  
+  if (!printWindow) {
+    alert("Veuillez autoriser les pop-ups pour imprimer le reçu.");
+    return;
+  }
 
-  // Create a hidden iframe
-  const iframe = document.createElement('iframe');
-  iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:0;height:0;border:0;';
-  document.body.appendChild(iframe);
-
-  const doc = iframe.contentWindow.document;
-  doc.open();
-  doc.write(html);
-  doc.close();
-
-  let isPrinting = false;
-  const doPrint = () => {
-    if (isPrinting) return;
-    isPrinting = true;
+  printWindow.document.open();
+  printWindow.document.write(html);
+  printWindow.document.close();
+  
+  // Attendre que le contenu et les images soient chargés avant d'imprimer
+  setTimeout(() => {
+    printWindow.focus();
+    printWindow.print();
     
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
-    
-    // Restore the original website title after a short delay
+    // Sur mobile, on ferme la fenêtre après un court délai
+    // pour permettre à la boîte de dialogue d'impression de s'ouvrir
     setTimeout(() => {
-      document.title = originalTitle;
-      if (document.body.contains(iframe)) {
-        document.body.removeChild(iframe);
-      }
-    }, 1000);
-  };
-
-  // Wait for content to load
-  iframe.contentWindow.onload = doPrint;
-  setTimeout(doPrint, 2000);
+      printWindow.close();
+    }, 500);
+  }, 1000);
 };
 
 export const downloadReceiptPDF = (order, paymentTypeLabel) => {
