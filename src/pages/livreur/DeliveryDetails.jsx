@@ -100,7 +100,7 @@ export default function DeliveryDetails() {
     );
   }
 
-  const baseUrl = "http://localhost:8080" || import.meta.env.VITE_API_URL;
+  const baseUrl = import.meta.env.VITE_API_URL;
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-fade-in pb-20 px-4 md:px-0 text-start">

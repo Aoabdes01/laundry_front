@@ -156,7 +156,7 @@ const PaymentModal = ({ isOpen, onClose, onConfirm, order, paymentTypes = [], lo
 
 const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized, isSelected, onSelect, navigate }) => {
   const { t } = useTranslation();
-  const baseUrl = "http://localhost:8080" || import.meta.env.VITE_API_URL;
+  const baseUrl = import.meta.env.VITE_API_URL;
   const allPhotos = useMemo(() => {
     const photos = [];
     const tapisList = order.commandeTapis || [];

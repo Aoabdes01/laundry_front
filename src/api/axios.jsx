@@ -3,7 +3,7 @@ import { store } from "../store/store"
 import { logOut, setCredentials } from "../store/auth/authSlice"
 import { toast } from "react-toastify"
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080"
+const BASE_URL = import.meta.env.VITE_API_URL
 export const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true
