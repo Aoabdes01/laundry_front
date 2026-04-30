@@ -89,7 +89,7 @@ export default function NotificationsPage() {
           </button>
           <button 
             onClick={() => dispatch(markAllAsReadThunk())}
-            className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/20"
+            className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/20"
           >
             <CheckCheck size={14} /> Tout marquer comme lu
           </button>
@@ -111,13 +111,13 @@ export default function NotificationsPage() {
         <div className="flex bg-surface p-1 rounded-2xl border border-border/50 shadow-sm">
           <button 
             onClick={() => setFilter('all')}
-            className={`flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filter === 'all' ? 'bg-background text-primary-600 shadow-inner' : 'text-text-muted hover:text-text-primary'}`}
+            className={`flex-1 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${filter === 'all' ? 'bg-background text-primary-600 shadow-inner' : 'text-text-muted hover:text-text-primary'}`}
           >
             Toutes
           </button>
           <button 
             onClick={() => setFilter('unread')}
-            className={`flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filter === 'unread' ? 'bg-background text-primary-600 shadow-inner' : 'text-text-muted hover:text-text-primary'}`}
+            className={`flex-1 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${filter === 'unread' ? 'bg-background text-primary-600 shadow-inner' : 'text-text-muted hover:text-text-primary'}`}
           >
             Non-lues
           </button>
@@ -146,16 +146,16 @@ export default function NotificationsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-1 mb-2">
                       <div className="flex items-center gap-3">
-                        <span className={`text-[10px] font-black uppercase tracking-widest ${!notif.read ? styles.text : 'text-text-muted'}`}>
+                        <span className={`text-xs font-black uppercase tracking-widest ${!notif.read ? styles.text : 'text-text-muted'}`}>
                           {notif.type.replace('_', ' ')}
                         </span>
                         {!notif.read && (
-                          <span className="px-2 py-0.5 rounded-full bg-primary-500 text-white text-[8px] font-black uppercase tracking-tighter animate-pulse">
+                          <span className="px-2 py-0.5 rounded-full bg-primary-500 text-white text-xs font-black uppercase tracking-tighter animate-pulse">
                             Nouveau
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-text-muted uppercase">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-text-muted uppercase">
                         <Clock size={12} />
                         {formatFullDate(notif.createdAt)}
                       </div>

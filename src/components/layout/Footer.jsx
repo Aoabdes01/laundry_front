@@ -26,7 +26,7 @@ const Footer = () => {
           <p className="text-laundry-sky/60 text-xs font-bold tracking-widest uppercase">
             © 2026 PURE CLEAN
           </p>
-          <p className="text-laundry-sky/40 text-[10px] font-bold uppercase tracking-[0.2em] leading-relaxed max-w-xs mx-auto">
+          <p className="text-laundry-sky/40 text-xs font-bold uppercase tracking-[0.2em] leading-relaxed max-w-xs mx-auto">
             Système Premium de Gestion de Blanchisserie
           </p>
         </div>

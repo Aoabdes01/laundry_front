@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, AlertTriangle, Info, Trash2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -51,8 +52,8 @@ const ConfirmModal = ({
   const cfg = CONFIG[type] || CONFIG.warning;
   const Icon = cfg.icon;
 
-  return (
-    <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
+  const modalContent = (
+    <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
       {/* BACKDROP */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
@@ -65,7 +66,7 @@ const ConfirmModal = ({
         {/* MOBILE HANDLE */}
         <div className="w-12 h-1.5 bg-border/40 rounded-full mx-auto mt-4 mb-2 sm:hidden" />
 
-        <div className="p-8 md:p-10 text-center">
+        <div className="p-8 md:p-10 pb-[max(2rem,calc(2rem+env(safe-area-inset-bottom)))] text-center">
           
           {/* ICON BOX */}
           <div className={`w-20 h-20 ${cfg.bg} rounded-[1.5rem] flex items-center justify-center mx-auto mb-8 shadow-inner border ${cfg.border}`}>
@@ -85,7 +86,7 @@ const ConfirmModal = ({
             <button
               onClick={onConfirm}
               disabled={loading}
-              className={`w-full ${cfg.btn} text-white rounded-2xl py-5 text-[11px] font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50`}
+              className={`w-full ${cfg.btn} text-white rounded-2xl py-5 text-xs font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50`}
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -97,7 +98,7 @@ const ConfirmModal = ({
             <button
               onClick={onClose}
               disabled={loading}
-              className="w-full bg-background border border-border/50 text-text-muted rounded-2xl py-5 text-[11px] font-black uppercase tracking-[0.2em] transition-all active:scale-95 hover:bg-surface disabled:opacity-50"
+              className="w-full bg-background border border-border/50 text-text-muted rounded-2xl py-5 text-xs font-black uppercase tracking-[0.2em] transition-all active:scale-95 hover:bg-surface disabled:opacity-50"
             >
               {cancelText || t('common.cancel')}
             </button>
@@ -106,6 +107,9 @@ const ConfirmModal = ({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
 
 export default ConfirmModal;
+

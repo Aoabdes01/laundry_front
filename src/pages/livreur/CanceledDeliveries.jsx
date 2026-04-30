@@ -54,7 +54,7 @@ const HorizontalCanceledCard = ({ order, onReturn, isProcessing }) => {
         <span className="text-xs font-bold text-red-700 dark:text-red-500">
           #{order.numeroCommande || order.id}
         </span>
-        <span className="flex items-center gap-1.5 text-[10px] font-bold text-red-600 dark:text-red-500 uppercase tracking-wider">
+        <span className="flex items-center gap-1.5 text-xs font-bold text-red-600 dark:text-red-500 uppercase tracking-wider">
           <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
           {t('driver.canceled_deliveries.card.canceled_by_client')}
         </span>
@@ -74,7 +74,7 @@ const HorizontalCanceledCard = ({ order, onReturn, isProcessing }) => {
           </div>
         )}
         <div className="absolute top-2 start-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10 z-10">
-          <span className="text-[10px] font-bold text-white uppercase tracking-wider">#{order.numeroCommande}</span>
+          <span className="text-xs font-bold text-white uppercase tracking-wider">#{order.numeroCommande}</span>
         </div>
       </div>
 
@@ -86,15 +86,15 @@ const HorizontalCanceledCard = ({ order, onReturn, isProcessing }) => {
               {order.client?.nom || order.client?.name || t('driver.canceled_deliveries.card.client_unknown')}
             </h3>
             <div className="flex items-center gap-2 mt-1.5">
-              <span className="text-[10px] font-bold text-red-700 dark:text-red-500 uppercase tracking-wider bg-red-500/10 px-2.5 py-0.5 rounded-lg border border-red-500/20">
+              <span className="text-xs font-bold text-red-700 dark:text-red-500 uppercase tracking-wider bg-red-500/10 px-2.5 py-0.5 rounded-lg border border-red-500/20">
                 {t('driver.canceled_deliveries.card.canceled_by_client')}
               </span>
             </div>
           </div>
           <div className="hidden sm:flex flex-col items-end shrink-0">
-            <span className="text-[10px] font-bold text-text-secondary uppercase tracking-wider mb-1">{t('driver.canceled_deliveries.card.current_status')}</span>
+            <span className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">{t('driver.canceled_deliveries.card.current_status')}</span>
             <div className="bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">
-              <span className="text-[10px] font-bold text-amber-700 dark:text-amber-500 uppercase tracking-wider">{t('driver.canceled_deliveries.card.to_return')}</span>
+              <span className="text-xs font-bold text-amber-700 dark:text-amber-500 uppercase tracking-wider">{t('driver.canceled_deliveries.card.to_return')}</span>
             </div>
           </div>
         </div>
@@ -138,13 +138,13 @@ const HorizontalCanceledCard = ({ order, onReturn, isProcessing }) => {
               </p>
               <div className="flex items-center gap-1.5 mt-1.5 text-text-secondary">
                 <Calendar size={13} />
-                <span className="text-[11px] font-semibold">
+                <span className="text-xs font-semibold">
                   {t('driver.canceled_deliveries.card.canceled_on', { date: new Date(order.dateCreation || order.createdAt).toLocaleDateString(t('common.date_locale', 'fr-FR')) })}
                 </span>
               </div>
             </div>
             <div className="bg-background px-2 py-1 rounded-lg border border-border">
-              <span className="text-[10px] font-bold text-text-secondary uppercase">
+              <span className="text-xs font-bold text-text-secondary uppercase">
                 {t('driver.canceled_deliveries.card.carpets_count', { count: order.commandeTapis?.length || 0 })}
               </span>
             </div>

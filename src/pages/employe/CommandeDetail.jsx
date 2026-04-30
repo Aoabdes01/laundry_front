@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -179,7 +180,7 @@ export default function CommandeDetail() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <button
           onClick={() => navigate('/employe/dashboard')}
-          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-text-primary transition-all active:scale-95 bg-surface px-4 py-2 rounded-xl border border-border/50 shadow-sm"
+          className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-text-muted hover:text-text-primary transition-all active:scale-95 bg-surface px-4 py-2 rounded-xl border border-border/50 shadow-sm"
         >
           <ArrowLeft size={14} className="rtl:rotate-180" />
           {t('workshop.detail.back')}
@@ -199,7 +200,7 @@ export default function CommandeDetail() {
           </div>
           <div>
             <p className="text-sm font-black text-text-primary uppercase tracking-tight mb-1">{t('admin.pro_ui.archived_order', 'Commande Archivée')}</p>
-            <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest opacity-80 leading-relaxed">
+            <p className="text-xs text-text-muted font-bold uppercase tracking-widest opacity-80 leading-relaxed">
               {t('workshop.pro_ui.archived_order_desc', "Cette commande a déjà été remise au livreur (Sortie de l'atelier).")}
             </p>
           </div>
@@ -216,9 +217,9 @@ export default function CommandeDetail() {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <Package size={14} className="text-primary-500" />
-              <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.labels.order')}</p>
+              <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.labels.order')}</p>
               {commande.status === COMMANDE_STATUS.RETOURNEE && (
-                <span className="bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[8px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest ring-1 ring-red-100 dark:ring-red-500/20 flex items-center gap-1 ms-2">
+                <span className="bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-black px-2 py-0.5 rounded-md uppercase tracking-widest ring-1 ring-red-100 dark:ring-red-500/20 flex items-center gap-1 ms-2">
                   <AlertCircle size={10} strokeWidth={3} /> {t('status.retournee')}
                 </span>
               )}
@@ -227,7 +228,7 @@ export default function CommandeDetail() {
 
             <div className="flex flex-wrap items-center gap-3">
               <StatusBadge status={commande.status} />
-              <span className="inline-flex items-center gap-2 text-[10px] font-black text-text-muted bg-background px-3 py-1.5 rounded-lg border border-border/50 uppercase tracking-widest">
+              <span className="inline-flex items-center gap-2 text-xs font-black text-text-muted bg-background px-3 py-1.5 rounded-lg border border-border/50 uppercase tracking-widest">
                 <CalendarDays size={14} />
                 {new Date(commande.dateCreation || commande.createdAt).toLocaleDateString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', { day: '2-digit', month: 'short' })}
               </span>
@@ -238,7 +239,7 @@ export default function CommandeDetail() {
             <button
               onClick={onStatusBtnClick}
               disabled={isUpdatingStatus}
-              className="w-full md:w-auto bg-primary-600 hover:bg-primary-700 text-white rounded-2xl px-8 py-5 text-[11px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all shadow-xl shadow-primary-500/20 active:scale-95 disabled:opacity-50 self-start md:self-center group/btn"
+              className="w-full md:w-auto bg-primary-600 hover:bg-primary-700 text-white rounded-2xl px-8 py-5 text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all shadow-xl shadow-primary-500/20 active:scale-95 disabled:opacity-50 self-start md:self-center group/btn"
             >
               {isUpdatingStatus ? <Loader2 size={20} className="animate-spin" /> : <ChevronRight size={20} strokeWidth={3} className="rtl:rotate-180 group-hover/btn:translate-x-1 transition-transform" />}
               {NEXT_COMMAND_LABEL[commande.status]}
@@ -258,7 +259,7 @@ export default function CommandeDetail() {
             </div>
             <div>
               <p className="text-sm font-black text-violet-700 dark:text-violet-400 uppercase tracking-tight mb-0.5">{t('workshop.table.view_all')}</p>
-              <p className="text-[10px] text-violet-600/70 dark:text-violet-500/60 font-bold uppercase tracking-widest">{t('admin.pro_ui.bulk_actions', 'Actions groupées sur les articles')}</p>
+              <p className="text-xs text-violet-600/70 dark:text-violet-500/60 font-bold uppercase tracking-widest">{t('admin.pro_ui.bulk_actions', 'Actions groupées sur les articles')}</p>
             </div>
           </div>
 
@@ -267,7 +268,7 @@ export default function CommandeDetail() {
               <button
                 onClick={() => handleBulkUpdate(TAPIS_ETAT.EN_NETTOYAGE)}
                 disabled={isBulkUpdating}
-                className="w-full sm:w-auto bg-surface hover:bg-background text-violet-600 border border-violet-200 dark:border-violet-500/30 rounded-xl px-6 py-3.5 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm"
+                className="w-full sm:w-auto bg-surface hover:bg-background text-violet-600 border border-violet-200 dark:border-violet-500/30 rounded-xl px-6 py-3.5 text-xs font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm"
               >
                 {isBulkUpdating ? <Loader2 size={16} className="animate-spin" /> : <Clock size={16} strokeWidth={2.5} />}
                 {t('admin.pro_ui.in_cleaning', 'En Nettoyage')}
@@ -277,7 +278,7 @@ export default function CommandeDetail() {
               <button
                 onClick={() => handleBulkUpdate(TAPIS_ETAT.NETTOYE)}
                 disabled={isBulkUpdating}
-                className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-6 py-3.5 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20"
+                className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-6 py-3.5 text-xs font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20"
               >
                 {isBulkUpdating ? <Loader2 size={16} className="animate-spin" /> : <ListChecks size={16} strokeWidth={2.5} />}
                 {t('admin.pro_ui.all_cleaned', 'Tout Nettoyé')}
@@ -306,7 +307,7 @@ export default function CommandeDetail() {
                   <div>
                     <div className="flex items-center gap-2 mb-1 opacity-60">
                       <Package size={12} className="text-primary-500" />
-                      <span className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.sections.carpet', { index: idx + 1 })}</span>
+                      <span className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.sections.carpet', { index: idx + 1 })}</span>
                     </div>
                     <h3 className="font-black text-text-primary text-lg md:text-xl tracking-tighter uppercase leading-none">{tapis?.nom}</h3>
                   </div>
@@ -328,25 +329,25 @@ export default function CommandeDetail() {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <ImageIcon size={14} className="text-text-muted opacity-60" />
-                      <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.sections.before')}</p>
+                      <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.sections.before')}</p>
                     </div>
-                    <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pb-2">
                       {beforeImgs.map((img, i) => (
                         <div key={i} className="relative group/img flex-shrink-0">
-                          <img src={`${BASE_URL}${img.imageUrl}`} alt="" className="w-28 h-28 md:w-32 md:h-32 rounded-2xl object-cover shadow-sm cursor-pointer border-2 border-border hover:border-primary-500 transition-all" onClick={() => setPreviewImg(img.imageUrl)} />
+                          <img src={`${BASE_URL}${img.imageUrl}`} alt="" className="w-full aspect-square rounded-2xl object-cover shadow-sm cursor-pointer border-2 border-border hover:border-primary-500 transition-all" onClick={() => setPreviewImg(img.imageUrl)} />
                           <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 rounded-2xl pointer-events-none transition-opacity flex items-center justify-center backdrop-blur-[2px]">
                             <Plus size={24} className="text-white drop-shadow-md" />
                           </div>
                         </div>
                       ))}
                       {!isReadOnly && (
-                        <label className="w-28 h-28 md:w-32 md:h-32 rounded-2xl border-2 border-dashed border-border/60 flex flex-col items-center justify-center cursor-pointer hover:border-primary-500 hover:bg-primary-500/5 flex-shrink-0 transition-all group/btn bg-background">
+                        <label className="w-full aspect-square rounded-2xl border-2 border-dashed border-border/60 flex flex-col items-center justify-center cursor-pointer hover:border-primary-500 hover:bg-primary-500/5 flex-shrink-0 transition-all group/btn bg-background">
                           {isUploading ? <Loader2 size={24} className="text-primary-500 animate-spin" /> : (
                             <>
                               <div className="w-10 h-10 rounded-[1rem] bg-surface flex items-center justify-center text-text-muted group-hover/btn:text-primary-500 transition-colors shadow-sm mb-2 border border-border/50">
                                 <Plus size={20} strokeWidth={2.5} />
                               </div>
-                              <span className="text-[9px] font-black text-text-muted uppercase tracking-[0.15em] group-hover/btn:text-primary-600">{t('workshop.pro_ui.add', 'Ajouter')}</span>
+                              <span className="text-xs font-black text-text-muted uppercase tracking-[0.15em] group-hover/btn:text-primary-600">{t('workshop.pro_ui.add', 'Ajouter')}</span>
                             </>
                           )}
                           <input type="file" accept="image/*" multiple className="hidden" onChange={e => handleImageUpload(ct.id, e.target.files, TAPIS_IMAGE_TYPE.BEFORE)} />
@@ -359,25 +360,25 @@ export default function CommandeDetail() {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <CheckCircle2 size={14} className="text-text-muted opacity-60" />
-                      <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.sections.after')}</p>
+                      <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.sections.after')}</p>
                     </div>
-                    <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pb-2">
                       {afterImgs.map((img, i) => (
                         <div key={i} className="relative group/img flex-shrink-0">
-                          <img src={`${BASE_URL}${img.imageUrl}`} alt="" className="w-28 h-28 md:w-32 md:h-32 rounded-2xl object-cover shadow-sm cursor-pointer border-2 border-border hover:border-primary-500 transition-all" onClick={() => setPreviewImg(img.imageUrl)} />
+                          <img src={`${BASE_URL}${img.imageUrl}`} alt="" className="w-full aspect-square rounded-2xl object-cover shadow-sm cursor-pointer border-2 border-border hover:border-primary-500 transition-all" onClick={() => setPreviewImg(img.imageUrl)} />
                           <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 rounded-2xl pointer-events-none transition-opacity flex items-center justify-center backdrop-blur-[2px]">
                             <Plus size={24} className="text-white drop-shadow-md" />
                           </div>
                         </div>
                       ))}
                       {!isReadOnly && (
-                        <label className="w-28 h-28 md:w-32 md:h-32 rounded-2xl border-2 border-dashed border-border/60 flex flex-col items-center justify-center cursor-pointer hover:border-primary-500 hover:bg-primary-500/5 flex-shrink-0 transition-all group/btn bg-background">
+                        <label className="w-full aspect-square rounded-2xl border-2 border-dashed border-border/60 flex flex-col items-center justify-center cursor-pointer hover:border-primary-500 hover:bg-primary-500/5 flex-shrink-0 transition-all group/btn bg-background">
                           {isUploading ? <Loader2 size={24} className="text-primary-500 animate-spin" /> : (
                             <>
                               <div className="w-10 h-10 rounded-[1rem] bg-surface flex items-center justify-center text-text-muted group-hover/btn:text-primary-500 transition-colors shadow-sm mb-2 border border-border/50">
                                 <Plus size={20} strokeWidth={2.5} />
                               </div>
-                              <span className="text-[9px] font-black text-text-muted uppercase tracking-[0.15em] group-hover/btn:text-primary-600">{t('workshop.pro_ui.add', 'Ajouter')}</span>
+                              <span className="text-xs font-black text-text-muted uppercase tracking-[0.15em] group-hover/btn:text-primary-600">{t('workshop.pro_ui.add', 'Ajouter')}</span>
                             </>
                           )}
                           <input type="file" accept="image/*" multiple className="hidden" onChange={e => handleImageUpload(ct.id, e.target.files, TAPIS_IMAGE_TYPE.AFTER)} />
@@ -389,14 +390,14 @@ export default function CommandeDetail() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 mt-8 border-t border-border/40 ms-2">
-                  <span className="bg-background text-text-secondary text-[11px] font-black px-5 py-2.5 rounded-xl uppercase tracking-widest border border-border/50 shadow-sm self-start">
+                  <span className="bg-background text-text-secondary text-xs font-black px-5 py-2.5 rounded-xl uppercase tracking-widest border border-border/50 shadow-sm self-start">
                     {t('workshop.detail.labels.qty', { count: ct.quantite })}
                   </span>
                   {/* {etatCfg?.next && !isReadOnly && (
                     <button
                       onClick={() => handleTapisStatusUpdate(ct.id, ct.etat)}
                       disabled={isUpdatingTapis}
-                      className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white rounded-xl px-8 py-4 sm:py-3.5 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-lg shadow-primary-500/20 active:scale-95 disabled:opacity-50"
+                      className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white rounded-xl px-8 py-3 sm:py-4 sm:py-3.5 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-lg shadow-primary-500/20 active:scale-95 disabled:opacity-50"
                     >
                       {isUpdatingTapis ? <Loader2 size={16} className="animate-spin" /> : <ChevronRight size={16} strokeWidth={3} className="rtl:rotate-180" />}
                       {t('workshop.detail.actions.next_step', { label: ETAT_CONFIG[etatCfg.next]?.label })}
@@ -417,7 +418,7 @@ export default function CommandeDetail() {
               <PieChart size={100} />
             </div>
 
-            <h3 className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-8 text-center relative z-10">{t('workshop.detail.progress.title')}</h3>
+            <h3 className="text-xs font-black text-text-muted uppercase tracking-[0.2em] mb-8 text-center relative z-10">{t('workshop.detail.progress.title')}</h3>
 
             <div className="flex justify-center mb-8 relative z-10">
               <svg viewBox="0 0 120 120" className="w-40 h-40 rotate-[-90deg] drop-shadow-md">
@@ -428,12 +429,12 @@ export default function CommandeDetail() {
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-3xl font-black text-text-primary tracking-tighter leading-none">{progressPct}%</span>
-                <span className="text-[8px] font-black text-text-muted uppercase tracking-[0.2em] mt-2 bg-background px-2 py-0.5 rounded-md border border-border/50">{t('workshop.detail.progress.completed')}</span>
+                <span className="text-xs font-black text-text-muted uppercase tracking-[0.2em] mt-2 bg-background px-2 py-0.5 rounded-md border border-border/50">{t('workshop.detail.progress.completed')}</span>
               </div>
             </div>
 
             <div className="bg-background rounded-2xl p-5 border border-border/50 shadow-sm relative z-10">
-              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest mb-3">
+              <div className="flex items-center justify-between text-xs font-black uppercase tracking-widest mb-3">
                 <span className="text-text-muted">{t('workshop.detail.progress.title')}</span>
                 <span className="text-primary-600 bg-primary-50 px-2 py-0.5 rounded-md border border-primary-100">{completedTapis} / {totalTapis}</span>
               </div>
@@ -447,10 +448,10 @@ export default function CommandeDetail() {
 
           {/* LOGISTICS WIDGET */}
           <div className="bg-surface rounded-[2rem] shadow-card p-6 md:p-8 border border-border/50 space-y-5">
-            <h3 className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">{t('workshop.detail.logistics.title')}</h3>
+            <h3 className="text-xs font-black text-text-muted uppercase tracking-[0.2em] mb-2">{t('workshop.detail.logistics.title')}</h3>
             <div className="grid grid-cols-1 gap-4">
               <div className="bg-background rounded-2xl p-5 border border-border/50 shadow-sm">
-                <p className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] mb-3">{t('workshop.detail.logistics.driver')}</p>
+                <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em] mb-3">{t('workshop.detail.logistics.driver')}</p>
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center text-primary-500 shadow-sm border border-border/50 shrink-0">
                     <Truck size={18} strokeWidth={2.5} className="rtl:rotate-180" />
@@ -463,7 +464,7 @@ export default function CommandeDetail() {
 
               {commande.livreur?.phone && (
                 <div className="bg-background rounded-2xl p-5 border border-border/50 shadow-sm">
-                  <p className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] mb-3">{t('admin.users.phone')}</p>
+                  <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em] mb-3">{t('admin.users.phone')}</p>
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center text-primary-500 shadow-sm border border-border/50 shrink-0">
                       <Phone size={18} strokeWidth={2.5} />
@@ -487,13 +488,21 @@ export default function CommandeDetail() {
         type="info"
       />
 
-      {previewImg && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 animate-in fade-in duration-300" onClick={() => setPreviewImg(null)}>
-          <button onClick={() => setPreviewImg(null)} className="absolute top-6 end-6 w-12 h-12 rounded-2xl bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-all active:scale-95">
+      {previewImg && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center md:items-start justify-center bg-black/95 p-0 animate-fade-in" onClick={() => setPreviewImg(null)}>
+          <button onClick={() => setPreviewImg(null)} className="absolute top-6 end-6 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-all active:scale-95 border border-white/10 z-[10000]">
             <X size={24} />
           </button>
-          <img src={`${BASE_URL}${previewImg}`} alt="" className="max-w-full max-h-[85vh] rounded-3xl object-contain shadow-2xl ring-4 ring-white/10" onClick={e => e.stopPropagation()} />
-        </div>
+          <div className="w-full h-full flex items-center md:items-start justify-center overflow-hidden p-4 md:p-12 md:pt-32">
+            <img 
+              src={`${BASE_URL}${previewImg}`} 
+              alt="zoom" 
+              className="w-full h-full md:max-w-[80vw] md:max-h-[80vh] object-contain rounded-lg shadow-2xl animate-in zoom-in-95 duration-500" 
+              onClick={e => e.stopPropagation()} 
+            />
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );

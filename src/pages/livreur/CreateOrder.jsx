@@ -67,7 +67,7 @@ export default function CreateOrder() {
             <ShoppingBag className="text-primary-500" size={40} />
           </div>
           <h1 className="text-2xl font-bold text-text-primary mb-2 tracking-tight">{t('driver.create_order.steps.title')}</h1>
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-4 mb-8 text-start flex items-start gap-3">
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3 sm:py-4 mb-8 text-start flex items-start gap-3">
             <AlertCircle className="text-amber-500 shrink-0 mt-0.5" size={18} />
             <p className="text-sm font-medium text-amber-600 dark:text-amber-500 leading-snug">
               {t('driver.create_order.steps.notice')}
@@ -302,7 +302,7 @@ export default function CreateOrder() {
             <Info size={18} />
             <span className="absolute top-1.5 end-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-surface"></span>
           </button>
-          <div className="w-8 h-8 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-500 flex items-center justify-center font-bold text-[10px] border border-primary-500/20">
+          <div className="w-8 h-8 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-500 flex items-center justify-center font-bold text-xs border border-primary-500/20">
             {pendingClient.name?.[0]?.toUpperCase()}
           </div>
         </div>
@@ -312,7 +312,7 @@ export default function CreateOrder() {
 
         {/* CLIENT SUMMARY */}
         <div className="bg-surface rounded-2xl shadow-card p-5 mb-5 mt-4 animate-in slide-in-from-top duration-500 border border-border/40">
-          <p className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider mb-4">{t('driver.create_order.client_details')}</p>
+          <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-4">{t('driver.create_order.client_details')}</p>
           <div className="flex items-start gap-4 text-start">
             <div className="w-12 h-12 bg-primary-500/10 text-primary-600 dark:text-primary-500 rounded-2xl flex items-center justify-center shrink-0 border border-primary-500/20">
               <UserCircle size={24} />
@@ -338,18 +338,18 @@ export default function CreateOrder() {
         {/* ARTICLES SECTION */}
         <div className="flex items-center justify-between mb-5 px-1">
           <h3 className="text-lg font-bold text-text-primary tracking-tight">{t('driver.create_order.articles.title')}</h3>
-          <span className="text-[11px] font-bold text-text-muted uppercase tracking-widest">{t('driver.create_order.articles.count', { count: articles.length })}</span>
+          <span className="text-xs font-bold text-text-muted uppercase tracking-widest">{t('driver.create_order.articles.count', { count: articles.length })}</span>
         </div>
 
         {articles.map((article, index) => (
           <div key={article.id} className="bg-surface rounded-2xl shadow-card p-5 mb-5 animate-in slide-in-from-bottom duration-500 border border-border/40">
             <div className="flex items-center justify-between mb-5">
-              <span className="text-[11px] font-bold text-primary-600 dark:text-primary-500 bg-primary-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wide border border-primary-500/20">{t('driver.create_order.article_label')} {index + 1}</span>
+              <span className="text-xs font-bold text-primary-600 dark:text-primary-500 bg-primary-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wide border border-primary-500/20">{t('driver.create_order.article_label')} {index + 1}</span>
             </div>
 
             {/* ── TYPE SELECTION ─────────────────────────────────────────── */}
             <div className="space-y-2 mb-5 text-start">
-              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.type_label')}</label>
+              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.type_label')}</label>
               <div className="relative">
                 <select
                   value={article.carpetTypeId || ''}
@@ -369,7 +369,7 @@ export default function CreateOrder() {
 
             {/* ── PRICING MODE TOGGLE ────────────────────────────────────── */}
             <div className="mb-5 text-start">
-              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1 mb-2.5 block">{t('driver.create_order.articles.pricing_mode')}</label>
+              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1 mb-2.5 block">{t('driver.create_order.articles.pricing_mode')}</label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -401,7 +401,7 @@ export default function CreateOrder() {
               <div className="mb-5 space-y-4 text-start">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.width')}</label>
+                    <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.width')}</label>
                     <input
                       type="number"
                       step="0.01"
@@ -413,7 +413,7 @@ export default function CreateOrder() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.height')}</label>
+                    <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.height')}</label>
                     <input
                       type="number"
                       step="0.01"
@@ -434,20 +434,20 @@ export default function CreateOrder() {
                           <Ruler size={14} className="text-primary-600 dark:text-primary-400" />
                         </div>
                         <div>
-                          <p className="text-[10px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider">{t('driver.create_order.articles.labels.calculated_price')}</p>
-                          <p className="text-[11px] font-semibold text-text-muted">
+                          <p className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider">{t('driver.create_order.articles.labels.calculated_price')}</p>
+                          <p className="text-xs font-semibold text-text-muted">
                             {article.largeur}m × {article.hauteur}m × {article.pricePerM2} DH/m²
                           </p>
                         </div>
                       </div>
                       <div className="bg-surface px-3.5 py-1.5 rounded-xl border border-border shadow-sm">
                         <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{article.prixCalcule}</span>
-                        <span className="text-[11px] font-bold text-text-muted ms-1">DH</span>
+                        <span className="text-xs font-bold text-text-muted ms-1">DH</span>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.final_price')}</label>
+                      <label className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.final_price')}</label>
                       <div className="relative">
                         <input
                           type="number"
@@ -465,7 +465,7 @@ export default function CreateOrder() {
                       parseFloat(article.prixFinal) !== parseFloat(article.prixCalcule) && (
                         <div className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2 mt-2">
                           <AlertTriangle size={13} className="text-amber-500 shrink-0" />
-                          <span className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wide">
+                          <span className="text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wide">
                             {t('driver.create_order.articles.pricing_warning.modified', {
                               type: parseFloat(article.prixFinal) < parseFloat(article.prixCalcule) ? t('driver.create_order.articles.pricing_warning.discount') : t('driver.create_order.articles.pricing_warning.extra'),
                               diff: Math.abs(parseFloat(article.prixCalcule) - parseFloat(article.prixFinal)).toFixed(2)
@@ -481,7 +481,7 @@ export default function CreateOrder() {
             {/* ── MANUAL MODE ───────────────────────────────────────────── */}
             {article.pricingMode === 'MANUAL' && (
               <div className="space-y-2 mb-5 text-start">
-                <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.estimated_price')}</label>
+                <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.estimated_price')}</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -499,7 +499,7 @@ export default function CreateOrder() {
 
             {/* ── QUANTITY ───────────────────────────────────────────────── */}
             <div className="space-y-2 mb-5 text-start">
-              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.quantity')}</label>
+              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.quantity')}</label>
               <div className="flex items-center border border-border rounded-xl overflow-hidden h-[52px] bg-background">
                 <button
                   onClick={() => updateArticle(index, 'quantite', Math.max(1, article.quantite - 1))}
@@ -521,7 +521,7 @@ export default function CreateOrder() {
 
             {/* ── NOTES ─────────────────────────────────────────────────── */}
             <div className="space-y-2 mb-5 text-start">
-              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.notes')}</label>
+              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.notes')}</label>
               <textarea
                 rows={2}
                 placeholder={t('driver.create_order.articles.placeholders.notes')}
@@ -533,7 +533,7 @@ export default function CreateOrder() {
 
             {/* ── PHOTOS ────────────────────────────────────────────────── */}
             <div className="space-y-3 text-start">
-              <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.photos', { count: article.photos.length })}</label>
+              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.photos', { count: article.photos.length })}</label>
               <div className="flex gap-3 overflow-x-auto pb-3 no-scrollbar">
                 {article.photos.map((photo, pIdx) => (
                   <div
@@ -549,7 +549,7 @@ export default function CreateOrder() {
                       <X size={14} strokeWidth={2.5} />
                     </button>
                     {photo.isPrincipal && (
-                      <div className="absolute top-1.5 start-1.5 bg-primary-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm">
+                      <div className="absolute top-1.5 start-1.5 bg-primary-500 text-white text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm">
                         {t('driver.create_order.articles.labels.principal')}
                       </div>
                     )}
@@ -572,13 +572,13 @@ export default function CreateOrder() {
                       className="w-28 h-24 border-2 border-dashed border-border rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-background hover:border-primary-400 hover:bg-primary-500/5 transition-all group"
                     >
                       <Camera size={22} className="text-text-muted mb-1.5 group-hover:text-primary-500 transition-colors" />
-                      <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest group-hover:text-primary-600 dark:group-hover:text-primary-400">Photo</span>
+                      <span className="text-xs font-bold text-text-muted uppercase tracking-widest group-hover:text-primary-600 dark:group-hover:text-primary-400">Photo</span>
                     </button>
                   </>
                 )}
               </div>
               {!article.carpetTypeId && (
-                <p className="text-[11px] font-medium text-text-muted text-center py-2 opacity-70">
+                <p className="text-xs font-medium text-text-muted text-center py-2 opacity-70">
                   {t('driver.create_order.articles.pricing_warning.prompt')}
                 </p>
               )}
@@ -588,7 +588,7 @@ export default function CreateOrder() {
             {articles.length > 1 && (
               <button
                 onClick={() => handleRemoveArticle(article.id)}
-                className="mt-6 w-full flex items-center justify-center gap-2 text-red-500 text-[11px] font-bold uppercase tracking-widest py-3 border-t border-border/50 hover:text-red-600 transition-colors"
+                className="mt-6 w-full flex items-center justify-center gap-2 text-red-500 text-xs font-bold uppercase tracking-widest py-3 border-t border-border/50 hover:text-red-600 transition-colors"
               >
                 <Trash2 size={15} /> {t('driver.create_order.articles.actions.delete')}
               </button>
@@ -604,19 +604,19 @@ export default function CreateOrder() {
           <div className="w-10 h-10 bg-background rounded-full flex items-center justify-center group-hover:bg-primary-500/10 transition-colors">
             <Plus size={24} strokeWidth={2.5} />
           </div>
-          <span className="text-[11px] font-bold uppercase tracking-widest">{t('driver.create_order.buttons.add_article')}</span>
+          <span className="text-xs font-bold uppercase tracking-widest">{t('driver.create_order.buttons.add_article')}</span>
         </button>
       </div>
 
       {/* STICKY BOTTOM BAR */}
       <div className="fixed bottom-[64px] pb-safe md:bottom-0 start-0 end-0 md:start-16 lg:start-64 z-[110] flex justify-center px-4 sm:px-6">
-        <div className="w-full max-w-4xl bg-surface/95 backdrop-blur-lg border-t border-x border-border rounded-t-2xl shadow-[0_-12px_40px_rgba(0,0,0,0.1)] py-3 md:py-4 px-5 flex flex-col items-stretch gap-2.5">
+        <div className="w-full max-w-4xl bg-surface/95 backdrop-blur-lg border-t border-x border-border rounded-t-2xl shadow-[0_-12px_40px_rgba(0,0,0,0.1)] py-3 md:py-3 sm:py-4 px-5 flex flex-col items-stretch gap-2.5">
           <div className="flex items-center justify-between px-1">
-            <span className="text-[11px] font-bold text-text-secondary uppercase tracking-widest">{t('driver.create_order.footer.articles', { count: totalUnits })}</span>
+            <span className="text-xs font-bold text-text-secondary uppercase tracking-widest">{t('driver.create_order.footer.articles', { count: totalUnits })}</span>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">{t('driver.create_order.footer.total')}</span>
+              <span className="text-xs font-bold text-text-secondary uppercase tracking-widest">{t('driver.create_order.footer.total')}</span>
               <span className="text-2xl font-bold text-primary-500 tracking-tighter leading-none">{totalEstime.toFixed(0)}</span>
-              <span className="text-[10px] font-bold text-text-muted uppercase">DH</span>
+              <span className="text-xs font-bold text-text-muted uppercase">DH</span>
             </div>
           </div>
 

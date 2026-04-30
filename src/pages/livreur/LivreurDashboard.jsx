@@ -38,10 +38,10 @@ const StatCard = ({ label, count, icon: Icon, colorClass, iconBgClass, iconColor
       <span className="text-2xl font-black text-text-primary tracking-tight">{count}</span>
     </div>
     <div className="flex flex-col gap-1">
-      <span className="text-[9px] font-black text-text-muted uppercase tracking-[0.15em] leading-tight truncate">
+      <span className="text-xs font-black text-text-muted uppercase tracking-[0.15em] leading-tight truncate">
         {label}
       </span>
-      <p className={`text-[8px] font-bold uppercase tracking-wider ${iconColorClass} opacity-80`}>
+      <p className={`text-xs font-bold uppercase tracking-wider ${iconColorClass} opacity-80`}>
         {label === t('driver.dashboard.stats.ready_delivery') ? t('driver.dashboard.stats.deliveries') : label === t('driver.dashboard.stats.collect_workshop') ? t('driver.dashboard.stats.collections') : t('driver.dashboard.stats.to_return')}
       </p>
     </div>
@@ -87,14 +87,14 @@ const MissionTableRow = ({ mission, onNavigate, t }) => {
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-sm font-black text-text-primary truncate tracking-tight">{displayName}</span>
-            <span className="text-[10px] text-text-muted truncate font-bold uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
+            <span className="text-xs text-text-muted truncate font-bold uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
               <MapPin size={10} /> {mission.client?.addresses?.[0]?.fullAddress || mission.client?.address || '—'}
             </span>
           </div>
         </div>
       </td>
       <td className="px-8 py-5 text-start">
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border
           ${isDelivery
             ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20'
             : 'bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-100 dark:border-primary-500/20'}`}>
@@ -129,11 +129,11 @@ const MissionMobileCard = ({ mission, onNavigate, t }) => {
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5 mb-1 opacity-60">
             <Hash size={12} className="text-primary-500" />
-            <span className="text-[9px] font-black text-text-muted uppercase tracking-widest">{t('workshop.detail.labels.order')}</span>
+            <span className="text-xs font-black text-text-muted uppercase tracking-widest">{t('workshop.detail.labels.order')}</span>
           </div>
           <span className="text-lg font-black text-text-primary tracking-tighter">#{mission.numeroCommande}</span>
         </div>
-        <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.15em] border
+        <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-[0.15em] border
           ${isDelivery
             ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
             : 'bg-primary-50 text-primary-600 border-primary-100'}`}>
@@ -149,7 +149,7 @@ const MissionMobileCard = ({ mission, onNavigate, t }) => {
           <p className="text-base font-black text-text-primary truncate tracking-tight">{displayName}</p>
           <div className="flex items-center gap-1.5 mt-1">
             <MapPin size={12} className="text-text-muted shrink-0" />
-            <p className="text-[10px] text-text-muted truncate font-bold uppercase tracking-tight">{mission.client?.addresses?.[0]?.address || '—'}</p>
+            <p className="text-xs text-text-muted truncate font-bold uppercase tracking-tight">{mission.client?.addresses?.[0]?.address || '—'}</p>
           </div>
         </div>
       </div>
@@ -157,9 +157,9 @@ const MissionMobileCard = ({ mission, onNavigate, t }) => {
       <div className="flex items-center justify-between ps-2">
         <div className="flex items-center gap-2">
           <Phone size={12} className="text-primary-500" />
-          <span className="text-[10px] font-black text-text-primary">{getClientPhone(mission.client)}</span>
+          <span className="text-xs font-black text-text-primary">{getClientPhone(mission.client)}</span>
         </div>
-        <div className="flex items-center gap-1 text-[10px] font-black text-primary-600 uppercase tracking-widest">
+        <div className="flex items-center gap-1 text-xs font-black text-primary-600 uppercase tracking-widest">
           {t('common.details')} <ChevronRight size={14} strokeWidth={3} />
         </div>
       </div>
@@ -181,7 +181,7 @@ const NextMissionSpotlight = ({ mission, onNavigate, t }) => {
 
       <div className="relative z-10">
         <div className="flex items-center gap-2 mb-6">
-          <span className="bg-white/20 backdrop-blur-md text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-white/10 shadow-sm">
+          <span className="bg-white/20 backdrop-blur-md text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-white/10 shadow-sm">
             {t('driver.dashboard.missions.next_mission')}
           </span>
           <div className="flex gap-1">
@@ -197,7 +197,7 @@ const NextMissionSpotlight = ({ mission, onNavigate, t }) => {
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <Hash size={14} className="opacity-60" />
-              <span className="text-[10px] font-black uppercase tracking-widest opacity-80">{t('workshop.detail.labels.order')} #{mission.numeroCommande}</span>
+              <span className="text-xs font-black uppercase tracking-widest opacity-80">{t('workshop.detail.labels.order')} #{mission.numeroCommande}</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-black tracking-tight truncate leading-tight">{displayName}</h3>
             <p className="text-primary-100 text-xs sm:text-sm font-bold flex items-center gap-2 mt-1 opacity-90 truncate uppercase tracking-tight">
@@ -208,7 +208,7 @@ const NextMissionSpotlight = ({ mission, onNavigate, t }) => {
 
         <button
           onClick={() => onNavigate(mission.id)}
-          className="w-full bg-white text-primary-600 font-black py-4 sm:py-5 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.97] hover:bg-primary-50 shadow-xl text-[11px] uppercase tracking-[0.15em] group/btn"
+          className="w-full bg-white text-primary-600 font-black py-3 sm:py-4 sm:py-5 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.97] hover:bg-primary-50 shadow-xl text-xs uppercase tracking-[0.15em] group/btn"
         >
           <Navigation2 size={20} strokeWidth={3} fill="currentColor" className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform rtl:rotate-180" />
           {isDelivery ? t('driver.dashboard.missions.start_delivery') : t('driver.dashboard.missions.start_collect')}
@@ -301,19 +301,19 @@ export default function LivreurDashboard() {
             <h2 className="text-2xl font-black text-text-primary tracking-tight uppercase">
               {t('driver.dashboard.missions.title')}
             </h2>
-            <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest opacity-60 mt-1">{t('driver.dashboard.missions.subtitle')}</p>
+            <p className="text-xs text-text-muted font-bold uppercase tracking-widest opacity-60 mt-1">{t('driver.dashboard.missions.subtitle')}</p>
           </div>
 
           <div className="bg-surface border border-border/50 p-1.5 rounded-[1.25rem] flex w-full sm:w-auto shadow-sm">
             <button
               onClick={() => setActiveTab('deliveries')}
-              className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'deliveries' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}
+              className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'deliveries' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}
             >
               {t('driver.dashboard.missions.badges.delivery')} ({readyForDelivery.length})
             </button>
             <button
               onClick={() => setActiveTab('collections')}
-              className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'collections' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}
+              className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'collections' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}
             >
               {t('driver.dashboard.missions.badges.collect')} ({readyOrders.length})
             </button>
@@ -335,7 +335,7 @@ export default function LivreurDashboard() {
             <div className="bg-surface rounded-[2.5rem] border border-border/50 border-dashed py-24 flex flex-col items-center text-center opacity-40">
               <LayoutDashboard size={48} className="mb-4 text-text-muted" />
               <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('driver.dashboard.missions.empty_title')}</h3>
-              <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mt-1">{t('driver.dashboard.missions.empty_body')}</p>
+              <p className="text-xs font-bold text-text-muted uppercase tracking-widest mt-1">{t('driver.dashboard.missions.empty_body')}</p>
             </div>
           )}
         </div>
@@ -346,10 +346,10 @@ export default function LivreurDashboard() {
             <table className="w-full text-start">
               <thead className="bg-background/50 border-b border-border/50">
                 <tr>
-                  <th className="px-8 py-4 text-start text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.labels.order')}</th>
-                  <th className="px-8 py-4 text-start text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.dashboard.missions.headers.client')}</th>
-                  <th className="px-8 py-4 text-start text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.dashboard.missions.headers.type')}</th>
-                  <th className="px-8 py-4 text-end text-[10px] font-black text-text-muted uppercase tracking-[0.2em] w-24">{t('admin.clients.table.actions')}</th>
+                  <th className="px-8 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.labels.order')}</th>
+                  <th className="px-8 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.dashboard.missions.headers.client')}</th>
+                  <th className="px-8 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.dashboard.missions.headers.type')}</th>
+                  <th className="px-8 py-3 sm:py-4 text-end text-xs font-black text-text-muted uppercase tracking-[0.2em] w-24">{t('admin.clients.table.actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/30">
@@ -368,7 +368,7 @@ export default function LivreurDashboard() {
                       <div className="flex flex-col items-center justify-center">
                         <LayoutDashboard size={48} className="mb-4" />
                         <p className="text-lg font-black text-text-primary uppercase tracking-tight">{t('driver.dashboard.missions.empty_title')}</p>
-                        <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mt-1">{t('driver.dashboard.missions.empty_body')}</p>
+                        <p className="text-xs font-bold text-text-muted uppercase tracking-widest mt-1">{t('driver.dashboard.missions.empty_body')}</p>
                       </div>
                     </td>
                   </tr>

@@ -44,7 +44,7 @@ export default function ReturnedOrders() {
               <span className="bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-black px-2.5 py-0.5 rounded-full border border-red-500/20">{returnedOrders.length}</span>
             )}
           </h1>
-          <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-1">{t('workshop.returns.subtitle')}</p>
+          <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">{t('workshop.returns.subtitle')}</p>
         </div>
         <button
           onClick={() => dispatch(fetchReturnedOrders())}
@@ -67,8 +67,8 @@ export default function ReturnedOrders() {
             <PackageCheck size={28} className="text-green-500" />
           </div>
           <h3 className="text-sm font-black text-text-primary uppercase tracking-tight mb-1">{t('workshop.returns.empty_title')}</h3>
-          <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest max-w-xs mb-6">{t('workshop.returns.empty_body')}</p>
-          <button onClick={() => navigate('/employe/dashboard')} className="bg-primary-500 hover:bg-primary-600 text-white rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary-500/20 transition-all active:scale-95">
+          <p className="text-xs text-text-muted font-bold uppercase tracking-widest max-w-xs mb-6">{t('workshop.returns.empty_body')}</p>
+          <button onClick={() => navigate('/employe/dashboard')} className="bg-primary-500 hover:bg-primary-600 text-white rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest shadow-lg shadow-primary-500/20 transition-all active:scale-95">
             {t('workshop.detail.back')}
           </button>
         </div>
@@ -78,11 +78,11 @@ export default function ReturnedOrders() {
             <table className="w-full">
               <thead>
                 <tr className="bg-background/50 border-b border-border/50">
-                  <th className="px-6 py-4 text-start text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.order')}</th>
-                  <th className="px-6 py-4 text-start text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.details')}</th>
-                  <th className="px-6 py-4 text-start text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.status')}</th>
-                  <th className="px-6 py-4 text-start text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.updated')}</th>
-                  <th className="px-6 py-4 text-end text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.action')}</th>
+                  <th className="px-6 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.order')}</th>
+                  <th className="px-6 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.details')}</th>
+                  <th className="px-6 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.status')}</th>
+                  <th className="px-6 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.updated')}</th>
+                  <th className="px-6 py-3 sm:py-4 text-end text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.returns.table.headers.action')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/40">
@@ -104,7 +104,7 @@ export default function ReturnedOrders() {
                       <span className="text-xs font-bold text-text-primary">{new Date(order.updatedAt || order.createdAt).toLocaleDateString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                     </td>
                     <td className="px-6 py-5 text-end">
-                      <button onClick={() => navigate(`/employe/commandes/${order.id}`)} className="inline-flex items-center gap-2 bg-primary-500 text-white rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-primary-600 transition-all shadow-lg active:scale-95">
+                      <button onClick={() => navigate(`/employe/commandes/${order.id}`)} className="inline-flex items-center gap-2 bg-primary-500 text-white rounded-xl px-4 py-2 text-xs font-black uppercase tracking-widest hover:bg-primary-600 transition-all shadow-lg active:scale-95">
                         {t('workshop.returns.table.process_btn')} <ChevronRight size={14} className="rtl:rotate-180" />
                       </button>
                     </td>
@@ -123,25 +123,25 @@ export default function ReturnedOrders() {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex flex-col text-start">
-                    <span className="text-[10px] font-black text-primary-500 uppercase tracking-widest mb-0.5">{t('workshop.detail.labels.order')}</span>
+                    <span className="text-xs font-black text-primary-500 uppercase tracking-widest mb-0.5">{t('workshop.detail.labels.order')}</span>
                     <p className="text-lg font-black text-text-primary tracking-tight">#{order.numeroCommande}</p>
                   </div>
                   <StatusBadge status={order.status} />
                 </div>
                 <div className="bg-background rounded-2xl p-4 mb-4 border border-border/50 text-start">
-                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-text-muted mb-2">
+                  <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-text-muted mb-2">
                     <span>{order.commandeTapis?.length || 0} {t('workshop.returns.table.headers.details')}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-text-muted">
                     <CalendarDays size={12} />
-                    <span className="text-[9px] font-bold uppercase tracking-widest">
+                    <span className="text-xs font-bold uppercase tracking-widest">
                       {new Date(order.updatedAt || order.createdAt).toLocaleDateString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', { day: '2-digit', month: 'short' })}
                     </span>
                   </div>
                 </div>
 
                 <button
-                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-primary-500 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary-500/20 active:bg-primary-600 transition-all"
+                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-primary-500 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-primary-500/20 active:bg-primary-600 transition-all"
                 >
                   {t('workshop.returns.table.process_return_btn')} <ChevronRight size={14} className="rtl:rotate-180" />
                 </button>

@@ -57,7 +57,7 @@ const NotFound = () => {
         {/* Action */}
         <button
           onClick={handleReturn}
-          className="w-full bg-primary-600 hover:bg-primary-700 text-white transition-all rounded-2xl py-4 flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 text-xs font-black uppercase tracking-widest active:scale-95">
+          className="w-full bg-primary-600 hover:bg-primary-700 text-white transition-all rounded-2xl py-3 sm:py-4 flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 text-xs font-black uppercase tracking-widest active:scale-95">
           <Home size={18} />
           {t('errors.not_found.back_to_prev')}
         </button>

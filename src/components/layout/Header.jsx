@@ -168,11 +168,14 @@ const Header = () => {
 
   const getPageTitle = () => {
     const path = location.pathname;
-    if (path.includes('/admin/dashboard'))         return t('nav.dashboard');
-    if (path.includes('/admin/users-management'))  return t('nav.users');
-    if (path.includes('/admin/commandes'))         return t('nav.orders');
-    if (path.includes('/admin/clients'))           return t('nav.clients');
-    if (path.includes('/admin/carpet-types'))      return t('nav.carpet_types');
+    if (path.includes('dashboard') || path === '/livreur') return t('nav.dashboard');
+    if (path.includes('users-management')) return t('nav.users');
+    if (path.includes('commandes') || path.includes('orders')) return t('nav.orders');
+    if (path.includes('clients')) return t('nav.clients');
+    if (path.includes('carpet-types')) return t('nav.carpet_types');
+    if (path.includes('delivery')) return t('nav.deliveries');
+    if (path.includes('canceled')) return t('nav.canceled');
+    if (path.includes('retours')) return t('nav.returns');
     return 'PureClean';
   };
 
@@ -187,7 +190,7 @@ const Header = () => {
         <h1 className="text-sm md:text-base font-black text-text-primary uppercase tracking-tight truncate">
           {isAdmin ? `${t('header.greeting')}, ${user?.name}` : getPageTitle()}
         </h1>
-        {isAdmin && <p className="text-[9px] font-bold text-text-muted uppercase tracking-widest hidden md:block opacity-60">{t('header.welcome_back')}</p>}
+        {isAdmin && <p className="text-xs font-bold text-text-muted uppercase tracking-widest hidden md:block opacity-60">{t('header.welcome_back')}</p>}
       </div>
 
       <div className="hidden md:flex flex-1 max-w-md mx-4">
@@ -198,12 +201,16 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-1 md:gap-3">
+        <button className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl text-text-muted hover:bg-background">
+          <Search size={20} />
+        </button>
+
         {/* NOTIFICATIONS DROPDOWN */}
         <div className="relative" ref={dropdownRef}>
           <button onClick={toggleNotifications} className={`relative w-10 h-10 flex items-center justify-center rounded-xl transition-all ${isNotificationsOpen ? 'bg-primary-50 text-primary-600' : 'text-text-muted hover:bg-background'}`}>
             <Bell size={20} />
             {unreadCount > 0 && (
-              <span className="absolute top-2 end-2 w-4 h-4 bg-primary-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border-2 border-surface animate-bounce">
+              <span className="absolute top-2 end-2 w-4 h-4 bg-primary-500 text-white text-xs font-black rounded-full flex items-center justify-center border-2 border-surface animate-bounce">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
@@ -214,10 +221,10 @@ const Header = () => {
               <div className="px-6 py-5 border-b border-border/50 flex items-center justify-between bg-background/30 text-start">
                 <div>
                   <h3 className="text-xs font-black text-text-primary uppercase tracking-widest">{t('common.notifications')}</h3>
-                  <p className="text-[9px] text-text-muted font-bold uppercase tracking-tighter mt-0.5">{t('header.notifications.unread_count', { unread: unreadCount, total: notifications.length })}</p>
+                  <p className="text-xs text-text-muted font-bold uppercase tracking-tighter mt-0.5">{t('header.notifications.unread_count', { unread: unreadCount, total: notifications.length })}</p>
                 </div>
                 {unreadCount > 0 && (
-                  <button onClick={handleMarkAllSeen} className="flex items-center gap-1.5 text-[9px] font-black text-primary-600 hover:text-primary-700 uppercase tracking-widest">
+                  <button onClick={handleMarkAllSeen} className="flex items-center gap-1.5 text-xs font-black text-primary-600 hover:text-primary-700 uppercase tracking-widest">
                     <CheckCheck size={12}/> {t('header.notifications.mark_all')}
                   </button>
                 )}
@@ -236,11 +243,11 @@ const Header = () => {
                         </div>
                         <div className="flex-1 min-w-0 text-start">
                           <div className="flex items-center justify-between mb-1">
-                            <span className={`text-[9px] font-black uppercase tracking-widest ${!notif.isRead ? styles.text : 'text-text-muted'}`}>{notif.type.replace('_', ' ')}</span>
-                            <span className="text-[8px] font-bold text-text-muted uppercase flex items-center gap-1"><Clock size={10}/> {formatRelativeTime(notif.createdAt)}</span>
+                            <span className={`text-xs font-black uppercase tracking-widest ${!notif.isRead ? styles.text : 'text-text-muted'}`}>{notif.type.replace('_', ' ')}</span>
+                            <span className="text-xs font-bold text-text-muted uppercase flex items-center gap-1"><Clock size={10}/> {formatRelativeTime(notif.createdAt)}</span>
                           </div>
                           <p className="text-xs font-bold text-text-primary leading-snug">{notif.title}</p>
-                          <p className="text-[10px] text-text-muted mt-0.5 truncate">{notif.message}</p>
+                          <p className="text-xs text-text-muted mt-0.5 truncate">{notif.message}</p>
                         </div>
                         {!notif.isRead && <div className={`w-2 h-2 rounded-full ${styles.color} mt-4 shadow-[0_0_10px_rgba(0,0,0,0.2)]`} />}
                       </div>
@@ -249,7 +256,7 @@ const Header = () => {
                 ) : (
                   <div className="py-16 text-center opacity-40">
                     <BellOff size={40} className="mx-auto mb-4" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em]">{t('header.notifications.empty')}</p>
+                    <p className="text-xs font-black uppercase tracking-[0.2em]">{t('header.notifications.empty')}</p>
                   </div>
                 )}
               </div>
@@ -257,7 +264,7 @@ const Header = () => {
               {notifications.length > 0 && (
                 <button 
                   onClick={() => { navigate('/notifications'); setIsNotificationsOpen(false); }}
-                  className="w-full py-4 bg-background/50 border-t border-border/50 text-[10px] font-black text-text-muted hover:text-primary-600 transition-colors uppercase tracking-widest flex items-center justify-center gap-2 group"
+                  className="w-full py-4 bg-background/50 border-t border-border/50 text-xs font-black text-text-muted hover:text-primary-600 transition-colors uppercase tracking-widest flex items-center justify-center gap-2 group"
                 >
                   {t('header.notifications.view_all')}
                   <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -280,7 +287,7 @@ const Header = () => {
         <div className="flex items-center gap-3 ps-3 border-l border-border/60">
           <div className="hidden lg:flex flex-col text-end">
             <span className="text-xs font-black text-text-primary uppercase tracking-tighter truncate max-w-[120px]">{user?.name}</span>
-            <span className="text-[9px] font-bold text-text-muted uppercase tracking-widest">{user?.role}</span>
+            <span className="text-xs font-bold text-text-muted uppercase tracking-widest">{user?.role}</span>
           </div>
           <div className="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-black shadow-sm uppercase border border-primary-200">
             {initials}
@@ -297,7 +304,7 @@ const Header = () => {
               <div className="absolute top-14 end-4 w-56 bg-surface rounded-2xl shadow-2xl border border-border overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
                 <div className="p-4 border-b border-border bg-background/30 text-start">
                   <p className="text-xs font-black text-text-primary uppercase tracking-tight">{user?.name}</p>
-                  <p className="text-[9px] font-bold text-text-muted uppercase tracking-widest mt-0.5">{user?.role}</p>
+                  <p className="text-xs font-bold text-text-muted uppercase tracking-widest mt-0.5">{user?.role}</p>
                 </div>
                 <div className="p-2">
                   <button onClick={async () => { await dispatch(logoutThunk()); navigate("/"); }} className="w-full flex items-center gap-3 px-4 py-3 text-xs font-black text-red-500 hover:bg-red-50 rounded-xl transition-colors uppercase tracking-widest">

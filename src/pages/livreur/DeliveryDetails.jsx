@@ -109,7 +109,7 @@ export default function DeliveryDetails() {
       <div className="flex flex-col gap-4 mt-4">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 px-4 py-2 bg-surface border border-border/50 rounded-xl text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-text-primary transition-all active:scale-95 shadow-sm self-start"
+          className="flex items-center gap-2 px-4 py-2 bg-surface border border-border/50 rounded-xl text-xs font-black uppercase tracking-widest text-text-muted hover:text-text-primary transition-all active:scale-95 shadow-sm self-start"
         >
           <ArrowLeft size={14} className="rtl:rotate-180" /> {t('driver.delivery_details.back_list')}
         </button>
@@ -119,7 +119,7 @@ export default function DeliveryDetails() {
           </h1>
           <div className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-4 py-1.5 rounded-full flex items-center gap-2.5 self-start sm:self-center border border-emerald-100 dark:border-emerald-500/20 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-            <span className="text-[10px] font-black uppercase tracking-widest">{t('driver.delivery_details.ready_badge')}</span>
+            <span className="text-xs font-black uppercase tracking-widest">{t('driver.delivery_details.ready_badge')}</span>
           </div>
         </div>
       </div>
@@ -137,14 +137,14 @@ export default function DeliveryDetails() {
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-2 opacity-60">
                   <Hash size={14} className="text-primary-500" />
-                  <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.delivery_details.order_number')}</span>
+                  <span className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.delivery_details.order_number')}</span>
                 </div>
                 <p className="text-4xl font-black text-text-primary tracking-tighter">#{order.numeroCommande}</p>
               </div>
               <div className="md:text-end relative z-10">
                 <div className="flex items-center md:justify-end gap-2 mb-2 opacity-60">
                   <Calendar size={14} className="text-primary-500" />
-                  <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.delivery_details.ready_date')}</span>
+                  <span className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.delivery_details.ready_date')}</span>
                 </div>
                 <p className="text-sm font-black text-text-primary uppercase tracking-tight">{t('driver.delivery_details.today')} • {new Date(order.dateCreation).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
               </div>
@@ -156,7 +156,7 @@ export default function DeliveryDetails() {
                   <User size={24} strokeWidth={2.5} />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[9px] font-black text-primary-400 uppercase tracking-[0.2em] mb-1.5">{t('driver.delivery_details.recipient')}</p>
+                  <p className="text-xs font-black text-primary-400 uppercase tracking-[0.2em] mb-1.5">{t('driver.delivery_details.recipient')}</p>
                   <h3 className="text-xl font-black text-text-primary tracking-tight">{order.client?.nom || order.client?.name}</h3>
                   <div className="flex flex-wrap gap-6 mt-3">
                     <a href={`tel:${order.client?.phones?.[0]?.phoneNumber || order.client?.telephone}`} className="text-xs font-black text-primary-600 flex items-center gap-2 hover:text-primary-700 transition-colors uppercase tracking-tight">
@@ -171,7 +171,7 @@ export default function DeliveryDetails() {
                   <MapPin size={22} strokeWidth={2.5} />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[9px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-1.5">{t('driver.delivery_details.address')}</p>
+                  <p className="text-xs font-black text-emerald-400 uppercase tracking-[0.2em] mb-1.5">{t('driver.delivery_details.address')}</p>
                   <p className="text-sm font-black text-text-primary leading-relaxed uppercase tracking-tight italic opacity-80">{order.client?.addresses?.[0]?.address || t('driver.delivery_details.no_address')}</p>
                   <button
                     onClick={() => {
@@ -180,7 +180,7 @@ export default function DeliveryDetails() {
                       if (lat && lng) window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
                       else window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.client?.addresses?.[0]?.address || '')}`, '_blank');
                     }}
-                    className="flex items-center gap-2 mt-4 text-[9px] font-black text-emerald-700 hover:text-emerald-800 transition-colors uppercase tracking-widest"
+                    className="flex items-center gap-2 mt-4 text-xs font-black text-emerald-700 hover:text-emerald-800 transition-colors uppercase tracking-widest"
                   >
                     {t('driver.delivery_details.directions')} <Navigation size={14} strokeWidth={3} className="rtl:rotate-180" />
                   </button>
@@ -198,7 +198,7 @@ export default function DeliveryDetails() {
                 </div>
                 <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('driver.delivery_details.package_items')}</h3>
               </div>
-              <span className="text-[10px] font-black text-text-muted uppercase tracking-widest bg-background px-3 py-1 rounded-lg border border-border/50">{order.commandeTapis?.length || 0} {t('driver.pro_ui.items_count')}</span>
+              <span className="text-xs font-black text-text-muted uppercase tracking-widest bg-background px-3 py-1 rounded-lg border border-border/50">{order.commandeTapis?.length || 0} {t('driver.pro_ui.items_count')}</span>
             </div>
 
             <div className="divide-y divide-border/30">
@@ -218,14 +218,14 @@ export default function DeliveryDetails() {
                       </div>
                       <div className="text-start">
                         <p className="text-sm font-black text-text-primary group-hover:text-primary-600 transition-colors tracking-tight leading-tight">{item.tapis?.nom}</p>
-                        <p className="text-[10px] font-bold text-text-muted mt-1 uppercase tracking-widest">
+                        <p className="text-xs font-bold text-text-muted mt-1 uppercase tracking-widest">
                           {t('driver.delivery_details.unit_price_format', { qty: item.quantite, price: item.prixUnitaire.toFixed(0) })}
                           {item.largeur && ` • ${item.largeur}x${item.hauteur}m`}
                         </p>
                       </div>
                     </div>
                     <div className="text-end">
-                      <p className="text-sm font-black text-text-primary tracking-tight">{(item.quantite * item.prixUnitaire).toLocaleString()} <span className="text-[9px] opacity-40">DH</span></p>
+                      <p className="text-sm font-black text-text-primary tracking-tight">{(item.quantite * item.prixUnitaire).toLocaleString()} <span className="text-xs opacity-40">DH</span></p>
                     </div>
                   </div>
                 );
@@ -233,11 +233,11 @@ export default function DeliveryDetails() {
             </div>
 
             <div className="pt-8 mt-4 border-t-2 border-dashed border-border/50 flex items-center justify-between">
-              <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.delivery_details.total_order')}</p>
+              <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.delivery_details.total_order')}</p>
               <div className="text-end">
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-black text-primary-600 tracking-tighter">{order.montantTotal.toLocaleString()}</span>
-                  <span className="text-[10px] font-black text-primary-600/60 uppercase">DH</span>
+                  <span className="text-xs font-black text-primary-600/60 uppercase">DH</span>
                 </div>
               </div>
             </div>
@@ -253,7 +253,7 @@ export default function DeliveryDetails() {
               <div className="w-12 h-12 bg-surface rounded-[1.25rem] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform border border-border/50">
                 <UserX size={24} className="text-orange-600" strokeWidth={2.5} />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest">{t('driver.pro_ui.client_absent')}</span>
+              <span className="text-xs font-black uppercase tracking-widest">{t('driver.pro_ui.client_absent')}</span>
             </button>
             <button
               onClick={() => setCancelModal({ isOpen: true, type: 'cancelled' })}
@@ -263,7 +263,7 @@ export default function DeliveryDetails() {
               <div className="w-12 h-12 bg-surface rounded-[1.25rem] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform border border-border/50">
                 <XCircle size={24} className="text-red-600" strokeWidth={2.5} />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest">{t('driver.pro_ui.cancel_mission')}</span>
+              <span className="text-xs font-black uppercase tracking-widest">{t('driver.pro_ui.cancel_mission')}</span>
             </button>
           </div>
         </div>
@@ -276,7 +276,7 @@ export default function DeliveryDetails() {
               <div className="absolute top-0 end-0 p-6 opacity-10 group-hover:rotate-12 transition-transform duration-700">
                 <Wallet size={100} strokeWidth={1} />
               </div>
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 text-white/80">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 text-white/80">
                 <CreditCard size={16} strokeWidth={3} /> {t('driver.delivery_details.payment_summary')}
               </h3>
               <div className="flex items-baseline gap-2 text-white">
@@ -287,7 +287,7 @@ export default function DeliveryDetails() {
 
             <div className="p-8 md:p-10 space-y-8 text-start">
               <div className="space-y-5">
-                <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] px-1">{t('driver.delivery_details.payment_method_label')}</p>
+                <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em] px-1">{t('driver.delivery_details.payment_method_label')}</p>
                 <div className="grid grid-cols-1 gap-3">
                   {paymentTypes?.length > 0 ? (
                     paymentTypes.map((opt, pidx) => (
@@ -314,7 +314,7 @@ export default function DeliveryDetails() {
                       </button>
                     ))
                   ) : (
-                    <div className="py-6 px-8 bg-red-50 text-red-600 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-center border border-red-100">
+                    <div className="py-6 px-8 bg-red-50 text-red-600 rounded-2xl text-xs font-black uppercase tracking-[0.2em] text-center border border-red-100">
                       {t('driver.delivery_details.payment_unavailable')}
                     </div>
                   )}
@@ -324,7 +324,7 @@ export default function DeliveryDetails() {
               <button
                 onClick={handleRecordPayment}
                 disabled={loading?.confirmPayment}
-                className="w-full bg-primary-600 hover:bg-primary-700 text-white rounded-2xl py-5 text-[11px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary-500/20 transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 group/btn"
+                className="w-full bg-primary-600 hover:bg-primary-700 text-white rounded-2xl py-5 text-xs font-black uppercase tracking-[0.2em] shadow-xl shadow-primary-500/20 transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 group/btn"
               >
                 {loading?.confirmPayment ? (
                   <Loader2 className="animate-spin" size={20} />
@@ -336,7 +336,7 @@ export default function DeliveryDetails() {
                 )}
               </button>
 
-              <p className="text-[9px] text-center font-black text-text-muted px-6 leading-relaxed uppercase tracking-widest opacity-40">
+              <p className="text-xs text-center font-black text-text-muted px-6 leading-relaxed uppercase tracking-widest opacity-40">
                 {t('driver.delivery_details.warning_note')}
               </p>
             </div>

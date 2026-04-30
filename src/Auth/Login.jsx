@@ -212,10 +212,10 @@ const Login = () => {
             {/* Final Single Footer */}
             <footer className="w-full py-12 flex flex-col items-center justify-center gap-4 mt-auto">
                 <div className="text-center">
-                    <p className="text-[10px] sm:text-xs font-black text-[#A09A8D] uppercase tracking-[0.3em]">
+                    <p className="text-xs sm:text-xs font-black text-[#A09A8D] uppercase tracking-[0.3em]">
                         {t('auth.login.footer_title')}
                     </p>
-                    <p className="text-[9px] sm:text-[10px] font-bold text-[#B1AB9D] uppercase tracking-[0.2em] mt-1 opacity-70">
+                    <p className="text-xs sm:text-xs font-bold text-[#B1AB9D] uppercase tracking-[0.2em] mt-1 opacity-70">
                         {t('auth.login.footer_subtitle')}
                     </p>
                 </div>

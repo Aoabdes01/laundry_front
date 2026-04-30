@@ -95,8 +95,8 @@ const Sidebar = ({ user }) => {
               <HelpCircle size={18} />
             </div>
             <h4 className="text-xs font-bold text-text-primary mb-1 uppercase tracking-wider">{t('common.need_help')}</h4>
-            <p className="text-[10px] text-text-secondary mb-3 font-medium">Consultez notre guide livreur pour plus d'infos.</p>
-            <button className="w-full py-2 bg-surface border border-border rounded-lg text-[10px] font-bold text-text-primary hover:text-primary-600 hover:border-primary-200 transition-all flex items-center justify-center gap-2 shadow-sm">
+            <p className="text-xs text-text-secondary mb-3 font-medium">Consultez notre guide livreur pour plus d'infos.</p>
+            <button className="w-full py-2 bg-surface border border-border rounded-lg text-xs font-bold text-text-primary hover:text-primary-600 hover:border-primary-200 transition-all flex items-center justify-center gap-2 shadow-sm">
               {t('common.open_guide')} <ChevronRight size={12} className="rtl:rotate-180" />
             </button>
           </div>
@@ -111,8 +111,8 @@ const Sidebar = ({ user }) => {
               <HelpCircle size={18} />
             </div>
             <h4 className="text-xs font-bold text-text-primary mb-1 uppercase tracking-wider">{t('common.support_admin')}</h4>
-            <p className="text-[10px] text-text-secondary mb-3 font-medium">Accédez aux outils d'administration et d'aide.</p>
-            <button className="w-full py-2 bg-surface border border-primary-500/20 rounded-lg text-[10px] font-bold text-text-primary hover:text-primary-600 hover:border-primary-200 transition-all flex items-center justify-center gap-2 shadow-sm">
+            <p className="text-xs text-text-secondary mb-3 font-medium">Accédez aux outils d'administration et d'aide.</p>
+            <button className="w-full py-2 bg-surface border border-primary-500/20 rounded-lg text-xs font-bold text-text-primary hover:text-primary-600 hover:border-primary-200 transition-all flex items-center justify-center gap-2 shadow-sm">
               {t('common.open_guide')} <ChevronRight size={12} className="rtl:rotate-180" />
             </button>
           </div>
@@ -127,7 +127,7 @@ const Sidebar = ({ user }) => {
           </div>
           <div className="flex flex-col overflow-hidden hidden lg:flex text-start">
             <span className="text-xs font-bold text-text-primary truncate">{user?.name}</span>
-            <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{user?.role}</span>
+            <span className="text-xs font-bold text-text-muted uppercase tracking-wider">{user?.role}</span>
           </div>
         </div>
         <LogoutButton />

@@ -130,26 +130,26 @@ export default function EmployeDashboard() {
         <div className="text-start">
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-xl md:text-2xl font-black text-text-primary uppercase tracking-tight">{t('workshop.title')}</h1>
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 shadow-sm">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-[0.2em] bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 shadow-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
               {t('workshop.active')}
             </span>
           </div>
-          <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest opacity-60">{t('workshop.subtitle')}</p>
+          <p className="text-xs text-text-muted font-bold uppercase tracking-widest opacity-60">{t('workshop.subtitle')}</p>
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="flex bg-surface p-1.5 rounded-2xl border border-border/50 shadow-sm w-full sm:w-auto">
             <button
               onClick={() => { setViewMode('active'); setActiveFilter(null); }}
-              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'active' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary hover:bg-background/50'
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${viewMode === 'active' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary hover:bg-background/50'
                 }`}
             >
               <Inbox size={14} strokeWidth={2.5} /> {t('admin.nav.production', 'Production')}
             </button>
             <button
               onClick={() => { setViewMode('handover'); setActiveFilter(null); }}
-              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'handover' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary hover:bg-background/50'
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${viewMode === 'handover' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary hover:bg-background/50'
                 }`}
             >
               <History size={14} strokeWidth={2.5} /> {t('admin.nav.sorties', 'Sorties')}
@@ -186,7 +186,7 @@ export default function EmployeDashboard() {
                   </div>
                   <span className="text-3xl md:text-4xl font-black text-text-primary tracking-tighter leading-none">{stat.count}</span>
                 </div>
-                <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ps-2 leading-tight">
+                <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ps-2 leading-tight">
                   {stat.label.replace(' (', '\n(')}
                 </p>
               </div>
@@ -203,7 +203,7 @@ export default function EmployeDashboard() {
           </div>
           <div>
             <p className="text-lg font-black text-red-600 dark:text-red-400 uppercase tracking-tight mb-1">{t('workshop.overdue.title')}</p>
-            <p className="text-[10px] text-red-600/80 font-black uppercase tracking-[0.2em]">
+            <p className="text-xs text-red-600/80 font-black uppercase tracking-[0.2em]">
               {t('workshop.overdue.body', { count: overdueCount })}
             </p>
           </div>
@@ -227,7 +227,7 @@ export default function EmployeDashboard() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={t('common.search_placeholder')}
-                className="w-full bg-surface border border-border/50 rounded-[1.5rem] py-4 ps-14 pe-12 text-sm font-black text-text-primary placeholder:text-text-muted/40 focus:outline-none focus:border-primary-500 transition-all shadow-sm"
+                className="w-full bg-surface border border-border/50 rounded-[1.5rem] py-3 sm:py-4 ps-14 pe-12 text-sm font-black text-text-primary placeholder:text-text-muted/40 focus:outline-none focus:border-primary-500 transition-all shadow-sm"
               />
               {searchTerm && (
                 <button onClick={() => setSearchTerm('')} className="absolute inset-y-0 end-0 pe-5 flex items-center text-text-muted hover:text-red-500 transition-colors">
@@ -240,14 +240,14 @@ export default function EmployeDashboard() {
               {(activeFilter || searchTerm) && (
                 <button
                   onClick={() => { setActiveFilter(null); setSearchTerm(''); }}
-                  className="px-5 py-4 rounded-[1.5rem] bg-red-50 dark:bg-red-500/10 text-red-600 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-red-100 transition-colors border border-red-200 dark:border-red-500/20 shadow-sm whitespace-nowrap"
+                  className="px-5 py-3 sm:py-4 rounded-[1.5rem] bg-red-50 dark:bg-red-500/10 text-red-600 text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-red-100 transition-colors border border-red-200 dark:border-red-500/20 shadow-sm whitespace-nowrap"
                 >
                   <X size={14} strokeWidth={3} /> {t('workshop.table.clear_filter')}
                 </button>
               )}
               <button
                 onClick={() => { setShowAll(!showAll); setActiveFilter(null); }}
-                className={`px-6 py-4 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest flex items-center gap-2.5 transition-all shadow-sm whitespace-nowrap border ${showAll
+                className={`px-6 py-3 sm:py-4 rounded-[1.5rem] text-xs font-black uppercase tracking-widest flex items-center gap-2.5 transition-all shadow-sm whitespace-nowrap border ${showAll
                   ? 'bg-primary-500/10 text-primary-600 border-primary-500/20'
                   : 'bg-surface text-text-muted border-border/50 hover:border-primary-300'
                   }`}
@@ -261,7 +261,7 @@ export default function EmployeDashboard() {
           {/* LIST/TABLE CONTAINER */}
           <div className="bg-surface rounded-[2rem] shadow-card border border-border/50 overflow-hidden">
             <div className="px-6 md:px-8 py-5 border-b border-border/50 bg-background/30 flex items-center justify-between">
-              <h2 className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] flex items-center gap-2">
+              <h2 className="text-xs font-black text-text-muted uppercase tracking-[0.2em] flex items-center gap-2">
                 {viewMode === 'handover' ? t('workshop.pro_ui.handover_registry', 'Registre des Sorties') : (showAll ? t('workshop.table.all_orders') : t('workshop.table.today_orders'))}
                 <span className="bg-background text-text-primary px-2.5 py-0.5 rounded-md border border-border/50">{filteredOrders.length}</span>
               </h2>
@@ -280,7 +280,7 @@ export default function EmployeDashboard() {
                 <h3 className="text-lg font-black text-text-primary uppercase tracking-tight mb-2">
                   {viewMode === 'active' ? t('workshop.table.no_orders_today') : t('workshop.pro_ui.empty_registry', 'Aucune sortie enregistrée')}
                 </h3>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">{t('workshop.pro_ui.empty_registry_desc', 'Le registre est actuellement vide')}</p>
+                <p className="text-xs font-bold text-text-muted uppercase tracking-widest">{t('workshop.pro_ui.empty_registry_desc', 'Le registre est actuellement vide')}</p>
               </div>
             ) : (
               <>
@@ -299,7 +299,7 @@ export default function EmployeDashboard() {
                             <div>
                               <div className="flex items-center gap-1.5 opacity-60 mb-0.5">
                                 <Hash size={12} className="text-primary-500" />
-                                <span className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.order')}</span>
+                                <span className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.order')}</span>
                               </div>
                               <p className="text-xl font-black text-text-primary tracking-tighter">#{order.numeroCommande}</p>
                             </div>
@@ -312,12 +312,12 @@ export default function EmployeDashboard() {
                         <div className="flex items-center justify-between bg-background/50 p-4 rounded-2xl border border-border/50 ps-1">
                           <div className="flex items-center gap-5">
                             <div className="text-start">
-                              <p className="text-[8px] font-black text-text-muted uppercase tracking-widest mb-1">{t('workshop.table.headers.articles')}</p>
+                              <p className="text-xs font-black text-text-muted uppercase tracking-widest mb-1">{t('workshop.table.headers.articles')}</p>
                               <p className="text-sm font-black text-text-primary tracking-tight">{order.commandeTapis?.length || 0} Unités</p>
                             </div>
                             <div className="w-px h-8 bg-border/50" />
                             <div className="text-start">
-                              <p className="text-[8px] font-black text-text-muted uppercase tracking-widest mb-1">{t('workshop.table.headers.date')}</p>
+                              <p className="text-xs font-black text-text-muted uppercase tracking-widest mb-1">{t('workshop.table.headers.date')}</p>
                               <p className="text-xs font-black text-text-primary tracking-tight uppercase">
                                 {new Date(order.dateCreation || order.createdAt).toLocaleDateString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', { day: '2-digit', month: 'short' })}
                               </p>
@@ -337,11 +337,11 @@ export default function EmployeDashboard() {
                   <table className="w-full text-start">
                     <thead>
                       <tr className="bg-background/50 border-b border-border/50">
-                        <th className="px-8 py-5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.order')}</th>
-                        <th className="px-8 py-5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.articles')}</th>
-                        <th className="px-8 py-5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.status')}</th>
-                        <th className="px-8 py-5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.date')}</th>
-                        <th className="px-8 py-5 text-end text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.action')}</th>
+                        <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.order')}</th>
+                        <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.articles')}</th>
+                        <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.status')}</th>
+                        <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.date')}</th>
+                        <th className="px-8 py-5 text-end text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.table.headers.action')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/30">
@@ -364,12 +364,12 @@ export default function EmployeDashboard() {
                               <p className="text-xs font-black text-text-primary uppercase tracking-tight">
                                 {new Date(order.dateCreation || order.createdAt).toLocaleDateString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', { day: '2-digit', month: 'short' })}
                               </p>
-                              <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mt-1 opacity-80">
+                              <p className="text-xs font-bold text-text-muted uppercase tracking-widest mt-1 opacity-80">
                                 {new Date(order.dateCreation || order.createdAt).toLocaleTimeString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', { hour: '2-digit', minute: '2-digit' })}
                               </p>
                             </td>
                             <td className="px-8 py-6 text-end">
-                              <button onClick={() => navigate(`/employe/commandes/${order.id}`)} className="inline-flex items-center gap-2.5 bg-surface border border-border/50 text-primary-600 rounded-xl px-5 py-2.5 text-[10px] font-black uppercase tracking-widest hover:bg-primary-600 hover:text-white hover:border-primary-600 transition-all shadow-sm active:scale-95 group/btn">
+                              <button onClick={() => navigate(`/employe/commandes/${order.id}`)} className="inline-flex items-center gap-2.5 bg-surface border border-border/50 text-primary-600 rounded-xl px-5 py-2.5 text-xs font-black uppercase tracking-widest hover:bg-primary-600 hover:text-white hover:border-primary-600 transition-all shadow-sm active:scale-95 group/btn">
                                 {viewMode === 'handover' ? t('workshop.pro_ui.verify', 'Vérifier') : t('workshop.table.manage_btn')} <ChevronRight size={14} strokeWidth={3} className="rtl:rotate-180 group-hover/btn:translate-x-0.5 transition-transform" />
                               </button>
                             </td>
@@ -397,7 +397,7 @@ export default function EmployeDashboard() {
                 <div className="w-16 h-16 rounded-2xl bg-background border border-border/50 flex items-center justify-center mb-4">
                   <RefreshCw size={28} className="text-text-muted" />
                 </div>
-                <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.activity.no_activity')}</p>
+                <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.activity.no_activity')}</p>
               </div>
             ) : (
               <div className="space-y-8 relative">
@@ -413,9 +413,9 @@ export default function EmployeDashboard() {
                       <div className="min-w-0 pt-0.5">
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <p className="text-xs font-black text-text-primary truncate tracking-tighter">#{order.numeroCommande}</p>
-                          <span className="text-[8px] font-black text-text-muted/60 uppercase tracking-widest shrink-0">{new Date(order.dateCreation || order.createdAt).toLocaleDateString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', { day: '2-digit', month: 'short' })}</span>
+                          <span className="text-xs font-black text-text-muted/60 uppercase tracking-widest shrink-0">{new Date(order.dateCreation || order.createdAt).toLocaleDateString(i18n.language === 'ar' ? 'ar-MA' : 'fr-FR', { day: '2-digit', month: 'short' })}</span>
                         </div>
-                        <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest leading-relaxed">
+                        <p className="text-xs text-text-muted font-bold uppercase tracking-widest leading-relaxed">
                           {t('workshop.activity.transition', { status: cfg.label })}
                         </p>
                       </div>

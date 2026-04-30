@@ -36,7 +36,7 @@ const SuspendedAccount = () => {
         {/* Action */}
         <button
           onClick={() => navigate('/')}
-          className="w-full bg-primary-600 hover:bg-primary-700 text-white transition-all rounded-2xl py-4 flex items-center justify-center shadow-lg shadow-primary-500/20 text-xs font-black uppercase tracking-widest active:scale-95"
+          className="w-full bg-primary-600 hover:bg-primary-700 text-white transition-all rounded-2xl py-3 sm:py-4 flex items-center justify-center shadow-lg shadow-primary-500/20 text-xs font-black uppercase tracking-widest active:scale-95"
         >
           {t('errors.suspended.back_to_login')}
         </button>

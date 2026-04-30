@@ -61,14 +61,14 @@ const Forbidden = () => {
         <div className="flex flex-col sm:flex-row gap-3 w-full">
            <button
             onClick={() => navigate(-1)}
-            className="flex-1 bg-gray-100 hover:bg-gray-200 text-text-primary transition-all rounded-2xl py-4 flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest active:scale-95 border border-border"
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-text-primary transition-all rounded-2xl py-3 sm:py-4 flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest active:scale-95 border border-border"
           >
             <ArrowLeft size={16} />
             {t('common.back')}
           </button>
           <button
              onClick={handleHome}
-             className="flex-1 bg-primary-600 hover:bg-primary-700 text-white transition-all rounded-2xl py-4 flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 text-xs font-black uppercase tracking-widest active:scale-95"
+             className="flex-1 bg-primary-600 hover:bg-primary-700 text-white transition-all rounded-2xl py-3 sm:py-4 flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 text-xs font-black uppercase tracking-widest active:scale-95"
           >
             <Home size={16} />
             {t('errors.forbidden.dashboard')}

@@ -25,7 +25,7 @@ export const StatusBadge = ({ status }) => {
   };
 
   return (
-    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tight ${cfg.bg} ${cfg.text} ring-1 ring-inset ring-current/10`}>
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-tight ${cfg.bg} ${cfg.text} ring-1 ring-inset ring-current/10`}>
       <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${cfg.dot}`} />
       {cfg.key ? t(cfg.key) : (status || '—')}
     </span>

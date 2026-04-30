@@ -34,7 +34,7 @@ const BottomNav = ({ user }) => {
 
   return (
     <div className="md:hidden fixed bottom-0 start-0 end-0 z-[100] px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pointer-events-none">
-      <nav className="pointer-events-auto bg-surface/95 backdrop-blur-md border border-border/60 flex items-center justify-evenly px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-2xl h-[64px]">
+      <nav className="pointer-events-auto bg-surface/95 backdrop-blur-md border border-border/60 flex items-center justify-evenly px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-2xl h-[72px]">
         {links.map((link) => {
           const Icon = link.icon;
           const isActive = location.pathname === link.path;
@@ -43,7 +43,7 @@ const BottomNav = ({ user }) => {
             <Link
               key={link.path}
               to={link.path}
-              className={`relative flex flex-col items-center justify-center min-w-[56px] py-1 transition-all duration-300 ${isActive
+              className={`relative flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 transition-all duration-300 ${isActive
                 ? 'text-primary-600'
                 : 'text-text-muted hover:text-text-primary'
                 }`}
@@ -56,7 +56,7 @@ const BottomNav = ({ user }) => {
                 />
               </div>
               
-              <span className={`text-[9px] font-bold mt-0.5 uppercase tracking-wider transition-all duration-300 ${isActive ? 'opacity-100 text-primary-700 dark:text-primary-500' : 'opacity-60 font-medium'}`}>
+              <span className={`text-xs font-bold mt-0.5 uppercase tracking-wider transition-all duration-300 ${isActive ? 'opacity-100 text-primary-700 dark:text-primary-500' : 'opacity-60 font-medium'}`}>
                 {link.name}
               </span>
 
