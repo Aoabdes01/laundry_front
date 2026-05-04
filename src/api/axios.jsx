@@ -3,15 +3,32 @@ import { store } from "../store/store"
 import { logOut, setCredentials } from "../store/auth/authSlice"
 import { toast } from "react-toastify"
 
-const BASE_URL = import.meta.env.VITE_API_URL
+// ── Base URL Strategy ──────────────────────────────────────────────────────
+// DEV mode  → empty string = requests go to the same origin (Vite dev server)
+//             Vite's proxy then forwards /api/* and /auth/* to localhost:8080
+//             This means only ONE ngrok tunnel is needed for phone testing!
+//
+// PROD mode → VITE_API_URL = full backend URL (e.g. Railway deployment URL)
+//             Requests go directly to the Spring Boot server.
+const BASE_URL = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_URL || '')
+
+// ── ngrok Free Tier Fix ────────────────────────────────────────────────────
+// ngrok free tier shows an HTML interstitial warning page for XHR/fetch
+// requests made through the tunnel. This causes API calls to fail with
+// unexpected HTML responses instead of JSON. The header below tells ngrok
+// to skip the interstitial and forward the request directly.
+const NGROK_HEADER = { 'ngrok-skip-browser-warning': 'true' }
+
 export const api = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true
+  withCredentials: true,
+  headers: NGROK_HEADER,
 })
 
 const refreshApi = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true
+  withCredentials: true,
+  headers: NGROK_HEADER,
 })
 
 api.interceptors.request.use((config) => {

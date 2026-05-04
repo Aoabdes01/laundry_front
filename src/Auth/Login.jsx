@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { 
-  User, Lock, Eye, EyeOff, Check, AlertCircle, AlertTriangle, Languages 
+  User, Lock, Eye, EyeOff, Check, AlertCircle, AlertTriangle, Languages, Loader2 
 } from 'lucide-react'
 import { useTranslation } from "react-i18next"
 import { login } from "../store/auth/authThunk"
@@ -59,56 +59,54 @@ const Login = () => {
     }
 
     return (
-        <div className="bg-[#EDE8E0] min-h-screen flex flex-col w-full font-sans items-center">
+        <div className="bg-[var(--bg)] min-h-screen flex flex-col w-full items-center text-start">
             {/* Topbar: branding text only */}
-            <nav className="w-full px-6 sm:px-10 py-5 flex items-center justify-between">
+            <nav className="w-full px-6 sm:px-10 py-5 flex items-center justify-between max-w-7xl">
                 <div className="flex items-center gap-2">
-                    <span className="text-base font-bold text-[#1A1A2E]">
+                    <span className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)] tracking-tight">
                         PureClean
                     </span>
                 </div>
                 <button 
                     onClick={toggleLanguage}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/50 hover:bg-white transition-all text-xs font-bold text-[#1A1A2E] shadow-sm border border-white/20"
+                    className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-white border border-[rgba(0,0,0,0.06)] text-[var(--text-secondary)] shadow-sm active:scale-95 transition-all"
                 >
-                    <Languages size={16} className="text-primary-500" />
-                    <span className="hidden sm:inline">
-                        {currentLang === 'fr' ? 'العربية' : 'Français'}
-                    </span>
-                    <span className="sm:hidden uppercase">
-                        {currentLang === 'fr' ? 'AR' : 'FR'}
-                    </span>
+                    <Languages size={18} />
                 </button>
             </nav>
 
             {/* Main content */}
-            <main className="flex-1 flex flex-col items-center justify-center w-full max-w-lg px-4 pt-4 pb-8 sm:pt-0 sm:pb-0 sm:-mt-10">
+            <main className="flex-1 flex flex-col items-center justify-center w-full max-w-lg px-5 py-12">
                 {/* Title Section */}
-                <div className="text-center mb-6 sm:mb-10">
-                    <h1 className="text-4xl sm:text-6xl font-black text-[#1A1A2E] tracking-tight flex items-end justify-center gap-1">
+                <div className="text-center mb-10">
+                    <h1 className="font-['Plus_Jakarta_Sans'] text-4xl font-bold text-[var(--text)] tracking-tight">
                         {t('auth.login.title')}
-                        <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-primary-500 mb-1.5 sm:mb-2 inline-block flex-shrink-0" />
                     </h1>
+                    <p className="font-['Inter'] text-[14px] text-[var(--text-muted)] mt-2 uppercase tracking-[0.06em]">
+                        PureClean Management
+                    </p>
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-white rounded-3xl shadow-sm w-full p-8 sm:p-10 mx-auto border border-white/20">
-                    <h2 className="text-2xl font-bold text-[#1A1A2E] mb-1">
-                        {t('auth.login.welcome')}
-                    </h2>
-                    <p className="text-sm text-[#9CA3AF] mb-10">
-                        {t('auth.login.subtitle')}
-                    </p>
+                <div className="bg-white rounded-[20px] shadow-[var(--shadow-md)] w-full p-8 border border-[rgba(0,0,0,0.06)]">
+                    <div className="mb-8">
+                        <h2 className="font-['Plus_Jakarta_Sans'] text-2xl font-bold text-[var(--text)]">
+                            {t('auth.login.welcome')}
+                        </h2>
+                        <p className="font-['Inter'] text-[14px] text-[var(--text-secondary)] mt-1">
+                            {t('auth.login.subtitle')}
+                        </p>
+                    </div>
 
                     <form onSubmit={handleLogin} className="space-y-6">
                         {/* Email field */}
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-[#1A1A2E] px-1 block">
+                            <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider block px-1">
                                 {t('auth.login.email_label')}
                             </label>
                             <div className="relative group">
-                                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-[#9CA3AF] group-focus-within:text-primary-500 transition-colors">
-                                    <User size={18} strokeWidth={2.5} />
+                                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--primary)] transition-colors">
+                                    <User size={18} />
                                 </div>
                                 <input
                                     type="email"
@@ -116,19 +114,19 @@ const Login = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder={t('auth.login.email_placeholder')}
                                     required
-                                    className="w-full bg-[#F4F2EE] border-0 rounded-2xl ps-12 pe-4 py-4 text-sm font-bold text-[#1A1A2E] placeholder:text-[#9CA3AF]/50 focus:outline-none focus:ring-2 focus:ring-primary-100 transition-all font-sans"
+                                    className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] ps-12 pe-4 py-4 text-[14px] font-medium text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-4 focus:ring-[var(--primary-glow)] focus:border-[var(--primary)] focus:bg-white transition-all"
                                 />
                             </div>
                         </div>
 
                         {/* Password field */}
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-[#1A1A2E] px-1 block">
+                            <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider block px-1">
                                 {t('auth.login.password_label')}
                             </label>
                             <div className="relative group">
-                                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-[#9CA3AF] group-focus-within:text-primary-500 transition-colors">
-                                    <Lock size={18} strokeWidth={2.5} />
+                                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--primary)] transition-colors">
+                                    <Lock size={18} />
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -136,11 +134,11 @@ const Login = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder={t('auth.login.password_placeholder')}
                                     required
-                                    className="w-full bg-[#F4F2EE] border-0 rounded-2xl ps-12 pe-12 py-4 text-sm font-bold text-[#1A1A2E] placeholder:text-[#9CA3AF]/50 focus:outline-none focus:ring-2 focus:ring-primary-100 transition-all font-sans"
+                                    className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] ps-12 pe-12 py-4 text-[14px] font-medium text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-4 focus:ring-[var(--primary-glow)] focus:border-[var(--primary)] focus:bg-white transition-all"
                                 />
                                 <button
                                     type="button"
-                                    className="absolute end-4 top-1/2 -translate-y-1/2 p-1 text-[#9CA3AF] hover:text-[#1A1A2E] transition-all active:scale-90"
+                                    className="absolute end-4 top-1/2 -translate-y-1/2 p-1 text-[var(--text-muted)] hover:text-[var(--primary)] transition-all"
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
                                     {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
@@ -152,24 +150,23 @@ const Login = () => {
                         <div className="flex items-center justify-between py-1">
                             <label className="flex items-center gap-3 cursor-pointer group">
                                 <div
-                                    className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${
+                                    className={`w-5 h-5 rounded-[6px] border-[1.5px] flex items-center justify-center transition-all ${
                                         rememberMe
-                                            ? 'bg-primary-500 border-primary-500 shadow-sm'
-                                            : 'border-gray-200 bg-white group-hover:border-primary-300'
+                                            ? 'bg-[var(--primary)] border-[var(--primary)] shadow-sm'
+                                            : 'border-[rgba(0,0,0,0.15)] bg-white group-hover:border-[var(--primary)]'
                                     }`}
                                     onClick={() => setRememberMe(!rememberMe)}
                                 >
-                                    {rememberMe && <Check className="w-4 h-4 text-white stroke-[3.5px]"/>}
+                                    {rememberMe && <Check className="w-3.5 h-3.5 text-white stroke-[3px]"/>}
                                 </div>
-                                <span className="text-sm font-bold text-[#9CA3AF] select-none tracking-tight">
+                                <span className="font-['Inter'] text-[13px] font-semibold text-[var(--text-secondary)] select-none">
                                     {t('auth.login.remember_me')}
                                 </span>
                             </label>
                             
                             <button
                                 type="button"
-                                className="text-sm text-primary-500 font-bold hover:text-primary-600 transition-colors"
-                                onClick={() => {/* forgot password logic here */}}
+                                className="font-['Inter'] text-[13px] font-bold text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors"
                             >
                                 {t('auth.login.forgot_password')}
                             </button>
@@ -177,16 +174,9 @@ const Login = () => {
 
                         {/* Alerts */}
                         {error && (
-                            <div className="bg-red-50 border border-red-100 rounded-2xl px-5 py-4 flex items-center gap-3 text-red-600 animate-shake">
-                                <AlertCircle size={20} className="shrink-0" />
-                                <p className="text-sm font-bold">{error}</p>
-                            </div>
-                        )}
-
-                        {rateLimitMessage && (
-                            <div className="bg-amber-50 border border-amber-100 rounded-2xl px-5 py-4 flex items-center gap-3 text-amber-700 animate-pulse">
-                                <AlertTriangle size={20} className="shrink-0" />
-                                <p className="text-sm font-bold">{rateLimitMessage}</p>
+                            <div className="bg-[#FEF2F2] border border-[#FECACA] rounded-[12px] px-4 py-3 flex items-center gap-3 text-[#EF4444]">
+                                <AlertCircle size={18} className="shrink-0" />
+                                <p className="text-[13px] font-bold">{error}</p>
                             </div>
                         )}
 
@@ -194,11 +184,11 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-primary-500 hover:bg-primary-600 text-white rounded-full py-4 text-sm font-bold uppercase tracking-widest transition-all shadow-md active:scale-[0.98] disabled:opacity-60"
+                            className="w-full bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-white rounded-[12px] py-4 text-[14px] font-bold uppercase tracking-wider transition-all shadow-[var(--shadow-teal)] active:scale-[0.98] disabled:opacity-60 flex items-center justify-center"
                         >
                             {isLoading ? (
                                 <div className="flex items-center justify-center gap-3">
-                                    <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                                    <Loader2 className="w-5 h-5 animate-spin" />
                                     <span>{t('auth.login.submitting')}</span>
                                 </div>
                             ) : (
@@ -209,16 +199,11 @@ const Login = () => {
                 </div>
             </main>
 
-            {/* Final Single Footer */}
-            <footer className="w-full py-12 flex flex-col items-center justify-center gap-4 mt-auto">
-                <div className="text-center">
-                    <p className="text-xs sm:text-xs font-black text-[#A09A8D] uppercase tracking-[0.3em]">
-                        {t('auth.login.footer_title')}
-                    </p>
-                    <p className="text-xs sm:text-xs font-bold text-[#B1AB9D] uppercase tracking-[0.2em] mt-1 opacity-70">
-                        {t('auth.login.footer_subtitle')}
-                    </p>
-                </div>
+            {/* Footer */}
+            <footer className="w-full py-8 mt-auto text-center">
+                <p className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em]">
+                    {t('auth.login.footer_title')}
+                </p>
             </footer>
         </div>
     )

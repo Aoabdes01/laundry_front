@@ -1,18 +1,55 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── PWA: Manifest Link ─────────────────────────────────────── -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- ── PWA: Theme Color (matches new primary color) ──── -->
+  <meta name="theme-color" content="#0D7377" />
+
+  <!-- ── PWA: iOS Home Screen Support ─────────────────────────────── -->
+  <!-- apple-mobile-web-app-capable: makes the app run fullscreen on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <!-- black-translucent: matches your top bar color on notched iPhones -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PureClean" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <!-- ── PWA: Android / General Mobile ────────────────────────────── -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="PureClean" />
+
+  <!-- ── Viewport: Prevents zoom on form inputs (important for mobile) -->
+  <!-- maximum-scale=1 prevents iOS auto-zoom when focusing inputs -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <!-- ── SEO ───────────────────────────────────────────────────────── -->
+  <meta name="description" content="PureClean — Gestion professionnelle de laverie de tapis. Commandes, livraisons et suivi d'atelier." />
+  <meta name="robots" content="noindex, nofollow" /><!-- Private B2B app -->
+
+  <!-- ── Favicon ───────────────────────────────────────────────────── -->
+  <link rel="icon" type="image/png" href="/icons/icon-192x192.png" />
+
   <title>PureClean</title>
+
+  <!-- ── Leaflet CSS ───────────────────────────────────────────────── -->
   <link rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""/>
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- ── SockJS Polyfill ───────────────────────────────────────────── -->
+  <script>
+    if (typeof global === 'undefined') {
+      var global = window;
+    }
+  </script>
+
+  <!-- ── Google Fonts: Plus Jakarta Sans & Inter ───────────────────── -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 
 <body>

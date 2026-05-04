@@ -61,42 +61,50 @@ export default function CreateOrder() {
   // ─── LANDING UI ────────────────────────────────────────────────────────────
   if (!pendingClient && !loading?.pendingClient) {
     return (
-      <div className="bg-background min-h-[calc(100vh-80px)] flex items-center justify-center p-6 animate-fade-in">
-        <div className="bg-surface rounded-2xl shadow-card p-8 max-w-md w-full text-center border border-border/60">
-          <div className="w-20 h-20 bg-primary-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <ShoppingBag className="text-primary-500" size={40} />
+      <div className="bg-[var(--bg)] min-h-[calc(100vh-80px)] flex flex-col items-center justify-center p-6 animate-fade-in text-start">
+        <div className="bg-white rounded-[20px] shadow-[var(--shadow-md)] p-8 max-w-md w-full border border-[rgba(0,0,0,0.06)] relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--primary)]" />
+          
+          <div className="w-16 h-16 bg-[var(--primary-surface)] rounded-[14px] flex items-center justify-center mx-auto mb-6">
+            <ShoppingBag className="text-[var(--primary)]" size={32} />
           </div>
-          <h1 className="text-2xl font-bold text-text-primary mb-2 tracking-tight">{t('driver.create_order.steps.title')}</h1>
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3 sm:py-4 mb-8 text-start flex items-start gap-3">
-            <AlertCircle className="text-amber-500 shrink-0 mt-0.5" size={18} />
-            <p className="text-sm font-medium text-amber-600 dark:text-amber-500 leading-snug">
+          
+          <h1 className="font-['Plus_Jakarta_Sans'] text-[24px] font-bold text-[var(--text)] tracking-tight text-center mb-2">
+            {t('driver.create_order.steps.title')}
+          </h1>
+          
+          <div className="bg-[#FFFBEB] border border-[#FDE68A] rounded-[14px] p-4 mb-8 flex items-start gap-3">
+            <AlertCircle className="text-[#D97706] shrink-0 mt-0.5" size={18} />
+            <p className="font-['Inter'] text-[13px] font-medium text-[#D97706] leading-tight">
               {t('driver.create_order.steps.notice')}
             </p>
           </div>
-          <div className="text-start mb-8 space-y-4">
+
+          <div className="space-y-5 mb-8">
             {[
               { id: 1, text: t('driver.create_order.steps.step1') },
               { id: 2, text: t('driver.create_order.steps.step2') },
               { id: 3, text: t('driver.create_order.steps.step3') }
             ].map(step => (
               <div key={step.id} className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-500 text-sm font-bold flex items-center justify-center shrink-0 border border-primary-500/20">
+                <div className="w-8 h-8 rounded-full bg-[var(--primary-surface)] text-[var(--primary)] font-bold text-[12px] flex items-center justify-center shrink-0 border border-[rgba(13,115,119,0.1)]">
                   {step.id}
                 </div>
-                <p className="text-sm font-semibold text-text-secondary tracking-tight">{step.text}</p>
+                <p className="font-['Inter'] text-[13px] font-semibold text-[var(--text-secondary)] tracking-tight">{step.text}</p>
               </div>
             ))}
           </div>
+
           <div className="space-y-3">
             <button
               onClick={() => navigate('/livreur/clients')}
-              className="w-full bg-primary-500 hover:bg-primary-600 text-white rounded-xl py-3.5 text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary-500/10 active:scale-95"
+              className="w-full bg-[var(--primary)] text-white rounded-[12px] py-4 text-[14px] font-bold uppercase tracking-wider shadow-[var(--shadow-teal)] active:scale-95 transition-all flex items-center justify-center gap-2"
             >
-              <Users size={18} strokeWidth={2} /> {t('driver.create_order.buttons.select_client')}
+              <Users size={18} /> {t('driver.create_order.buttons.select_client')}
             </button>
             <button
               onClick={() => navigate('/livreur')}
-              className="w-full border border-border bg-surface hover:bg-background text-text-secondary rounded-xl py-3 text-xs font-semibold transition-colors"
+              className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.06)] text-[var(--text-secondary)] rounded-[12px] py-4 text-[12px] font-bold uppercase tracking-wider hover:bg-white active:scale-95 transition-all"
             >
               {t('driver.create_order.buttons.back_dashboard')}
             </button>
@@ -284,49 +292,49 @@ export default function CreateOrder() {
   };
 
   return (
-    <div className="min-h-screen bg-background animate-fade-in pb-32">
+    <div className="min-h-screen bg-[var(--bg)] animate-fade-in pb-40 text-start">
 
       {/* TOPBAR */}
-      <div className="fixed top-0 start-0 end-0 md:start-16 lg:start-64 z-[60] bg-surface border-b border-border h-14 px-6 flex items-center justify-between shadow-sm">
+      <div className="fixed top-0 start-0 end-0 md:start-16 lg:start-64 z-[60] bg-white border-b border-[rgba(0,0,0,0.06)] h-[60px] px-5 flex items-center justify-between shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 rounded-lg hover:bg-background flex items-center justify-center transition-colors text-text-secondary"
+            className="w-9 h-9 rounded-[10px] bg-[var(--bg)] border border-[rgba(0,0,0,0.06)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--primary)] hover:text-white transition-all active:scale-95"
           >
             <ArrowLeft size={18} className="rtl:rotate-180" />
           </button>
-          <h2 className="text-base font-bold text-text-primary tracking-tight">{t('driver.create_order.title')}</h2>
+          <h2 className="font-['Plus_Jakarta_Sans'] text-[15px] font-bold text-[var(--text)] tracking-tight">{t('driver.create_order.title')}</h2>
         </div>
         <div className="flex items-center gap-3">
-          <button className="w-8 h-8 flex items-center justify-center text-text-muted hover:text-primary-500 transition-colors relative">
+          <button className="w-9 h-9 rounded-[10px] bg-[var(--bg)] border border-[rgba(0,0,0,0.06)] flex items-center justify-center text-[var(--text-secondary)] relative active:scale-95 transition-all">
             <Info size={18} />
-            <span className="absolute top-1.5 end-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-surface"></span>
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[var(--danger)] rounded-full border-2 border-white"></span>
           </button>
-          <div className="w-8 h-8 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-500 flex items-center justify-center font-bold text-xs border border-primary-500/20">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#0D7377] to-[#14A3A8] text-white flex items-center justify-center font-bold text-[14px] shadow-[0_2px_8px_rgba(13,115,119,0.3)]">
             {pendingClient.name?.[0]?.toUpperCase()}
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto pt-16 px-4 sm:px-6">
+      <div className="max-w-2xl mx-auto pt-[80px] px-5">
 
         {/* CLIENT SUMMARY */}
-        <div className="bg-surface rounded-2xl shadow-card p-5 mb-5 mt-4 animate-in slide-in-from-top duration-500 border border-border/40">
-          <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-4">{t('driver.create_order.client_details')}</p>
-          <div className="flex items-start gap-4 text-start">
-            <div className="w-12 h-12 bg-primary-500/10 text-primary-600 dark:text-primary-500 rounded-2xl flex items-center justify-center shrink-0 border border-primary-500/20">
+        <div className="bg-white rounded-[20px] shadow-[var(--shadow-sm)] p-5 mb-6 animate-in slide-in-from-top duration-500 border border-[rgba(0,0,0,0.06)]">
+          <p className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-4 px-1">{t('driver.create_order.client_details')}</p>
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-[var(--primary-surface)] text-[var(--primary)] rounded-[14px] flex items-center justify-center shrink-0 border border-[rgba(13,115,119,0.1)]">
               <UserCircle size={24} />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-base font-bold text-text-primary tracking-tight leading-tight">{pendingClient.name}</h3>
-              <div className="flex flex-col gap-2 mt-3">
-                <div className="flex items-center gap-2.5 text-text-secondary text-xs font-medium">
-                  <Phone size={14} className="text-primary-500 shrink-0" />
+              <h3 className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)] tracking-tight leading-tight">{pendingClient.name}</h3>
+              <div className="flex flex-col gap-2 mt-4">
+                <div className="flex items-center gap-2 text-[var(--text-secondary)] font-['Inter'] text-[13px] font-medium">
+                  <Phone size={14} className="text-[#10B981] shrink-0" />
                   <span className="truncate">{pendingClient.phones?.[0]?.phoneNumber}</span>
                 </div>
-                <div className="flex items-start gap-2.5 text-text-secondary text-xs font-medium">
-                  <MapPin size={14} className="text-primary-500 shrink-0 mt-0.5" />
-                  <span className="line-clamp-2 leading-relaxed">
+                <div className="flex items-start gap-2 text-[var(--text-secondary)] font-['Inter'] text-[13px] font-medium">
+                  <MapPin size={14} className="text-[var(--primary)] shrink-0 mt-0.5" />
+                  <span className="line-clamp-2 leading-tight">
                     {pendingClient.addresses?.[0]?.address || t('driver.create_order.unknown_address')}
                   </span>
                 </div>
@@ -336,72 +344,67 @@ export default function CreateOrder() {
         </div>
 
         {/* ARTICLES SECTION */}
-        <div className="flex items-center justify-between mb-5 px-1">
-          <h3 className="text-lg font-bold text-text-primary tracking-tight">{t('driver.create_order.articles.title')}</h3>
-          <span className="text-xs font-bold text-text-muted uppercase tracking-widest">{t('driver.create_order.articles.count', { count: articles.length })}</span>
+        <div className="flex items-center justify-between mb-4 px-1">
+          <h3 className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)]">{t('driver.create_order.articles.title')}</h3>
+          <span className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.1em]">{t('driver.create_order.articles.count', { count: articles.length })}</span>
         </div>
 
         {articles.map((article, index) => (
-          <div key={article.id} className="bg-surface rounded-2xl shadow-card p-5 mb-5 animate-in slide-in-from-bottom duration-500 border border-border/40">
+          <div key={article.id} className="bg-white rounded-[20px] shadow-[var(--shadow-md)] p-5 mb-5 animate-in slide-in-from-bottom duration-500 border border-[rgba(0,0,0,0.06)] relative overflow-hidden">
             <div className="flex items-center justify-between mb-5">
-              <span className="text-xs font-bold text-primary-600 dark:text-primary-500 bg-primary-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wide border border-primary-500/20">{t('driver.create_order.article_label')} {index + 1}</span>
+              <span className="font-['Inter'] text-[11px] font-bold text-[var(--primary)] bg-[var(--primary-surface)] px-3 py-1 rounded-full uppercase tracking-wider border border-[rgba(13,115,119,0.1)]">{t('driver.create_order.article_label')} {index + 1}</span>
             </div>
 
             {/* ── TYPE SELECTION ─────────────────────────────────────────── */}
-            <div className="space-y-2 mb-5 text-start">
-              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.type_label')}</label>
-              <div className="relative">
-                <select
-                  value={article.carpetTypeId || ''}
-                  onChange={(e) => handleTypeChange(index, e.target.value)}
-                  className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-semibold focus:bg-surface focus:border-primary-400 outline-none appearance-none h-[52px] text-text-primary"
-                >
-                  <option value="">{t('driver.create_order.articles.choose_type')}</option>
-                  {carpetTypes.map(t => (
-                    <option key={t.id} value={t.id}>{t.nom} — {t.prixParM2} DH/m²</option>
-                  ))}
-                  {!carpetTypes.length && (
-                    <option disabled>{t('driver.create_order.articles.no_types')}</option>
-                  )}
-                </select>
-              </div>
+            <div className="space-y-1.5 mb-5">
+              <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.create_order.articles.type_label')}</label>
+              <select
+                value={article.carpetTypeId || ''}
+                onChange={(e) => handleTypeChange(index, e.target.value)}
+                className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none h-[52px] transition-all"
+              >
+                <option value="">{t('driver.create_order.articles.choose_type')}</option>
+                {carpetTypes.map(t => (
+                  <option key={t.id} value={t.id}>{t.nom} — {t.prixParM2} DH/m²</option>
+                ))}
+              </select>
             </div>
 
             {/* ── PRICING MODE TOGGLE ────────────────────────────────────── */}
-            <div className="mb-5 text-start">
-              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1 mb-2.5 block">{t('driver.create_order.articles.pricing_mode')}</label>
+            <div className="mb-5">
+              <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1 mb-2.5 block">{t('driver.create_order.articles.pricing_mode')}</label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => handlePricingModeChange(index, 'SIZE_BASED')}
-                  className={`flex items-center justify-center gap-2.5 py-3 rounded-xl text-xs font-bold border transition-all ${article.pricingMode === 'SIZE_BASED'
-                      ? 'bg-primary-500 text-white border-primary-500 shadow-md shadow-primary-500/10'
-                      : 'bg-background text-text-secondary border-border hover:border-primary-200'
+                  className={`flex items-center justify-center gap-2 py-3.5 rounded-[12px] text-[12px] font-bold border transition-all ${article.pricingMode === 'SIZE_BASED'
+                      ? 'bg-[var(--primary)] text-white border-[var(--primary)] shadow-[var(--shadow-teal)]'
+                      : 'bg-[var(--bg)] text-[var(--text-muted)] border-[rgba(0,0,0,0.08)] hover:bg-white'
                     }`}
                 >
                   <Ruler size={14} />
-                  {t('driver.create_order.articles.by_size')}
+                  {t('driver.create_order.articles.by_size').toUpperCase()}
                 </button>
                 <button
                   type="button"
                   onClick={() => handlePricingModeChange(index, 'MANUAL')}
-                  className={`flex items-center justify-center gap-2.5 py-3 rounded-xl text-xs font-bold border transition-all ${article.pricingMode === 'MANUAL'
-                      ? 'bg-primary-500 text-white border-primary-500 shadow-md shadow-primary-500/10'
-                      : 'bg-background text-text-secondary border-border hover:border-primary-200'
+                  className={`flex items-center justify-center gap-2 py-3.5 rounded-[12px] text-[12px] font-bold border transition-all ${article.pricingMode === 'MANUAL'
+                      ? 'bg-[var(--primary)] text-white border-[var(--primary)] shadow-[var(--shadow-teal)]'
+                      : 'bg-[var(--bg)] text-[var(--text-muted)] border-[rgba(0,0,0,0.08)] hover:bg-white'
                     }`}
                 >
                   <DollarSign size={14} />
-                  {t('driver.create_order.articles.manual')}
+                  {t('driver.create_order.articles.manual').toUpperCase()}
                 </button>
               </div>
             </div>
 
             {/* ── SIZE-BASED MODE ────────────────────────────────────────── */}
             {article.pricingMode === 'SIZE_BASED' && (
-              <div className="mb-5 space-y-4 text-start">
+              <div className="mb-5 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.width')}</label>
+                  <div className="space-y-1.5">
+                    <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.width')}</label>
                     <input
                       type="number"
                       step="0.01"
@@ -409,11 +412,11 @@ export default function CreateOrder() {
                       placeholder="Ex: 2.00"
                       value={article.largeur}
                       onChange={(e) => handleDimensionChange(index, 'largeur', e.target.value)}
-                      className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-semibold focus:bg-surface focus:border-primary-400 outline-none h-[52px] text-text-primary"
+                      className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none h-[52px] transition-all"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.height')}</label>
+                  <div className="space-y-1.5">
+                    <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.height')}</label>
                     <input
                       type="number"
                       step="0.01"
@@ -421,33 +424,33 @@ export default function CreateOrder() {
                       placeholder="Ex: 3.00"
                       value={article.hauteur}
                       onChange={(e) => handleDimensionChange(index, 'hauteur', e.target.value)}
-                      className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-semibold focus:bg-surface focus:border-primary-400 outline-none h-[52px] text-text-primary"
+                      className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none h-[52px] transition-all"
                     />
                   </div>
                 </div>
 
                 {article.prixCalcule && (
-                  <div className="bg-primary-500/10 border border-primary-500/20 rounded-2xl p-4 space-y-4 text-start">
+                  <div className="bg-[var(--primary-surface)] border border-[rgba(13,115,119,0.1)] rounded-[16px] p-4 space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-primary-500/20 rounded-lg flex items-center justify-center">
-                          <Ruler size={14} className="text-primary-600 dark:text-primary-400" />
+                        <div className="w-9 h-9 bg-white rounded-[10px] flex items-center justify-center shadow-sm text-[var(--primary)]">
+                          <Ruler size={16} />
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider">{t('driver.create_order.articles.labels.calculated_price')}</p>
-                          <p className="text-xs font-semibold text-text-muted">
+                          <p className="font-['Inter'] text-[11px] font-bold text-[var(--primary)] uppercase tracking-wider">{t('driver.create_order.articles.labels.calculated_price')}</p>
+                          <p className="font-['Inter'] text-[11px] font-semibold text-[var(--text-muted)]">
                             {article.largeur}m × {article.hauteur}m × {article.pricePerM2} DH/m²
                           </p>
                         </div>
                       </div>
-                      <div className="bg-surface px-3.5 py-1.5 rounded-xl border border-border shadow-sm">
-                        <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{article.prixCalcule}</span>
-                        <span className="text-xs font-bold text-text-muted ms-1">DH</span>
+                      <div className="bg-white px-3 py-1.5 rounded-[10px] border border-[rgba(0,0,0,0.06)] shadow-sm">
+                        <span className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--primary)]">{article.prixCalcule}</span>
+                        <span className="text-[10px] font-bold text-[var(--text-muted)] ms-1">DH</span>
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.final_price')}</label>
+                    <div className="space-y-1.5">
+                      <label className="font-['Inter'] text-[11px] font-bold text-[var(--primary)] uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.final_price')}</label>
                       <div className="relative">
                         <input
                           type="number"
@@ -455,17 +458,17 @@ export default function CreateOrder() {
                           min="0"
                           value={article.prixFinal}
                           onChange={(e) => updateArticle(index, 'prixFinal', e.target.value)}
-                          className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-base font-bold focus:border-primary-400 outline-none h-[48px] text-text-primary shadow-sm"
+                          className="w-full bg-white border border-[var(--primary)] rounded-[12px] px-4 py-3 text-lg font-bold text-[var(--text)] outline-none h-[52px] shadow-sm focus:ring-4 focus:ring-[var(--primary-glow)] transition-all"
                         />
-                        <span className="absolute end-4 top-1/2 -translate-y-1/2 text-xs font-bold text-text-muted">DH</span>
+                        <span className="absolute end-4 top-1/2 -translate-y-1/2 text-[12px] font-bold text-[var(--text-muted)]">DH</span>
                       </div>
                     </div>
 
                     {article.prixFinal && article.prixCalcule &&
                       parseFloat(article.prixFinal) !== parseFloat(article.prixCalcule) && (
-                        <div className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2 mt-2">
-                          <AlertTriangle size={13} className="text-amber-500 shrink-0" />
-                          <span className="text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wide">
+                        <div className="flex items-center gap-2.5 bg-[#FFFBEB] border border-[#FDE68A] rounded-[10px] px-3 py-2">
+                          <AlertTriangle size={14} className="text-[#D97706] shrink-0" />
+                          <span className="font-['Inter'] text-[11px] font-bold text-[#D97706] uppercase tracking-tight">
                             {t('driver.create_order.articles.pricing_warning.modified', {
                               type: parseFloat(article.prixFinal) < parseFloat(article.prixCalcule) ? t('driver.create_order.articles.pricing_warning.discount') : t('driver.create_order.articles.pricing_warning.extra'),
                               diff: Math.abs(parseFloat(article.prixCalcule) - parseFloat(article.prixFinal)).toFixed(2)
@@ -480,8 +483,8 @@ export default function CreateOrder() {
 
             {/* ── MANUAL MODE ───────────────────────────────────────────── */}
             {article.pricingMode === 'MANUAL' && (
-              <div className="space-y-2 mb-5 text-start">
-                <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.estimated_price')}</label>
+              <div className="space-y-1.5 mb-5">
+                <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.estimated_price')}</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -490,66 +493,66 @@ export default function CreateOrder() {
                     placeholder={t('driver.create_order.articles.placeholders.manual_price')}
                     value={article.prixEstime}
                     onChange={(e) => updateArticle(index, 'prixEstime', e.target.value)}
-                    className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-semibold focus:bg-surface focus:border-primary-400 outline-none h-[52px] text-text-primary"
+                    className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none h-[52px] transition-all"
                   />
-                  <span className="absolute end-4 top-1/2 -translate-y-1/2 text-xs font-bold text-text-muted">DH</span>
+                  <span className="absolute end-4 top-1/2 -translate-y-1/2 text-[12px] font-bold text-[var(--text-muted)]">DH</span>
                 </div>
               </div>
             )}
 
             {/* ── QUANTITY ───────────────────────────────────────────────── */}
-            <div className="space-y-2 mb-5 text-start">
-              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.quantity')}</label>
-              <div className="flex items-center border border-border rounded-xl overflow-hidden h-[52px] bg-background">
+            <div className="space-y-1.5 mb-5">
+              <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.quantity')}</label>
+              <div className="flex items-center border border-[rgba(0,0,0,0.08)] rounded-[12px] overflow-hidden h-[52px] bg-[var(--bg)]">
                 <button
                   onClick={() => updateArticle(index, 'quantite', Math.max(1, article.quantite - 1))}
-                  className="flex-1 h-full hover:bg-surface flex items-center justify-center transition-all bg-background/50"
+                  className="flex-1 h-full hover:bg-white flex items-center justify-center transition-all active:scale-90"
                 >
-                  <Minus size={18} strokeWidth={2.5} className="text-text-secondary" />
+                  <Minus size={20} className="text-[var(--text-secondary)]" />
                 </button>
-                <div className="w-20 text-center font-bold text-base text-text-primary bg-surface h-full flex items-center justify-center border-x border-border/50">
+                <div className="w-20 text-center font-bold text-lg text-[var(--text)] bg-white h-full flex items-center justify-center border-x border-[rgba(0,0,0,0.06)]">
                   {article.quantite}
                 </div>
                 <button
                   onClick={() => updateArticle(index, 'quantite', article.quantite + 1)}
-                  className="flex-1 h-full hover:bg-surface flex items-center justify-center transition-all bg-background/50"
+                  className="flex-1 h-full hover:bg-white flex items-center justify-center transition-all active:scale-90"
                 >
-                  <Plus size={18} strokeWidth={2.5} className="text-text-secondary" />
+                  <Plus size={20} className="text-[var(--text-secondary)]" />
                 </button>
               </div>
             </div>
 
             {/* ── NOTES ─────────────────────────────────────────────────── */}
-            <div className="space-y-2 mb-5 text-start">
-              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.notes')}</label>
+            <div className="space-y-1.5 mb-5">
+              <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.notes')}</label>
               <textarea
                 rows={2}
                 placeholder={t('driver.create_order.articles.placeholders.notes')}
                 value={article.notes}
                 onChange={(e) => updateArticle(index, 'notes', e.target.value)}
-                className="w-full bg-background border border-border rounded-xl px-4 py-3.5 text-sm font-medium focus:bg-surface focus:border-primary-400 outline-none resize-none shadow-sm min-h-[70px] transition-all text-text-primary"
+                className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-medium focus:bg-white focus:border-[var(--primary)] outline-none resize-none shadow-sm min-h-[80px] transition-all text-[var(--text)]"
               />
             </div>
 
             {/* ── PHOTOS ────────────────────────────────────────────────── */}
-            <div className="space-y-3 text-start">
-              <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.photos', { count: article.photos.length })}</label>
+            <div className="space-y-3">
+              <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.create_order.articles.labels.photos', { count: article.photos.length })}</label>
               <div className="flex gap-3 overflow-x-auto pb-3 no-scrollbar">
                 {article.photos.map((photo, pIdx) => (
                   <div
                     key={pIdx}
                     onClick={() => setMainPhoto(index, pIdx)}
-                    className={`w-28 h-24 rounded-2xl object-cover shrink-0 cursor-pointer relative overflow-hidden group border-2 transition-all ${photo.isPrincipal ? 'border-primary-500 shadow-md' : 'border-transparent hover:border-primary-500/30'}`}
+                    className={`w-28 h-24 rounded-[16px] shrink-0 cursor-pointer relative overflow-hidden group border-2 transition-all ${photo.isPrincipal ? 'border-[var(--primary)] shadow-md' : 'border-transparent'}`}
                   >
                     <img src={photo.preview} alt="photo" className="w-full h-full object-cover" />
                     <button
                       onClick={(e) => { e.stopPropagation(); handleRemovePhoto(index, pIdx); }}
-                      className="absolute top-1.5 end-1.5 w-6 h-6 rounded-lg bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-red-500 transition-colors"
+                      className="absolute top-1.5 end-1.5 w-6 h-6 rounded-[6px] bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-[#EF4444] transition-colors"
                     >
                       <X size={14} strokeWidth={2.5} />
                     </button>
                     {photo.isPrincipal && (
-                      <div className="absolute top-1.5 start-1.5 bg-primary-500 text-white text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm">
+                      <div className="absolute bottom-0 left-0 right-0 bg-[var(--primary)] text-white text-[9px] font-bold py-1 text-center uppercase tracking-wider">
                         {t('driver.create_order.articles.labels.principal')}
                       </div>
                     )}
@@ -569,26 +572,21 @@ export default function CreateOrder() {
                     <button
                       type="button"
                       onClick={() => photoInputRefs.current[index]?.click()}
-                      className="w-28 h-24 border-2 border-dashed border-border rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-background hover:border-primary-400 hover:bg-primary-500/5 transition-all group"
+                      className="w-28 h-24 border-2 border-dashed border-[rgba(0,0,0,0.08)] rounded-[16px] flex flex-col items-center justify-center cursor-pointer bg-[var(--bg)] hover:border-[var(--primary)] hover:bg-[var(--primary-surface)] transition-all group"
                     >
-                      <Camera size={22} className="text-text-muted mb-1.5 group-hover:text-primary-500 transition-colors" />
-                      <span className="text-xs font-bold text-text-muted uppercase tracking-widest group-hover:text-primary-600 dark:group-hover:text-primary-400">Photo</span>
+                      <Camera size={22} className="text-[var(--text-muted)] mb-1.5 group-hover:text-[var(--primary)] transition-colors" />
+                      <span className="font-['Inter'] text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider group-hover:text-[var(--primary)]">Photo</span>
                     </button>
                   </>
                 )}
               </div>
-              {!article.carpetTypeId && (
-                <p className="text-xs font-medium text-text-muted text-center py-2 opacity-70">
-                  {t('driver.create_order.articles.pricing_warning.prompt')}
-                </p>
-              )}
             </div>
 
             {/* DELETE ACTION */}
             {articles.length > 1 && (
               <button
                 onClick={() => handleRemoveArticle(article.id)}
-                className="mt-6 w-full flex items-center justify-center gap-2 text-red-500 text-xs font-bold uppercase tracking-widest py-3 border-t border-border/50 hover:text-red-600 transition-colors"
+                className="mt-6 w-full flex items-center justify-center gap-2 text-[#EF4444] font-['Inter'] text-[11px] font-bold uppercase tracking-[0.1em] py-4 border-t border-[rgba(0,0,0,0.04)] hover:bg-[#FEF2F2] transition-colors rounded-b-[20px]"
               >
                 <Trash2 size={15} /> {t('driver.create_order.articles.actions.delete')}
               </button>
@@ -599,36 +597,38 @@ export default function CreateOrder() {
         {/* ADD ARTICLE BUTTON */}
         <button
           onClick={handleAddArticle}
-          className="w-full border-2 border-dashed border-border py-8 flex flex-col items-center justify-center gap-2.5 rounded-2xl text-text-muted hover:border-primary-500 hover:bg-primary-500/5 hover:text-primary-600 dark:hover:text-primary-400 transition-all group mb-8"
+          className="w-full border-2 border-dashed border-[rgba(0,0,0,0.08)] py-10 flex flex-col items-center justify-center gap-3 rounded-[20px] text-[var(--text-muted)] hover:border-[var(--primary)] hover:bg-[var(--primary-surface)] hover:text-[var(--primary)] transition-all active:scale-[0.98] group mb-12"
         >
-          <div className="w-10 h-10 bg-background rounded-full flex items-center justify-center group-hover:bg-primary-500/10 transition-colors">
-            <Plus size={24} strokeWidth={2.5} />
+          <div className="w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-sm border border-[rgba(0,0,0,0.06)] group-hover:scale-110 transition-transform">
+            <Plus size={24} strokeWidth={2.5} className="text-[var(--primary)]" />
           </div>
-          <span className="text-xs font-bold uppercase tracking-widest">{t('driver.create_order.buttons.add_article')}</span>
+          <span className="font-['Inter'] text-[12px] font-bold uppercase tracking-widest">{t('driver.create_order.buttons.add_article')}</span>
         </button>
       </div>
 
       {/* STICKY BOTTOM BAR */}
-      <div className="fixed bottom-[64px] pb-safe md:bottom-0 start-0 end-0 md:start-16 lg:start-64 z-[110] flex justify-center px-4 sm:px-6">
-        <div className="w-full max-w-4xl bg-surface/95 backdrop-blur-lg border-t border-x border-border rounded-t-2xl shadow-[0_-12px_40px_rgba(0,0,0,0.1)] py-3 md:py-3 sm:py-4 px-5 flex flex-col items-stretch gap-2.5">
+      <div className="fixed bottom-0 start-0 end-0 md:start-16 lg:start-64 z-[110] flex justify-center">
+        <div className="w-full max-w-2xl bg-white/95 backdrop-blur-[16px] border-t border-[rgba(0,0,0,0.06)] rounded-t-[24px] shadow-[0_-12px_40px_rgba(0,0,0,0.08)] pb-[calc(1rem+env(safe-area-inset-bottom))] pt-5 px-6 flex flex-col items-stretch gap-4">
           <div className="flex items-center justify-between px-1">
-            <span className="text-xs font-bold text-text-secondary uppercase tracking-widest">{t('driver.create_order.footer.articles', { count: totalUnits })}</span>
+            <div className="flex flex-col">
+              <span className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">{t('driver.create_order.footer.articles', { count: totalUnits })}</span>
+            </div>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-xs font-bold text-text-secondary uppercase tracking-widest">{t('driver.create_order.footer.total')}</span>
-              <span className="text-2xl font-bold text-primary-500 tracking-tighter leading-none">{totalEstime.toFixed(0)}</span>
-              <span className="text-xs font-bold text-text-muted uppercase">DH</span>
+              <span className="font-['Inter'] text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">{t('driver.create_order.footer.total')}</span>
+              <span className="font-['Plus_Jakarta_Sans'] text-[28px] font-bold text-[var(--primary)] tracking-tight leading-none">{totalEstime.toFixed(0)}</span>
+              <span className="text-[12px] font-bold text-[var(--text-muted)] uppercase">DH</span>
             </div>
           </div>
 
           <button
             onClick={handleFinalizeOrder}
             disabled={loading.createOrder || isFinalizing}
-            className="w-full bg-primary-500 hover:bg-primary-600 text-white rounded-xl py-3.5 text-sm font-bold shadow-lg shadow-primary-500/10 flex items-center justify-center gap-2.5 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+            className="w-full bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-white rounded-[14px] py-4.5 text-[15px] font-bold shadow-[var(--shadow-teal)] flex items-center justify-center gap-3 active:scale-95 disabled:opacity-60 transition-all h-[56px]"
           >
             {isFinalizing ? (
               <>
-                <Loader2 className="animate-spin" size={18} />
-                <span className="tracking-wide text-xs">
+                <Loader2 className="animate-spin" size={20} />
+                <span className="uppercase tracking-wider">
                   {finalizeStatus === 'compressing' ? t('driver.create_order.status.compressing') :
                     finalizeStatus === 'uploading' ? t('driver.create_order.status.uploading') :
                       t('driver.create_order.status.creating')}
@@ -636,8 +636,8 @@ export default function CreateOrder() {
               </>
             ) : (
               <>
-                <CheckCircle size={18} strokeWidth={2.5} />
-                <span className="tracking-wide">{t('driver.create_order.finalize_btn')}</span>
+                <CheckCircle size={20} />
+                <span className="uppercase tracking-wider">{t('driver.create_order.finalize_btn')}</span>
               </>
             )}
           </button>

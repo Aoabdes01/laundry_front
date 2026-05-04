@@ -151,165 +151,163 @@ export default function RegisterClient() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto pb-32 animate-fade-in px-4 md:px-0 text-start">
+    <div className="max-w-2xl mx-auto pb-32 animate-fade-in px-5 text-start">
       
       {/* PAGE HEADER */}
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8 mt-2">
+      <div className="flex flex-col gap-4 mb-6 mt-2">
         <div>
-          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">{t('driver.register_client.title')}</h1>
-          <p className="text-xs text-text-muted font-bold uppercase tracking-widest opacity-60 mt-1">{t('driver.register_client.subtitle')}</p>
+          <h1 className="font-['Plus_Jakarta_Sans'] text-2xl font-bold text-[var(--text)] tracking-tight uppercase">
+            {t('driver.register_client.title')}
+          </h1>
+          <p className="font-['Inter'] text-[13px] text-[var(--text-muted)] mt-1">
+            {t('driver.register_client.subtitle')}
+          </p>
         </div>
         <button 
           onClick={handleShowForm}
-          className="bg-primary-600 hover:bg-primary-700 text-white rounded-2xl px-6 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-2 transition-all shadow-lg shadow-primary-500/20 active:scale-95 whitespace-nowrap"
+          className="w-full bg-[var(--primary)] text-white rounded-[12px] py-4 text-[14px] font-bold uppercase tracking-wider shadow-[var(--shadow-teal)] active:scale-95 transition-all flex items-center justify-center gap-2"
         >
           <UserPlus size={18} /> {t('driver.register_client.new_client_btn')}
         </button>
       </div>
 
       {/* SEARCH SECTION */}
-      <div className="bg-surface rounded-3xl shadow-card p-2 flex items-center gap-3 border border-border/50 group focus-within:border-primary-500/50 transition-all">
-        <div className="w-12 h-12 bg-background rounded-2xl flex items-center justify-center text-primary-500 shrink-0 border border-border/50">
-          <Search size={20} strokeWidth={3} />
+      <div className="bg-white rounded-[16px] shadow-[var(--shadow-sm)] p-1.5 flex items-center gap-3 border border-[rgba(0,0,0,0.06)] group focus-within:ring-4 focus-within:ring-[var(--primary-glow)] focus-within:border-[var(--primary)] transition-all">
+        <div className="w-11 h-11 bg-[var(--bg)] rounded-[12px] flex items-center justify-center text-[var(--text-secondary)] shrink-0 border border-[rgba(0,0,0,0.06)]">
+          <Search size={20} />
         </div>
         <input 
           type="tel"
           placeholder={t('driver.register_client.search_placeholder')}
           value={searchPhone}
           onChange={(e) => setSearchPhone(e.target.value)}
-          className="flex-1 py-3 text-sm font-black placeholder:font-bold placeholder:text-text-muted/50 outline-none bg-transparent text-text-primary"
+          className="flex-1 py-3 text-sm font-bold placeholder:text-[var(--text-muted)] outline-none bg-transparent text-[var(--text)]"
         />
         <button 
           onClick={() => alert(t('driver.register_client.scanner_unavailable'))}
-          className="bg-background hover:bg-surface rounded-2xl px-5 h-12 text-xs font-black text-text-muted uppercase tracking-widest transition-all flex items-center gap-2 border border-border/50 shadow-sm"
+          className="bg-[var(--bg)] hover:bg-white rounded-[12px] px-4 h-11 text-[12px] font-bold text-[var(--text-secondary)] uppercase tracking-wider transition-all flex items-center gap-2 border border-[rgba(0,0,0,0.06)] active:scale-95"
         >
-          <QrCode size={16} />
+          <QrCode size={18} />
           <span className="hidden sm:inline">{t('driver.register_client.scanner')}</span>
         </button>
       </div>
 
       {/* SEARCH RESULT CARD */}
       {searchResult && (
-        <div className="border border-primary-500/30 rounded-[2.5rem] p-6 md:p-8 mt-8 bg-surface flex flex-col md:flex-row items-center gap-8 shadow-2xl shadow-primary-500/10 animate-in zoom-in-95 duration-300 relative overflow-hidden">
-          <div className="absolute top-0 end-0 p-8 opacity-5">
-             <UserCircle size={120} className="text-primary-500" />
+        <div className="border border-[var(--primary)] rounded-[20px] p-6 mt-6 bg-white flex flex-col items-center gap-6 shadow-[var(--shadow-md)] animate-in zoom-in-95 duration-300 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
+             <UserCircle size={100} className="text-[var(--primary)]" />
           </div>
           
-          <div className="w-20 h-20 rounded-[2rem] bg-primary-500 text-white flex items-center justify-center shrink-0 shadow-xl shadow-primary-500/20 border-4 border-surface ring-1 ring-primary-500/10">
-            <span className="text-3xl font-black">{searchResult.name?.[0]?.toUpperCase()}</span>
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#0D7377] to-[#14A3A8] text-white flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(13,115,119,0.3)]">
+            <span className="text-3xl font-bold font-['Plus_Jakarta_Sans']">{searchResult.name?.[0]?.toUpperCase()}</span>
           </div>
           
-          <div className="flex-1 text-center md:text-start min-w-0 relative z-10">
-             <div className="flex flex-col md:flex-row items-center gap-3 mb-3">
-                <h3 className="text-2xl font-black text-text-primary tracking-tight truncate">{searchResult.name}</h3>
-                <span className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-100 dark:border-emerald-500/20">
+          <div className="text-center min-w-0 relative z-10 w-full">
+             <div className="flex flex-col items-center gap-2 mb-4">
+                <h3 className="font-['Plus_Jakarta_Sans'] text-[22px] font-bold text-[var(--text)] tracking-tight truncate">{searchResult.name}</h3>
+                <span className="bg-[#ECFDF5] text-[#10B981] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-[#A7F3D0]">
                    {t('driver.register_client.found_badge')}
                 </span>
              </div>
-             <div className="flex flex-wrap justify-center md:justify-start gap-y-2 gap-x-6">
-                <div className="flex items-center gap-2 text-text-muted text-xs font-bold">
-                   <Phone size={14} className="text-primary-500" />
+             <div className="flex flex-col gap-3 px-2">
+                <div className="flex items-center justify-center gap-2 text-[var(--text-secondary)] font-['Inter'] text-[13px] font-medium">
+                   <Phone size={14} className="text-[#10B981]" />
                    {searchResult.phones?.[0]?.phoneNumber}
                 </div>
-                <div className="flex items-center gap-2 text-text-muted text-xs font-bold">
-                   <MapPin size={14} className="text-primary-500" />
-                   <span className="truncate max-w-[200px]">{searchResult.addresses?.[0]?.address || t('driver.register_client.no_address')}</span>
+                <div className="flex items-center justify-center gap-2 text-[var(--text-secondary)] font-['Inter'] text-[13px] font-medium">
+                   <MapPin size={14} className="text-[var(--primary)]" />
+                   <span className="truncate">{searchResult.addresses?.[0]?.address || t('driver.register_client.no_address')}</span>
                 </div>
              </div>
           </div>
 
           <button 
             onClick={() => handleSelectExisting(searchResult)}
-            className="w-full md:w-auto bg-primary-600 hover:bg-primary-700 text-white rounded-2xl px-10 py-3 sm:py-4 text-xs font-black uppercase tracking-widest shadow-xl shadow-primary-500/20 flex items-center justify-center gap-3 transition-all active:scale-95 relative z-10"
+            className="w-full bg-[var(--primary)] text-white rounded-[12px] py-4 text-[14px] font-bold uppercase tracking-wider shadow-[var(--shadow-teal)] flex items-center justify-center gap-2 active:scale-95 transition-all relative z-10"
           >
-            {t('driver.register_client.choose_btn')} <ChevronRight size={18} strokeWidth={3} className="rtl:rotate-180" />
+            {t('driver.register_client.choose_btn')} <ChevronRight size={18} />
           </button>
         </div>
       )}
 
       {/* NOT FOUND TEXT */}
       {!searchResult && searchPhone.length >= 8 && !loading.search && (
-        <div className="bg-orange-50 dark:bg-orange-500/10 border border-orange-100 dark:border-orange-500/20 rounded-2xl py-3 sm:py-4 px-6 text-center mt-6 animate-in fade-in duration-300">
-          <p className="text-xs font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest flex items-center justify-center gap-2">
-             <AlertCircle size={14} /> {t('driver.register_client.not_found')}
+        <div className="bg-[#FFFBEB] border border-[#FDE68A] rounded-[12px] py-4 px-6 text-center mt-6 animate-in fade-in duration-300">
+          <p className="font-['Inter'] text-[12px] font-bold text-[#D97706] uppercase tracking-wider flex items-center justify-center gap-2">
+             <AlertCircle size={16} /> {t('driver.register_client.not_found')}
           </p>
         </div>
       )}
 
       {/* NEW CLIENT FORM SECTION */}
-       <div ref={formRef} className={`space-y-8 transition-all duration-700 mt-12 ${showForm ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
-        <div className="flex items-center gap-4">
-           <h2 className="text-xl font-black text-text-primary tracking-tight uppercase">{t('driver.register_client.form.title')}</h2>
-           <div className="h-px flex-1 bg-border/40"></div>
+       <div ref={formRef} className={`space-y-6 transition-all duration-700 mt-10 ${showForm ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
+        <div className="flex items-center gap-3">
+           <h2 className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)] uppercase tracking-tight">{t('driver.register_client.form.title')}</h2>
+           <div className="h-px flex-1 bg-[rgba(0,0,0,0.06)]"></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+        <div className="space-y-6">
           
-          {/* LEFT CARD — Informations Personnelles */}
-          <div className="bg-surface rounded-[2rem] shadow-card border border-border/50 overflow-hidden flex flex-col">
-             <div className="bg-background/30 px-8 py-5 border-b border-border/50 flex items-center gap-3">
-                <UserCircle className="text-primary-500" size={18} strokeWidth={3} />
-                <h3 className="text-xs font-black text-text-primary uppercase tracking-widest">{t('driver.register_client.form.personal_info')}</h3>
+          {/* INFORMATIONS PERSONNELLES */}
+          <div className="bg-white rounded-[20px] shadow-[var(--shadow-sm)] border border-[rgba(0,0,0,0.06)] overflow-hidden">
+             <div className="bg-[var(--bg)] px-6 py-4 border-b border-[rgba(0,0,0,0.06)] flex items-center gap-3">
+                <UserCircle className="text-[var(--primary)]" size={18} />
+                <h3 className="font-['Inter'] text-[12px] font-bold text-[var(--text)] uppercase tracking-wider">{t('driver.register_client.form.personal_info')}</h3>
              </div>
              
-             <div className="p-6 md:p-10 space-y-8 flex-1">
-                <div className="space-y-2">
-                   <label className="text-xs font-black text-text-muted uppercase tracking-widest px-1 flex items-center gap-2">
-                      <UserCircle size={12} /> {t('driver.register_client.form.labels.fullname')}
-                   </label>
+             <div className="p-6 space-y-6">
+                <div className="space-y-1.5">
+                   <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.register_client.form.labels.fullname')}</label>
                    <input 
                      type="text" 
                      placeholder={t('driver.pro_ui.placeholder_fullname')}
                      value={formData.name}
                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                     className="w-full bg-background border border-border/60 rounded-2xl px-5 py-3 sm:py-4 text-sm font-black focus:border-primary-500 outline-none transition-all text-text-primary placeholder:text-text-muted/30"
+                     className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none transition-all"
                    />
                 </div>
 
-                <div className="space-y-2">
-                   <label className="text-xs font-black text-text-muted uppercase tracking-widest px-1 flex items-center gap-2">
-                      <Phone size={12} /> {t('driver.register_client.form.labels.phone_primary')}
-                   </label>
+                <div className="space-y-1.5">
+                   <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.register_client.form.labels.phone_primary')}</label>
                     <input 
                       type="tel" 
-                      placeholder="Ex: 0612345678 ou +2126XXXXXXXX"
+                      placeholder="Ex: 0612345678"
                       value={formData.phone1}
                       onChange={(e) => setFormData({...formData, phone1: e.target.value})}
-                      className="w-full bg-background border border-border/60 rounded-2xl px-5 py-3 sm:py-4 text-sm font-black focus:border-primary-500 outline-none transition-all text-text-primary placeholder:text-text-muted/30"
+                      className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none transition-all"
                     />
                 </div>
 
-                <div className="space-y-2">
-                   <label className="text-xs font-black text-text-muted uppercase tracking-widest px-1 flex items-center gap-2">
-                      <Phone size={12} className="opacity-40" /> {t('driver.register_client.form.labels.phone_secondary')}
-                   </label>
+                <div className="space-y-1.5">
+                   <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.register_client.form.labels.phone_secondary')}</label>
                     <input 
                       type="tel" 
-                      placeholder="Optionnel (Ex: 05XXXXXXXX)"
+                      placeholder="Optionnel"
                       value={formData.phone2}
                       onChange={(e) => setFormData({...formData, phone2: e.target.value})}
-                      className="w-full bg-background border border-border/60 rounded-2xl px-5 py-3 sm:py-4 text-sm font-black focus:border-primary-500 outline-none transition-all text-text-primary placeholder:text-text-muted/30"
+                      className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none transition-all"
                     />
                 </div>
              </div>
           </div>
 
-          {/* RIGHT CARD — Adresse de Livraison */}
-          <div className="bg-surface rounded-[2rem] shadow-card border border-border/50 overflow-hidden flex flex-col">
-             <div className="bg-background/30 px-8 py-5 border-b border-border/50 flex items-center gap-3">
-                <MapPin className="text-primary-500" size={18} strokeWidth={3} />
-                <h3 className="text-xs font-black text-text-primary uppercase tracking-widest">{t('driver.register_client.form.delivery_address')}</h3>
+          {/* ADRESSE DE LIVRAISON */}
+          <div className="bg-white rounded-[20px] shadow-[var(--shadow-sm)] border border-[rgba(0,0,0,0.06)] overflow-hidden">
+             <div className="bg-[var(--bg)] px-6 py-4 border-b border-[rgba(0,0,0,0.06)] flex items-center gap-3">
+                <MapPin className="text-[var(--primary)]" size={18} />
+                <h3 className="font-['Inter'] text-[12px] font-bold text-[var(--text)] uppercase tracking-wider">{t('driver.register_client.form.delivery_address')}</h3>
              </div>
 
-             <div className="p-6 md:p-10 space-y-8 flex-1">
-                <div className="bg-primary-500/5 border border-primary-500/10 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                   <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-surface border border-border/50 flex items-center justify-center text-primary-500 shadow-sm shrink-0">
-                         <Target size={22} strokeWidth={2.5} />
+             <div className="p-6 space-y-6">
+                <div className="bg-[var(--primary-surface)] border border-[rgba(13,115,119,0.1)] rounded-[16px] p-4 flex flex-col items-center gap-4">
+                   <div className="flex items-center gap-4 w-full">
+                      <div className="w-11 h-11 rounded-[10px] bg-white border border-[rgba(0,0,0,0.06)] flex items-center justify-center text-[var(--primary)] shadow-sm shrink-0">
+                         <Target size={22} />
                       </div>
-                       <div>
-                         <p className="text-xs font-black text-primary-400 uppercase tracking-[0.2em] mb-0.5">{t('driver.register_client.form.labels.gps')}</p>
-                         <p className={`text-sm font-black ${formData.latitude ? 'text-primary-600' : 'text-text-muted/40'}`}>
+                       <div className="flex-1">
+                         <p className="font-['Inter'] text-[11px] font-bold text-[var(--primary)] uppercase tracking-wider mb-0.5">{t('driver.register_client.form.labels.gps')}</p>
+                         <p className={`font-['Inter'] text-[13px] font-bold ${formData.latitude ? 'text-[var(--text)]' : 'text-[var(--text-muted)]'}`}>
                             {formData.latitude ? `${formData.latitude}, ${formData.longitude}` : t('driver.register_client.form.gps_actions.not_captured')}
                          </p>
                       </div>
@@ -318,59 +316,59 @@ export default function RegisterClient() {
                      type="button"
                      onClick={handleCaptureGPS}
                      disabled={isLocating}
-                     className="w-full sm:w-auto px-5 py-2.5 bg-surface text-primary-600 text-xs font-black uppercase tracking-widest rounded-xl shadow-sm border border-border/50 active:scale-95 transition-all hover:bg-primary-50"
+                     className="w-full py-3 bg-white text-[var(--primary)] text-[12px] font-bold uppercase tracking-wider rounded-[10px] shadow-sm border border-[rgba(13,115,119,0.15)] active:scale-95 transition-all hover:bg-[var(--bg)]"
                    >
-                     {isLocating ? <Loader2 className="animate-spin" size={16} /> : formData.latitude ? t('driver.register_client.form.gps_actions.recapture') : t('driver.register_client.form.gps_actions.capture')}
+                     {isLocating ? <Loader2 className="animate-spin mx-auto" size={18} /> : formData.latitude ? t('driver.register_client.form.gps_actions.recapture') : t('driver.register_client.form.gps_actions.capture')}
                    </button>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                   <div className="space-y-2 text-start">
-                      <label className="text-xs font-black text-text-muted uppercase tracking-widest px-1">{t('driver.register_client.form.labels.neighborhood')}</label>
+                   <div className="space-y-1.5">
+                      <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.register_client.form.labels.neighborhood')}</label>
                       <input 
                         type="text" placeholder={t('driver.pro_ui.placeholder_neighborhood')}
                         value={formData.quartier}
                         onChange={(e) => setFormData({...formData, quartier: e.target.value})}
-                        className="w-full bg-background border border-border/60 rounded-2xl px-4 py-3 sm:py-4 text-sm font-black focus:border-primary-500 outline-none text-text-primary placeholder:text-text-muted/30"
+                        className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none"
                       />
                    </div>
-                   <div className="space-y-2 text-start">
-                      <label className="text-xs font-black text-text-muted uppercase tracking-widest px-1">{t('driver.register_client.form.labels.street')}</label>
+                   <div className="space-y-1.5">
+                      <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.register_client.form.labels.street')}</label>
                       <input 
                         type="text" placeholder={t('driver.register_client.form.placeholders.street')}
                         value={formData.rue}
                         onChange={(e) => setFormData({...formData, rue: e.target.value})}
-                        className="w-full bg-background border border-border/60 rounded-2xl px-4 py-3 sm:py-4 text-sm font-black focus:border-primary-500 outline-none text-text-primary placeholder:text-text-muted/30"
+                        className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none"
                       />
                    </div>
-                   <div className="space-y-2 text-start">
-                      <label className="text-xs font-black text-text-muted uppercase tracking-widest px-1">{t('driver.register_client.form.labels.building')}</label>
+                   <div className="space-y-1.5">
+                      <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.register_client.form.labels.building')}</label>
                       <input 
-                        type="text" placeholder={t('driver.register_client.form.placeholders.building')}
+                        type="text" placeholder="Ex: A2"
                         value={formData.immeuble}
                         onChange={(e) => setFormData({...formData, immeuble: e.target.value})}
-                        className="w-full bg-background border border-border/60 rounded-2xl px-4 py-3 sm:py-4 text-sm font-black focus:border-primary-500 outline-none text-text-primary placeholder:text-text-muted/30"
+                        className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none"
                       />
                    </div>
-                   <div className="space-y-2 text-start">
-                      <label className="text-xs font-black text-text-muted uppercase tracking-widest px-1">{t('driver.register_client.form.labels.apartment')}</label>
+                   <div className="space-y-1.5">
+                      <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.register_client.form.labels.apartment')}</label>
                       <input 
-                        type="text" placeholder={t('driver.register_client.form.placeholders.apartment')}
+                        type="text" placeholder="Ex: 12"
                         value={formData.appartement}
                         onChange={(e) => setFormData({...formData, appartement: e.target.value})}
-                        className="w-full bg-background border border-border/60 rounded-2xl px-4 py-3 sm:py-4 text-sm font-black focus:border-primary-500 outline-none text-text-primary placeholder:text-text-muted/30"
+                        className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-bold text-[var(--text)] focus:bg-white focus:border-[var(--primary)] outline-none"
                       />
                    </div>
                 </div>
 
-                <div className="space-y-2 text-start">
-                   <label className="text-xs font-black text-text-muted uppercase tracking-widest px-1">{t('driver.register_client.form.labels.notes')}</label>
+                <div className="space-y-1.5">
+                   <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider px-1">{t('driver.register_client.form.labels.notes')}</label>
                    <textarea 
                      rows={2} 
                      placeholder={t('driver.register_client.form.placeholders.notes')}
                      value={formData.notes}
                      onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                     className="w-full bg-background border border-border/60 rounded-2xl px-4 py-3 sm:py-4 text-sm font-black focus:border-primary-500 outline-none transition-all resize-none min-h-[100px] text-text-primary placeholder:text-text-muted/30"
+                     className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] px-4 py-3.5 text-sm font-medium focus:bg-white focus:border-[var(--primary)] outline-none transition-all resize-none min-h-[80px] text-[var(--text)]"
                    />
                 </div>
              </div>
@@ -378,17 +376,17 @@ export default function RegisterClient() {
         </div>
 
         {/* SUBMIT BUTTON */}
-        <div className="pt-6 w-full pb-12">
+        <div className="pt-6 w-full">
            <button
              onClick={handleSubmit}
              disabled={loading.createClient}
-             className="w-full bg-primary-600 hover:bg-primary-700 text-white rounded-[1.5rem] py-5 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary-500/20 transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50"
+             className="w-full bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-white rounded-[12px] py-4.5 text-[15px] font-bold uppercase tracking-wider shadow-[var(--shadow-teal)] transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 h-[56px]"
            >
              {loading.createClient ? (
                <Loader2 className="animate-spin" size={20} />
              ) : (
                <>
-                 <Send size={18} strokeWidth={3} className="rtl:rotate-180" />
+                 <Send size={18} className="rtl:rotate-180" />
                  {t('driver.register_client.form.submit')}
                </>
              )}

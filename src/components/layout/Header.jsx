@@ -22,14 +22,30 @@ import {
 const NOTIFICATION_SOUND_URL = 'https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
-const getNotificationStyles = (type) => {
-  switch (type) {
-    case 'NEW_ORDER':       return { icon: Package, color: 'bg-blue-500', text: 'text-blue-600' };
-    case 'ORDER_READY':     return { icon: CheckCheck, color: 'bg-emerald-500', text: 'text-emerald-600' };
-    case 'PAYMENT_RECEIVED': return { icon: DollarSign, color: 'bg-purple-500', text: 'text-purple-600' };
-    case 'ORDER_CANCELLED':  return { icon: BellOff, color: 'bg-red-500', text: 'text-red-600' };
-    default:                return { icon: Bell, color: 'bg-primary-500', text: 'text-primary-600' };
+const getNotificationStyles = (type, title = '') => {
+  const text = (type || title || '').toUpperCase();
+  if (text.includes('ORDER_CREATED') || text.includes('CRÉÉE') || text.includes('NOUVELLE')) {
+    return { bg: 'rgba(13,115,119,0.1)', emoji: '📦', color: '#0D7377' };
   }
+  if (text.includes('ORDER_RECEIVED') || text.includes('RÉCEPTIONNÉE')) {
+    return { bg: 'rgba(59,130,246,0.1)', emoji: '✅', color: '#3B82F6' };
+  }
+  if (text.includes('ORDER_READY') || text.includes('PRÊTE')) {
+    return { bg: 'rgba(16,185,129,0.1)', emoji: '🎉', color: '#10B981' };
+  }
+  if (text.includes('ORDER_DELIVERED') || text.includes('LIVRÉE')) {
+    return { bg: 'rgba(201,168,76,0.1)', emoji: '🚚', color: '#C9A84C' };
+  }
+  if (text.includes('ORDER_PAID') || text.includes('PAYÉE')) {
+    return { bg: 'rgba(201,168,76,0.15)', emoji: '💰', color: '#C9A84C' };
+  }
+  if (text.includes('ORDER_CANCELLED') || text.includes('ANNULÉE')) {
+    return { bg: 'rgba(239,68,68,0.1)', emoji: '❌', color: '#EF4444' };
+  }
+  if (text.includes('ORDER_RETURNED') || text.includes('RETOURNÉE')) {
+    return { bg: 'rgba(245,158,11,0.1)', emoji: '↩️', color: '#F59E0B' };
+  }
+  return { bg: 'rgba(13,115,119,0.08)', emoji: '🔔', color: '#0D7377' };
 };
 
 const formatRelativeTime = (dateStr) => {
@@ -141,13 +157,7 @@ const Header = () => {
   }, [notifications, user]);
 
   const toggleNotifications = () => {
-    const nextState = !isNotificationsOpen;
-    setIsNotificationsOpen(nextState);
-    
-    // AUTO-MARK AS READ: When opening the dropdown, clear the unread count
-    if (nextState && unreadCount > 0) {
-      dispatch(markAllAsReadThunk());
-    }
+    setIsNotificationsOpen(!isNotificationsOpen);
   };
 
   const handleNotificationClick = (notif) => {
@@ -157,6 +167,10 @@ const Header = () => {
       if (user?.role === 'livreur') target = '/livreur/delivery';
       if (user?.role === 'employe') target = '/employe/dashboard';
       navigate(target);
+    }
+    
+    if (!notif.read) {
+        dispatch(markAsReadThunk(notif.id));
     }
     setIsNotificationsOpen(false);
   };
@@ -182,81 +196,70 @@ const Header = () => {
   const initials = user?.name ? user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : '?';
 
   return (
-    <header className={`fixed top-0 end-0 z-30 bg-surface shadow-sm border-b border-border/40 px-4 md:px-8 flex items-center justify-between transition-all duration-300
-      ${user ? 'start-0 md:start-16 lg:start-64' : 'start-0'}
-      h-[calc(4rem+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)]`}>
+    <header className={`fixed top-0 left-0 right-0 z-30 bg-white border-b border-[rgba(0,0,0,0.06)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-[calc(60px+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)] px-5 flex items-center justify-between transition-all duration-300`}>
       
-      <div className="flex flex-col min-w-0 flex-1 me-2 text-start">
-        <h1 className="text-sm md:text-base font-black text-text-primary uppercase tracking-tight truncate">
-          {isAdmin ? `${t('header.greeting')}, ${user?.name}` : getPageTitle()}
+      <div className="flex items-center min-w-0 flex-1 me-2">
+        <h1 className="font-['Plus_Jakarta_Sans'] text-[15px] font-bold text-[var(--text)] tracking-[-0.01em] truncate">
+          {getPageTitle()}
         </h1>
-        {isAdmin && <p className="text-xs font-bold text-text-muted uppercase tracking-widest hidden md:block opacity-60">{t('header.welcome_back')}</p>}
       </div>
 
-      <div className="hidden md:flex flex-1 max-w-md mx-4">
-        <div className="w-full flex items-center gap-3 bg-background border border-border/60 rounded-xl px-4 py-2 group">
-          <Search size={16} className="text-text-muted group-focus-within:text-primary-500" />
-          <input type="text" placeholder={t('common.search_placeholder')} className="bg-transparent border-none outline-none text-xs font-bold text-text-primary w-full" />
-        </div>
-      </div>
-
-      <div className="flex items-center gap-1 md:gap-3">
-        <button className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl text-text-muted hover:bg-background">
-          <Search size={20} />
+      <div className="flex items-center gap-2">
+        {/* SEARCH ICON */}
+        <button className="w-9 h-9 flex items-center justify-center rounded-[10px] bg-[var(--bg)] border border-[rgba(0,0,0,0.06)] text-[var(--text-secondary)] hover:bg-[var(--primary)] hover:text-white transition-all duration-200">
+          <Search size={18} />
         </button>
 
-        {/* NOTIFICATIONS DROPDOWN */}
+        {/* NOTIFICATIONS */}
         <div className="relative" ref={dropdownRef}>
-          <button onClick={toggleNotifications} className={`relative w-10 h-10 flex items-center justify-center rounded-xl transition-all ${isNotificationsOpen ? 'bg-primary-50 text-primary-600' : 'text-text-muted hover:bg-background'}`}>
-            <Bell size={20} />
+          <button 
+            onClick={toggleNotifications} 
+            className="relative w-[40px] h-[40px] flex items-center justify-center rounded-[12px] bg-[var(--primary)] shadow-[0_4px_12px_rgba(13,115,119,0.3)] border-none active:scale-95 transition-all"
+          >
+            <Bell size={20} color="white" />
             {unreadCount > 0 && (
-              <span className="absolute top-2 end-2 w-4 h-4 bg-primary-500 text-white text-xs font-black rounded-full flex items-center justify-center border-2 border-surface animate-bounce">
+              <span className="absolute top-[-6px] right-[-6px] min-w-[20px] h-[20px] bg-[#EF4444] text-white rounded-full flex items-center justify-center border-[2px] border-[var(--bg)] font-['Inter'] text-[11px] font-bold text-center px-1 animate-in zoom-in-50 duration-300">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </button>
 
           {isNotificationsOpen && (
-            <div className="absolute z-50 bg-surface rounded-[2rem] shadow-2xl border border-border start-1/2 -translate-x-1/2 w-[90vw] top-12 md:start-auto md:end-0 md:translate-x-0 md:w-96 md:top-11 max-h-[80vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-              <div className="px-6 py-5 border-b border-border/50 flex items-center justify-between bg-background/30 text-start">
-                <div>
-                  <h3 className="text-xs font-black text-text-primary uppercase tracking-widest">{t('common.notifications')}</h3>
-                  <p className="text-xs text-text-muted font-bold uppercase tracking-tighter mt-0.5">{t('header.notifications.unread_count', { unread: unreadCount, total: notifications.length })}</p>
-                </div>
+            <div className="absolute z-[1000] bg-[#FFFFFF] rounded-[16px] shadow-[0_12px_48px_rgba(0,0,0,0.14)] border border-[rgba(0,0,0,0.08)] right-0 w-[300px] top-[52px] max-h-[420px] overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right flex flex-col">
+              <div className="p-[16px] border-b border-[rgba(0,0,0,0.06)] flex items-center justify-between shrink-0">
+                <h3 className="font-['Plus_Jakarta_Sans'] text-[15px] font-bold text-[#0D1B2A] m-0">Notifications</h3>
                 {unreadCount > 0 && (
-                  <button onClick={handleMarkAllSeen} className="flex items-center gap-1.5 text-xs font-black text-primary-600 hover:text-primary-700 uppercase tracking-widest">
-                    <CheckCheck size={12}/> {t('header.notifications.mark_all')}
+                  <button onClick={handleMarkAllSeen} className="font-['Inter'] text-[12px] font-semibold text-[#0D7377] hover:underline bg-transparent border-none p-0 cursor-pointer">
+                    Tout lire
                   </button>
                 )}
               </div>
 
-              <div className="max-h-[60vh] overflow-y-auto divide-y divide-border/30">
+              <div className="overflow-y-auto max-h-[320px] scrollbar-thin flex-1" style={{ scrollbarColor: 'rgba(13,115,119,0.2) transparent' }}>
                 {notifications.length > 0 ? (
                   notifications.map((notif) => {
-                    const styles = getNotificationStyles(notif.type);
-                    const Icon = styles.icon;
+                    const styles = getNotificationStyles(notif.type, notif.title);
                     return (
                       <div key={notif.id} onClick={() => handleNotificationClick(notif)}
-                        className={`px-6 py-4 hover:bg-background/50 cursor-pointer flex items-start gap-4 transition-all ${!notif.isRead ? 'bg-primary-500/[0.03]' : 'opacity-60'}`}>
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-all ${!notif.isRead ? `${styles.color} text-white border-transparent shadow-lg shadow-current/20 scale-110` : 'bg-background text-text-muted border-border'}`}>
-                          <Icon size={18} />
+                        className={`p-[12px_16px] flex gap-[10px] items-start border-b border-[rgba(0,0,0,0.04)] cursor-pointer transition-colors duration-150 hover:bg-[#F7F8FA] text-start ${!notif.isRead ? 'bg-[rgba(13,115,119,0.04)] border-l-[3px] border-l-[#0D7377] pl-[13px]' : 'bg-white border-l-0'}`}>
+                        <div className="w-[38px] h-[38px] rounded-full flex items-center justify-center shrink-0 text-[18px]" style={{ backgroundColor: styles.bg }}>
+                          {styles.emoji}
                         </div>
-                        <div className="flex-1 min-w-0 text-start">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className={`text-xs font-black uppercase tracking-widest ${!notif.isRead ? styles.text : 'text-text-muted'}`}>{notif.type.replace('_', ' ')}</span>
-                            <span className="text-xs font-bold text-text-muted uppercase flex items-center gap-1"><Clock size={10}/> {formatRelativeTime(notif.createdAt)}</span>
-                          </div>
-                          <p className="text-xs font-bold text-text-primary leading-snug">{notif.title}</p>
-                          <p className="text-xs text-text-muted mt-0.5 truncate">{notif.message}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-['Inter'] text-[13px] font-semibold text-[#0D1B2A] whitespace-nowrap overflow-hidden text-ellipsis m-0">{notif.title}</p>
+                          <p className="font-['Inter'] text-[12px] text-[#4A5568] leading-[1.4] mt-[2px] overflow-hidden m-0" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{notif.message}</p>
+                          <p className="font-['Inter'] text-[11px] text-[#94A3B8] m-0 mt-[4px]">{formatRelativeTime(notif.createdAt)}</p>
                         </div>
-                        {!notif.isRead && <div className={`w-2 h-2 rounded-full ${styles.color} mt-4 shadow-[0_0_10px_rgba(0,0,0,0.2)]`} />}
+                        {!notif.isRead && (
+                           <div className="shrink-0 w-[8px] h-[8px] rounded-full bg-[#0D7377] mt-[4px]" />
+                        )}
                       </div>
                     );
                   })
                 ) : (
-                  <div className="py-16 text-center opacity-40">
-                    <BellOff size={40} className="mx-auto mb-4" />
-                    <p className="text-xs font-black uppercase tracking-[0.2em]">{t('header.notifications.empty')}</p>
+                  <div className="py-[40px] px-[20px] text-center flex flex-col items-center">
+                    <div className="text-[40px] mb-[12px]">🔔</div>
+                    <p className="font-['Inter'] text-[14px] font-medium text-[#94A3B8] m-0">Aucune notification</p>
                   </div>
                 )}
               </div>
@@ -264,57 +267,49 @@ const Header = () => {
               {notifications.length > 0 && (
                 <button 
                   onClick={() => { navigate('/notifications'); setIsNotificationsOpen(false); }}
-                  className="w-full py-4 bg-background/50 border-t border-border/50 text-xs font-black text-text-muted hover:text-primary-600 transition-colors uppercase tracking-widest flex items-center justify-center gap-2 group"
+                  className="w-full p-[12px_16px] font-['Inter'] text-[12px] font-bold text-[#0D7377] hover:bg-[rgba(13,115,119,0.04)] transition-colors tracking-[0.04em] border-t border-[rgba(0,0,0,0.06)] text-center bg-transparent shrink-0"
                 >
-                  {t('header.notifications.view_all')}
-                  <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  TOUTES LES NOTIFICATIONS
                 </button>
               )}
             </div>
           )}
         </div>
 
-        {/* THEME & LANG */}
-        <button onClick={() => setIsDarkMode(!isDarkMode)} className="w-10 h-10 flex items-center justify-center rounded-xl text-text-muted hover:bg-background">
-          {isDarkMode ? <Sun size={20} className="text-primary-500" /> : <Moon size={20} className="text-primary-500" />}
+        {/* THEME */}
+        <button onClick={() => setIsDarkMode(!isDarkMode)} className="w-9 h-9 flex items-center justify-center rounded-[10px] bg-[var(--bg)] border border-[rgba(0,0,0,0.06)] text-[var(--text-secondary)] hover:bg-[var(--primary)] hover:text-white transition-all duration-200">
+          {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
-        <button onClick={() => i18n.changeLanguage(i18n.language === 'fr' ? 'ar' : 'fr')} className="w-10 h-10 flex items-center justify-center rounded-xl text-text-muted hover:bg-background">
-          <Languages size={20} className="text-primary-500" />
+        {/* LANGUAGE */}
+        <button onClick={() => i18n.changeLanguage(i18n.language === 'fr' ? 'ar' : 'fr')} className="w-9 h-9 flex items-center justify-center rounded-[10px] bg-[var(--bg)] border border-[rgba(0,0,0,0.06)] text-[var(--text-secondary)] hover:bg-[var(--primary)] hover:text-white transition-all duration-200">
+          <Languages size={18} />
         </button>
 
-        {/* PROFILE */}
-        <div className="flex items-center gap-3 ps-3 border-l border-border/60">
-          <div className="hidden lg:flex flex-col text-end">
-            <span className="text-xs font-black text-text-primary uppercase tracking-tighter truncate max-w-[120px]">{user?.name}</span>
-            <span className="text-xs font-bold text-text-muted uppercase tracking-widest">{user?.role}</span>
-          </div>
-          <div className="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-black shadow-sm uppercase border border-primary-200">
-            {initials}
-          </div>
+        {/* THREE DOTS MENU (Mobile) */}
+        <div className="relative md:hidden" ref={mobileMenuRef}>
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="w-9 h-9 flex items-center justify-center rounded-[10px] bg-[var(--bg)] border border-[rgba(0,0,0,0.06)] text-[var(--text-secondary)] hover:bg-[var(--primary)] hover:text-white transition-all duration-200">
+            <MoreVertical size={18} />
+          </button>
+          {isMobileMenuOpen && (
+            <div className="absolute top-11 right-0 w-48 bg-white rounded-xl shadow-[var(--shadow-lg)] border border-[rgba(0,0,0,0.06)] overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
+              <div className="p-3 border-b border-[rgba(0,0,0,0.04)]">
+                <p className="text-xs font-bold text-[var(--text)] truncate">{user?.name}</p>
+                <p className="text-[10px] font-medium text-[var(--text-muted)] uppercase tracking-wider">{user?.role}</p>
+              </div>
+              <div className="p-1">
+                <button onClick={async () => { await dispatch(logoutThunk()); navigate("/"); }} className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-[var(--danger)] hover:bg-[var(--danger)] hover:text-white rounded-lg transition-colors">
+                  <LogOut size={14} /> <span>{t('common.logout')}</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* MOBILE MENU */}
-        {user && (
-          <div className="md:hidden" ref={mobileMenuRef}>
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="w-9 h-9 flex items-center justify-center rounded-xl text-text-muted hover:bg-background">
-              <MoreVertical size={20} />
-            </button>
-            {isMobileMenuOpen && (
-              <div className="absolute top-14 end-4 w-56 bg-surface rounded-2xl shadow-2xl border border-border overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
-                <div className="p-4 border-b border-border bg-background/30 text-start">
-                  <p className="text-xs font-black text-text-primary uppercase tracking-tight">{user?.name}</p>
-                  <p className="text-xs font-bold text-text-muted uppercase tracking-widest mt-0.5">{user?.role}</p>
-                </div>
-                <div className="p-2">
-                  <button onClick={async () => { await dispatch(logoutThunk()); navigate("/"); }} className="w-full flex items-center gap-3 px-4 py-3 text-xs font-black text-red-500 hover:bg-red-50 rounded-xl transition-colors uppercase tracking-widest">
-                    <LogOut size={16} /> <span>{t('common.logout')}</span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+        {/* AVATAR */}
+        <div className="hidden md:flex w-9 h-9 rounded-full bg-gradient-to-br from-[#0D7377] to-[#14A3A8] text-white items-center justify-center text-[14px] font-bold shadow-[0_2px_8px_rgba(13,115,119,0.3)] cursor-pointer">
+          {initials}
+        </div>
       </div>
     </header>
   );

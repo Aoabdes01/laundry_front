@@ -33,8 +33,8 @@ const BottomNav = ({ user }) => {
   const links = user?.role === 'admin' ? adminLinks : user?.role === 'livreur' ? livreurLinks : user?.role === 'employe' ? employeLinks : [];
 
   return (
-    <div className="md:hidden fixed bottom-0 start-0 end-0 z-[100] px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pointer-events-none">
-      <nav className="pointer-events-auto bg-surface/95 backdrop-blur-md border border-border/60 flex items-center justify-evenly px-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-2xl h-[72px]">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-[100] h-[calc(72px+env(safe-area-inset-bottom))] bg-white border-t border-[rgba(0,0,0,0.06)] shadow-[0_-4px_20px_rgba(0,0,0,0.06)] pb-[env(safe-area-inset-bottom)]">
+      <nav className="flex items-center justify-evenly h-full px-2">
         {links.map((link) => {
           const Icon = link.icon;
           const isActive = location.pathname === link.path;
@@ -43,25 +43,24 @@ const BottomNav = ({ user }) => {
             <Link
               key={link.path}
               to={link.path}
-              className={`relative flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 transition-all duration-300 ${isActive
-                ? 'text-primary-600'
-                : 'text-text-muted hover:text-text-primary'
-                }`}
+              className={`relative flex flex-col items-center justify-center min-w-[60px] gap-1 px-4 py-2 rounded-xl transition-all duration-200 active:scale-[0.92] ${
+                isActive ? 'text-[var(--primary)]' : 'text-[var(--text-muted)]'
+              }`}
             >
-              <div className={`p-1.5 rounded-xl transition-all duration-300 ${isActive ? 'bg-primary-500/10 scale-105' : 'active:scale-90'}`}>
-                <Icon
-                  size={20}
-                  strokeWidth={isActive ? 2.5 : 2}
-                  className="transition-transform"
-                />
-              </div>
+              <Icon
+                size={22}
+                strokeWidth={isActive ? 2.5 : 2}
+                className="transition-transform"
+              />
               
-              <span className={`text-xs font-bold mt-0.5 uppercase tracking-wider transition-all duration-300 ${isActive ? 'opacity-100 text-primary-700 dark:text-primary-500' : 'opacity-60 font-medium'}`}>
+              <span className={`font-['Inter'] text-[10px] uppercase tracking-[0.02em] transition-all duration-200 ${
+                isActive ? 'font-bold' : 'font-medium'
+              }`}>
                 {link.name}
               </span>
 
               {isActive && (
-                <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-primary-500 shadow-sm" />
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--primary)]" />
               )}
             </Link>
           );

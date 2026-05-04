@@ -13,6 +13,13 @@ const notificationSlice = createSlice({
         clearNotifications: (state) => {
             state.list = [];
             state.unreadCount = 0;
+        },
+        receiveNotification: (state, action) => {
+            // Check if not already in list to avoid duplicates
+            if (!state.list.some(n => n.id === action.payload.id)) {
+                state.list.unshift(action.payload);
+                state.unreadCount += 1;
+            }
         }
     },
     extraReducers: (builder) => {
@@ -50,5 +57,5 @@ const notificationSlice = createSlice({
     }
 });
 
-export const { clearNotifications } = notificationSlice.actions;
+export const { clearNotifications, receiveNotification } = notificationSlice.actions;
 export default notificationSlice.reducer;

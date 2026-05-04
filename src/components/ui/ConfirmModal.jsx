@@ -1,6 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { X, AlertTriangle, Info, Trash2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, AlertTriangle, Info, Trash2, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const ConfirmModal = ({ 
@@ -21,31 +21,31 @@ const ConfirmModal = ({
   const CONFIG = {
     warning: {
       icon: AlertTriangle,
-      color: 'text-orange-500',
-      bg: 'bg-orange-500/10',
-      btn: 'bg-orange-600 hover:bg-orange-700 shadow-orange-500/20',
-      border: 'border-orange-100'
+      color: 'text-[#F59E0B]',
+      bg: 'bg-[rgba(245,158,11,0.1)]',
+      btn: 'bg-[#F59E0B] hover:bg-[#D97706] shadow-[0_4px_12px_rgba(245,158,11,0.2)]',
+      border: 'border-[rgba(245,158,11,0.15)]'
     },
     danger: {
       icon: Trash2,
-      color: 'text-red-500',
-      bg: 'bg-red-500/10',
-      btn: 'bg-red-600 hover:bg-red-700 shadow-red-500/20',
-      border: 'border-red-100'
+      color: 'text-[#EF4444]',
+      bg: 'bg-[rgba(239,68,68,0.1)]',
+      btn: 'bg-[#EF4444] hover:bg-[#DC2626] shadow-[0_4px_12px_rgba(239,68,68,0.2)]',
+      border: 'border-[rgba(239,68,68,0.15)]'
     },
     success: {
       icon: CheckCircle2,
-      color: 'text-emerald-500',
-      bg: 'bg-emerald-500/10',
-      btn: 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20',
-      border: 'border-emerald-100'
+      color: 'text-[#10B981]',
+      bg: 'bg-[rgba(16,185,129,0.1)]',
+      btn: 'bg-[#10B981] hover:bg-[#059669] shadow-[0_4px_12px_rgba(16,185,129,0.2)]',
+      border: 'border-[rgba(16,185,129,0.15)]'
     },
     info: {
       icon: Info,
-      color: 'text-primary-500',
-      bg: 'bg-primary-500/10',
-      btn: 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/20',
-      border: 'border-primary-100'
+      color: 'text-[var(--primary)]',
+      bg: 'bg-[var(--primary-surface)]',
+      btn: 'bg-[var(--primary)] hover:bg-[var(--primary-dark)] shadow-[var(--shadow-teal)]',
+      border: 'border-[rgba(13,115,119,0.15)]'
     }
   };
 
@@ -56,40 +56,40 @@ const ConfirmModal = ({
     <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
       {/* BACKDROP */}
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" 
         onClick={loading ? null : onClose} 
       />
 
       {/* MODAL CONTENT */}
-      <div className="relative bg-surface w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2rem] shadow-modal overflow-hidden animate-in slide-in-from-bottom sm:zoom-in-95 duration-300 border-t sm:border border-border/50">
+      <div className="relative bg-white w-full max-w-md rounded-t-[20px] sm:rounded-[20px] shadow-[0_-8px_40px_rgba(0,0,0,0.12)] overflow-hidden animate-in slide-in-from-bottom sm:zoom-in-95 duration-300">
         
-        {/* MOBILE HANDLE */}
-        <div className="w-12 h-1.5 bg-border/40 rounded-full mx-auto mt-4 mb-2 sm:hidden" />
+        {/* DRAG HANDLE (Mobile) */}
+        <div className="w-10 h-1 bg-[rgba(0,0,0,0.15)] rounded-full mx-auto mt-3 sm:hidden" />
 
-        <div className="p-8 md:p-10 pb-[max(2rem,calc(2rem+env(safe-area-inset-bottom)))] text-center">
+        <div className="p-6 sm:p-8 text-center">
           
           {/* ICON BOX */}
-          <div className={`w-20 h-20 ${cfg.bg} rounded-[1.5rem] flex items-center justify-center mx-auto mb-8 shadow-inner border ${cfg.border}`}>
-            <Icon className={cfg.color} size={40} strokeWidth={2.5} />
+          <div className={`w-16 h-16 ${cfg.bg} rounded-[18px] flex items-center justify-center mx-auto mb-6 border ${cfg.border}`}>
+            <Icon className={cfg.color} size={32} strokeWidth={2.5} />
           </div>
 
           {/* TEXT CONTENT */}
-          <h3 className="text-2xl font-black text-text-primary uppercase tracking-tight mb-3">
+          <h3 className="font-['Plus_Jakarta_Sans'] text-[20px] font-bold text-[var(--text)] mb-2">
             {title || t('common.confirm_title')}
           </h3>
-          <p className="text-sm text-text-muted font-bold leading-relaxed mb-10 px-2">
+          <p className="font-['Inter'] text-[14px] text-[var(--text-secondary)] leading-relaxed mb-8 px-2">
             {message}
           </p>
 
           {/* ACTIONS */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2.5">
             <button
               onClick={onConfirm}
               disabled={loading}
-              className={`w-full ${cfg.btn} text-white rounded-2xl py-5 text-xs font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50`}
+              className={`w-full ${cfg.btn} text-white rounded-[12px] py-4 text-[14px] font-bold uppercase tracking-wider transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50`}
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 confirmText || t('common.confirm')
               )}
@@ -98,7 +98,7 @@ const ConfirmModal = ({
             <button
               onClick={onClose}
               disabled={loading}
-              className="w-full bg-background border border-border/50 text-text-muted rounded-2xl py-5 text-xs font-black uppercase tracking-[0.2em] transition-all active:scale-95 hover:bg-surface disabled:opacity-50"
+              className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.06)] text-[var(--text-secondary)] rounded-[12px] py-4 text-[14px] font-bold uppercase tracking-wider transition-all active:scale-95 hover:bg-white disabled:opacity-50"
             >
               {cancelText || t('common.cancel')}
             </button>

@@ -4,21 +4,45 @@
 
 @layer base {
   :root {
-    --background: #F8F9FA;
-    --surface: #FFFFFF;
-    --border: #F1F3F5;
-    --text-primary: #0F172A;
-    --text-secondary: #64748B;
-    --text-muted: #94A3B8;
-  }
+    --primary: #0D7377;
+    --primary-dark: #0A5F63;
+    --primary-light: #14A3A8;
+    --primary-glow: rgba(13,115,119,0.12);
+    --primary-surface: rgba(13,115,119,0.08);
 
-  .dark {
-    --background: #0B1120;
-    --surface: #1E293B;
-    --border: #334155;
-    --text-primary: #F8FAFC;
-    --text-secondary: #94A3B8;
-    --text-muted: #64748B;
+    --accent: #C9A84C;
+    --accent-light: #E2C06E;
+    --accent-surface: rgba(201,168,76,0.1);
+
+    --bg: #F7F8FA;
+    --surface: #FFFFFF;
+    --surface-elevated: #FFFFFF;
+    --card: #FFFFFF;
+    --card-hover: #F9FAFB;
+
+    --text: #0D1B2A;
+    --text-secondary: #4A5568;
+    --text-muted: #94A3B8;
+    --text-on-primary: #FFFFFF;
+
+    --border: rgba(0,0,0,0.06);
+    --border-medium: rgba(0,0,0,0.1);
+    --border-focus: rgba(13,115,119,0.4);
+
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --info: #3B82F6;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.06);
+    --shadow-teal: 0 4px 20px rgba(13,115,119,0.2);
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
   }
 
   *, *::before, *::after {
@@ -28,31 +52,38 @@
   }
 
   html {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-background text-text-primary font-sans;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
     min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
   }
 
   /* Clean scrollbar */
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #CBD5E1;
+    background: var(--border-medium);
     border-radius: 99px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #94A3B8;
+    background: var(--text-muted);
   }
 }
 
@@ -60,148 +91,90 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* Animation fade in */
-  .animate-fade-in {
-    animation: fadeIn 0.2s ease-out;
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      #F7F8FA 0%,
+      #EDEEF0 50%,
+      #F7F8FA 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
   }
 
-  /* Animation slide up */
-  .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
-  /* CUSTOM TOAST PILL STYLES */
+  .shadow-teal {
+    box-shadow: var(--shadow-teal);
+  }
+
+  /* CUSTOM TOAST STYLES */
   .Toastify__toast-container {
-    padding: 0 !important;
-    width: max-content !important;
-    max-width: 85vw !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  /* Center toasts on mobile (top-center) */
-  .Toastify__toast-container--top-center {
-    align-items: center !important;
-  }
-
-  /* Align toasts to the right on desktop (bottom-right) */
-  .Toastify__toast-container--bottom-right {
-    align-items: flex-end !important;
-    bottom: 24px !important;
-    right: 24px !important;
+    padding: 16px !important;
   }
 
   .custom-toast-pill {
-    border-radius: 9999px !important;
-    padding: 10px 24px !important;
-    min-height: 44px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
-    border: 1px solid #E2E8F0 !important;
-    background: white !important;
-    margin-bottom: 12px !important;
-    width: max-content !important;
-    max-width: 100% !important;
+    background: #0D1B2A !important;
+    color: white !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    box-shadow: var(--shadow-lg) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    min-height: auto !important;
   }
 
-  /* Success Variant */
-  .custom-toast-pill.Toastify__toast--success {
-    background-color: #F0FDF4 !important;
-    border-color: #86EFAC !important;
-  }
-  .custom-toast-pill.Toastify__toast--success .Toastify__toast-icon svg {
-    fill: #10B981 !important;
-  }
-  .custom-toast-pill.Toastify__toast--success .Toastify__toast-body {
-    color: #065F46 !important;
+  .Toastify__toast--success {
+    border-left: 3px solid #10B981 !important;
   }
 
-  /* Error Variant */
-  .custom-toast-pill.Toastify__toast--error {
-    background-color: #FEF2F2 !important;
-    border-color: #FECACA !important;
-  }
-  .custom-toast-pill.Toastify__toast--error .Toastify__toast-icon svg {
-    fill: #EF4444 !important;
-  }
-  .custom-toast-pill.Toastify__toast--error .Toastify__toast-body {
-    color: #991B1B !important;
+  .Toastify__toast--error {
+    border-left: 3px solid #EF4444 !important;
   }
 
-  /* Warning Variant */
-  .custom-toast-pill.Toastify__toast--warning {
-    background-color: #FFFBEB !important;
-    border-color: #FDE68A !important;
-  }
-  .custom-toast-pill.Toastify__toast--warning .Toastify__toast-icon svg {
-    fill: #F59E0B !important;
-  }
-  .custom-toast-pill.Toastify__toast--warning .Toastify__toast-body {
-    color: #92400E !important;
-  }
-
-  /* Only animate on enter */
-  .Toastify__toast--animate {
-    animation-fill-mode: both;
-  }
-
-  .Toastify__slide-enter--top-center, .Toastify__slide-enter--bottom-right {
-    animation-name: toastSlideIn;
-    animation-duration: 0.4s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  .Toastify__toast--info {
+    border-left: 3px solid #0D7377 !important;
   }
 
   .Toastify__toast-body {
     padding: 0 !important;
     margin: 0 !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    color: #1E293B !important;
-    white-space: nowrap !important;
-  }
-
-  .Toastify__close-button {
-    display: none !important;
+    color: white !important;
   }
 
   .Toastify__toast-icon {
-    width: 18px !important;
-    margin-right: 10px !important;
+    width: 20px !important;
   }
 
-  @keyframes toastSlideIn {
-    from {
-      opacity: 0;
-      transform: translateY(-12px) scale(0.98);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+  /* PREMIUM NOTIFICATION TOAST OVERRIDES */
+  .Toastify__toast-container--top-right {
+    top: 72px !important;
+    right: 16px !important;
+    width: 320px !important;
   }
 
-  /* Position adjustments for mobile */
-  @media (max-width: 640px) {
-    .Toastify__toast-container--top-center {
-      top: calc(110px + env(safe-area-inset-top, 0px)) !important;
-      left: 50% !important;
-      transform: translateX(-50%) !important;
-      margin: 0 !important;
-    }
+  .premium-notification-toast {
+    min-height: auto !important;
+    margin-bottom: 12px !important;
+    animation: toastEnter 0.3s ease-out forwards !important;
   }
 
-  @media (max-width: 480px) {
-    .Toastify__toast-container--top-center {
-      top: calc(140px + env(safe-area-inset-top, 0px)) !important;
-    }
+  @keyframes toastEnter {
+    from { transform: translateX(110%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
   }
-}
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+  /* We let react-toastify handle exit with its default or we can override Toastify__bounce-out-right */
+  .Toastify__bounce-out-right {
+    animation: toastExit 0.2s ease-in forwards !important;
+  }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  @keyframes toastExit {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(110%); opacity: 0; }
+  }
 }

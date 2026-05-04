@@ -10,7 +10,8 @@ import {
   MapPin,
   Hash,
   Phone,
-  ChevronRight
+  ChevronRight,
+  MoreVertical
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -25,28 +26,55 @@ import {
   selectLoading
 } from '../../store/livreur/livreurSelectors';
 
-const StatCard = ({ label, count, icon: Icon, colorClass, iconBgClass, iconColorClass, barColorClass, t, onClick }) => (
-  <button
-    onClick={onClick}
-    className={`w-full bg-surface rounded-[2rem] shadow-card p-5 border border-border/50 transition-all hover:shadow-card-hover active:scale-95 text-start group relative overflow-hidden`}
-  >
-    <div className={`absolute top-0 start-0 w-1 h-full ${barColorClass}`} />
-    <div className="flex justify-between items-start mb-4">
-      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${iconBgClass} transition-transform group-hover:scale-110`}>
-        <Icon className={iconColorClass} size={20} />
+const StatCard = ({ label, count, icon: Icon, type, t, onClick }) => {
+  const getAccentColor = () => {
+    switch (type) {
+      case 'deliveries': return '#10B981';
+      case 'collections': return '#0D7377';
+      case 'canceled': return '#F59E0B';
+      default: return '#0D7377';
+    }
+  };
+
+  const getBgColor = () => {
+    switch (type) {
+      case 'deliveries': return 'rgba(16,185,129,0.1)';
+      case 'collections': return 'rgba(13,115,119,0.1)';
+      case 'canceled': return 'rgba(245,158,11,0.1)';
+      default: return 'rgba(13,115,119,0.1)';
+    }
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className="bg-white rounded-[16px] border border-[rgba(0,0,0,0.06)] shadow-[var(--shadow-sm)] p-4 relative overflow-hidden text-start active:scale-[0.98] transition-all"
+    >
+      <div 
+        className="absolute top-0 left-0 right-0 h-[3px]" 
+        style={{ backgroundColor: getAccentColor() }}
+      />
+      
+      <div className="flex justify-between items-start">
+        <div 
+          className="w-10 h-10 rounded-[10px] flex items-center justify-center"
+          style={{ backgroundColor: getBgColor() }}
+        >
+          <Icon size={20} style={{ color: getAccentColor() }} />
+        </div>
+        <span className="font-['Plus_Jakarta_Sans'] text-[24px] font-bold text-[var(--text)] tracking-[-0.02em]">
+          {count}
+        </span>
       </div>
-      <span className="text-2xl font-black text-text-primary tracking-tight">{count}</span>
-    </div>
-    <div className="flex flex-col gap-1">
-      <span className="text-xs font-black text-text-muted uppercase tracking-[0.15em] leading-tight truncate">
-        {label}
-      </span>
-      <p className={`text-xs font-bold uppercase tracking-wider ${iconColorClass} opacity-80`}>
-        {label === t('driver.dashboard.stats.ready_delivery') ? t('driver.dashboard.stats.deliveries') : label === t('driver.dashboard.stats.collect_workshop') ? t('driver.dashboard.stats.collections') : t('driver.dashboard.stats.to_return')}
-      </p>
-    </div>
-  </button>
-);
+
+      <div className="mt-3">
+        <p className="font-['Inter'] text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-[0.06em]">
+          {label}
+        </p>
+      </div>
+    </button>
+  );
+};
 
 const getClientDisplayName = (mission, t) => {
   return mission.client?.name || mission.clientNom || mission.client?.nom || t('admin.dashboard.external_client');
@@ -67,100 +95,55 @@ const getInitials = (name, t) => {
   return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
 };
 
-const MissionTableRow = ({ mission, onNavigate, t }) => {
-  const isDelivery = mission.status === 'livree';
-  const displayName = getClientDisplayName(mission, t);
-  const initials = getInitials(displayName, t);
-
-  return (
-    <tr className="border-b border-border/40 last:border-0 hover:bg-background/40 transition-colors group">
-      <td className="px-8 py-5 text-start">
-        <div className="flex items-center gap-2">
-          <Hash size={14} className="text-primary-500" />
-          <span className="text-sm font-black text-text-primary tracking-tight">#{mission.numeroCommande}</span>
-        </div>
-      </td>
-      <td className="px-8 py-5 text-start">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-background text-primary-600 font-black text-xs flex items-center justify-center shrink-0 border border-border shadow-sm">
-            {initials}
-          </div>
-          <div className="flex flex-col min-w-0">
-            <span className="text-sm font-black text-text-primary truncate tracking-tight">{displayName}</span>
-            <span className="text-xs text-text-muted truncate font-bold uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
-              <MapPin size={10} /> {mission.client?.addresses?.[0]?.fullAddress || mission.client?.address || '—'}
-            </span>
-          </div>
-        </div>
-      </td>
-      <td className="px-8 py-5 text-start">
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border
-          ${isDelivery
-            ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20'
-            : 'bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-100 dark:border-primary-500/20'}`}>
-          {isDelivery ? t('driver.dashboard.missions.badges.delivery') : t('driver.dashboard.missions.badges.collect')}
-        </span>
-      </td>
-      <td className="px-8 py-5 text-end">
-        <button
-          onClick={() => onNavigate(mission.id)}
-          className="w-10 h-10 rounded-xl bg-background text-text-muted flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all shadow-sm active:scale-90"
-        >
-          <ChevronRight size={18} className="rtl:rotate-180" strokeWidth={3} />
-        </button>
-      </td>
-    </tr>
-  );
-};
-
 const MissionMobileCard = ({ mission, onNavigate, t }) => {
-  const isDelivery = mission.status === 'livree';
+  const isDelivery = mission.status === 'livree' || mission.status === 'prete' || mission.status === 'EN_TRAITEMENT';
   const displayName = getClientDisplayName(mission, t);
   const initials = getInitials(displayName, t);
 
   return (
     <div
       onClick={() => onNavigate(mission.id)}
-      className="bg-surface rounded-3xl shadow-card p-5 border border-border/50 active:scale-[0.98] transition-all text-start group relative overflow-hidden"
+      className="bg-white rounded-[20px] shadow-[var(--shadow-md)] p-5 border border-[rgba(0,0,0,0.06)] active:scale-[0.98] transition-all text-start group relative overflow-hidden mb-3"
     >
-      <div className={`absolute top-0 start-0 w-1.5 h-full ${isDelivery ? 'bg-emerald-500' : 'bg-primary-500'}`} />
-
-      <div className="flex justify-between items-start mb-5 ps-2">
-        <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 mb-1 opacity-60">
-            <Hash size={12} className="text-primary-500" />
-            <span className="text-xs font-black text-text-muted uppercase tracking-widest">{t('workshop.detail.labels.order')}</span>
-          </div>
-          <span className="text-lg font-black text-text-primary tracking-tighter">#{mission.numeroCommande}</span>
-        </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-[0.15em] border
-          ${isDelivery
-            ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
-            : 'bg-primary-50 text-primary-600 border-primary-100'}`}>
+      <div className="flex justify-between items-center mb-4">
+        <span className="font-['Inter'] text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider">
+          #{mission.numeroCommande}
+        </span>
+        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.06em] border ${
+          isDelivery 
+            ? 'bg-[#EFF6FF] border-[#BFDBFE] text-[#3B82F6]' 
+            : 'bg-[#FFFBEB] border-[#FDE68A] text-[#D97706]'
+        }`}>
           {isDelivery ? t('driver.dashboard.missions.badges.delivery') : t('driver.dashboard.missions.badges.collect')}
         </span>
       </div>
 
-      <div className="flex items-center gap-4 bg-background/40 p-4 rounded-2xl mb-4 border border-border/40">
-        <div className="w-12 h-12 rounded-xl bg-surface text-primary-600 font-black text-sm flex items-center justify-center shadow-sm border border-primary-500/10 shrink-0">
+      <div className="flex items-center gap-4 mb-4">
+        <div className="w-12 h-12 rounded-[12px] bg-[var(--primary-surface)] text-[var(--primary)] font-['Plus_Jakarta_Sans'] font-bold text-lg flex items-center justify-center border border-[rgba(0,0,0,0.08)] shrink-0">
           {initials}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-base font-black text-text-primary truncate tracking-tight">{displayName}</p>
-          <div className="flex items-center gap-1.5 mt-1">
-            <MapPin size={12} className="text-text-muted shrink-0" />
-            <p className="text-xs text-text-muted truncate font-bold uppercase tracking-tight">{mission.client?.addresses?.[0]?.address || '—'}</p>
+          <p className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)] truncate leading-tight">
+            {displayName}
+          </p>
+          <div className="flex items-center gap-1.5 mt-1 text-[var(--text-secondary)]">
+            <MapPin size={14} className="text-[var(--primary)] shrink-0" />
+            <p className="font-['Inter'] text-[13px] font-medium truncate leading-tight">
+              {mission.client?.addresses?.[0]?.fullAddress || mission.client?.address || '—'}
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between ps-2">
+      <div className="flex items-center justify-between pt-3 border-t border-[rgba(0,0,0,0.06)]">
         <div className="flex items-center gap-2">
-          <Phone size={12} className="text-primary-500" />
-          <span className="text-xs font-black text-text-primary">{getClientPhone(mission.client)}</span>
+          <Phone size={14} className="text-[#10B981]" />
+          <span className="font-['Inter'] text-[13px] font-semibold text-[var(--text)]">
+            {getClientPhone(mission.client)}
+          </span>
         </div>
-        <div className="flex items-center gap-1 text-xs font-black text-primary-600 uppercase tracking-widest">
-          {t('common.details')} <ChevronRight size={14} strokeWidth={3} />
+        <div className="flex items-center gap-1 text-[12px] font-bold text-[var(--primary)] uppercase tracking-wider">
+          {t('common.details')} <ChevronRight size={14} strokeWidth={2.5} />
         </div>
       </div>
     </div>
@@ -169,48 +152,42 @@ const MissionMobileCard = ({ mission, onNavigate, t }) => {
 
 const NextMissionSpotlight = ({ mission, onNavigate, t }) => {
   if (!mission) return null;
-  const isDelivery = mission.status === 'livree';
+  const isDelivery = mission.status === 'livree' || mission.status === 'prete' || mission.status === 'EN_TRAITEMENT';
   const displayName = getClientDisplayName(mission, t);
   const initials = getInitials(displayName, t);
 
   return (
-    <div className="bg-primary-600 rounded-[2.5rem] p-6 sm:p-8 text-white shadow-2xl shadow-primary-500/30 overflow-hidden relative mb-10 animate-in zoom-in-95 duration-500 text-start group">
-      <div className="absolute -top-10 -right-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
-        <Truck size={200} strokeWidth={1} />
-      </div>
-
+    <div className="bg-gradient-to-br from-[#0D7377] to-[#0A5F63] rounded-[20px] p-5 text-white shadow-[var(--shadow-teal)] relative mb-6 text-start group overflow-hidden">
       <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-6">
-          <span className="bg-white/20 backdrop-blur-md text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-white/10 shadow-sm">
+        <div className="flex justify-between items-center mb-4">
+          <span className="font-['Inter'] text-[11px] font-semibold text-[rgba(255,255,255,0.7)] uppercase tracking-[0.06em]">
             {t('driver.dashboard.missions.next_mission')}
           </span>
-          <div className="flex gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-white animate-bounce" style={{ animationDelay: '0ms' }}></span>
-            <span className="w-1.5 h-1.5 rounded-full bg-white animate-bounce" style={{ animationDelay: '150ms' }}></span>
-          </div>
+          <MoreVertical size={18} className="text-[rgba(255,255,255,0.5)]" />
         </div>
 
-        <div className="flex items-center gap-5 sm:gap-6 mb-8">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.5rem] bg-white text-primary-600 font-black text-xl sm:text-2xl flex items-center justify-center shadow-xl border-4 border-white/20 shrink-0 uppercase">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="w-16 h-16 rounded-[16px] bg-[rgba(255,255,255,0.15)] border border-[rgba(255,255,255,0.2)] text-white font-['Plus_Jakarta_Sans'] font-bold text-2xl flex items-center justify-center shrink-0">
             {initials}
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <Hash size={14} className="opacity-60" />
-              <span className="text-xs font-black uppercase tracking-widest opacity-80">{t('workshop.detail.labels.order')} #{mission.numeroCommande}</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-black tracking-tight truncate leading-tight">{displayName}</h3>
-            <p className="text-primary-100 text-xs sm:text-sm font-bold flex items-center gap-2 mt-1 opacity-90 truncate uppercase tracking-tight">
-              <MapPin size={14} strokeWidth={3} /> {mission.client?.addresses?.[0]?.address || '—'}
+            <span className="font-['Inter'] text-[11px] text-[rgba(255,255,255,0.6)] font-semibold uppercase tracking-wider">
+              #{mission.numeroCommande}
+            </span>
+            <h3 className="font-['Plus_Jakarta_Sans'] text-[20px] font-bold leading-tight truncate">
+              {displayName}
+            </h3>
+            <p className="font-['Inter'] text-[13px] text-[rgba(255,255,255,0.75)] mt-1 truncate leading-tight">
+              {mission.client?.addresses?.[0]?.address || '—'}
             </p>
           </div>
         </div>
 
         <button
           onClick={() => onNavigate(mission.id)}
-          className="w-full bg-white text-primary-600 font-black py-3 sm:py-4 sm:py-5 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.97] hover:bg-primary-50 shadow-xl text-xs uppercase tracking-[0.15em] group/btn"
+          className="w-full bg-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.25)] border border-[rgba(255,255,255,0.25)] backdrop-blur-[8px] text-white font-['Inter'] font-semibold py-3.5 rounded-[12px] flex items-center justify-center gap-2 transition-all active:scale-[0.97] text-[14px]"
         >
-          <Navigation2 size={20} strokeWidth={3} fill="currentColor" className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform rtl:rotate-180" />
+          <Navigation2 size={18} fill="currentColor" className="rtl:rotate-180" />
           {isDelivery ? t('driver.dashboard.missions.start_delivery') : t('driver.dashboard.missions.start_collect')}
         </button>
       </div>
@@ -250,41 +227,42 @@ export default function LivreurDashboard() {
   };
 
   return (
-    <div className="animate-fade-in space-y-8 pb-16 max-w-7xl mx-auto px-4 md:px-0">
+    <div className="animate-fade-in pb-12 text-start">
+      
+      {/* PAGE TITLE */}
+      <div className="mb-6">
+        <h1 className="font-['Plus_Jakarta_Sans'] text-2xl font-bold text-[var(--text)] tracking-[-0.02em]">
+          {t('nav.dashboard')}
+        </h1>
+        <p className="font-['Inter'] text-[13px] text-[var(--text-muted)] mt-1">
+          {t('admin.dashboard.overview_desc')}
+        </p>
+      </div>
 
-      {/* KPI GRID - Optimized for Mobile */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
+      {/* KPI GRID */}
+      <div className="grid grid-cols-2 gap-3 mb-6">
         <StatCard
           label={t('driver.dashboard.stats.ready_delivery')}
           count={stats.commandesPretesCount}
           icon={Truck}
-          colorClass="border-emerald-500"
-          iconBgClass="bg-emerald-500/10"
-          iconColorClass="text-emerald-600"
-          barColorClass="bg-emerald-500"
+          type="deliveries"
           t={t}
-          onClick={() => { setActiveTab('deliveries'); }}
+          onClick={() => setActiveTab('deliveries')}
         />
         <StatCard
           label={t('driver.dashboard.stats.collect_workshop')}
           count={stats.commandesARecupererCount}
           icon={Archive}
-          colorClass="border-primary-500"
-          iconBgClass="bg-primary-500/10"
-          iconColorClass="text-primary-600"
-          barColorClass="bg-primary-500"
+          type="collections"
           t={t}
           onClick={() => setActiveTab('collections')}
         />
-        <div className="col-span-2 md:col-span-1">
+        <div className="col-span-2">
           <StatCard
             label={t('driver.dashboard.stats.canceled')}
             count={stats.commandesAnnuleesCount}
             icon={RotateCcw}
-            colorClass="border-orange-500"
-            iconBgClass="bg-orange-500/10"
-            iconColorClass="text-orange-600"
-            barColorClass="bg-orange-500"
+            type="canceled"
             t={t}
             onClick={() => navigate('/livreur/canceled')}
           />
@@ -295,33 +273,37 @@ export default function LivreurDashboard() {
       <NextMissionSpotlight mission={nextMission} onNavigate={handleNavigateToMission} t={t} />
 
       {/* MISSIONS SECTION */}
-      <div className="space-y-6 text-start">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-          <div>
-            <h2 className="text-2xl font-black text-text-primary tracking-tight uppercase">
-              {t('driver.dashboard.missions.title')}
-            </h2>
-            <p className="text-xs text-text-muted font-bold uppercase tracking-widest opacity-60 mt-1">{t('driver.dashboard.missions.subtitle')}</p>
-          </div>
-
-          <div className="bg-surface border border-border/50 p-1.5 rounded-[1.25rem] flex w-full sm:w-auto shadow-sm">
+      <div className="space-y-4">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)]">
+            {t('driver.dashboard.missions.title')}
+          </h2>
+          
+          <div className="bg-white border border-[rgba(0,0,0,0.08)] p-1 rounded-[10px] flex shadow-[var(--shadow-sm)]">
             <button
               onClick={() => setActiveTab('deliveries')}
-              className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'deliveries' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}
+              className={`px-4 py-1.5 rounded-[8px] text-[12px] font-bold transition-all duration-200 ${
+                activeTab === 'deliveries' 
+                  ? 'bg-[var(--primary)] text-white' 
+                  : 'text-[var(--text-muted)]'
+              }`}
             >
-              {t('driver.dashboard.missions.badges.delivery')} ({readyForDelivery.length})
+              {readyForDelivery.length}
             </button>
             <button
               onClick={() => setActiveTab('collections')}
-              className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'collections' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}
+              className={`px-4 py-1.5 rounded-[8px] text-[12px] font-bold transition-all duration-200 ${
+                activeTab === 'collections' 
+                  ? 'bg-[var(--primary)] text-white' 
+                  : 'text-[var(--text-muted)]'
+              }`}
             >
-              {t('driver.dashboard.missions.badges.collect')} ({readyOrders.length})
+              {readyOrders.length}
             </button>
           </div>
         </div>
 
-        {/* Mobile Missions List */}
-        <div className="md:hidden space-y-4">
+        <div className="space-y-3">
           {filteredMissions.length > 0 ? (
             filteredMissions.map(mission => (
               <MissionMobileCard
@@ -332,50 +314,13 @@ export default function LivreurDashboard() {
               />
             ))
           ) : (
-            <div className="bg-surface rounded-[2.5rem] border border-border/50 border-dashed py-24 flex flex-col items-center text-center opacity-40">
-              <LayoutDashboard size={48} className="mb-4 text-text-muted" />
-              <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('driver.dashboard.missions.empty_title')}</h3>
-              <p className="text-xs font-bold text-text-muted uppercase tracking-widest mt-1">{t('driver.dashboard.missions.empty_body')}</p>
+            <div className="py-16 text-center opacity-40">
+              <LayoutDashboard size={48} className="mx-auto mb-4 text-[var(--text-muted)]" />
+              <p className="font-['Plus_Jakarta_Sans'] text-[18px] font-semibold text-[var(--text-secondary)]">
+                {t('driver.dashboard.missions.empty_title')}
+              </p>
             </div>
           )}
-        </div>
-
-        {/* Desktop Missions Table */}
-        <div className="hidden md:block bg-surface rounded-[2rem] shadow-card overflow-hidden border border-border/50">
-          <div className="overflow-x-auto min-w-full">
-            <table className="w-full text-start">
-              <thead className="bg-background/50 border-b border-border/50">
-                <tr>
-                  <th className="px-8 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('workshop.detail.labels.order')}</th>
-                  <th className="px-8 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.dashboard.missions.headers.client')}</th>
-                  <th className="px-8 py-3 sm:py-4 text-start text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('driver.dashboard.missions.headers.type')}</th>
-                  <th className="px-8 py-3 sm:py-4 text-end text-xs font-black text-text-muted uppercase tracking-[0.2em] w-24">{t('admin.clients.table.actions')}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/30">
-                {filteredMissions.length > 0 ? (
-                  filteredMissions.map(mission => (
-                    <MissionTableRow
-                      key={mission.id}
-                      mission={mission}
-                      onNavigate={handleNavigateToMission}
-                      t={t}
-                    />
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="py-24 text-center opacity-40">
-                      <div className="flex flex-col items-center justify-center">
-                        <LayoutDashboard size={48} className="mb-4" />
-                        <p className="text-lg font-black text-text-primary uppercase tracking-tight">{t('driver.dashboard.missions.empty_title')}</p>
-                        <p className="text-xs font-bold text-text-muted uppercase tracking-widest mt-1">{t('driver.dashboard.missions.empty_body')}</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
     </div>

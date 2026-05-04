@@ -3,31 +3,33 @@ import logo from '../../assets/logo.png'; // Adjust path as needed
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-laundry-deep text-white py-10 px-4 mt-auto">
-      <div className="max-w-7xl mx-auto flex flex-col items-center gap-6">
+    <footer className="w-full bg-[#0D1B2A] text-white py-12 px-5 mt-auto">
+      <div className="max-w-7xl mx-auto flex flex-col items-center gap-8">
 
         {/* LOGO SECTION */}
-        <div className="flex items-center gap-3 opacity-90 transition-opacity hover:opacity-100">
-          <img
-            src={logo}
-            alt="Pure Clean"
-            className="h-8 w-8 object-contain brightness-0 invert"
-          />
-          <span className="font-black text-xl tracking-tighter uppercase whitespace-nowrap">
-            PURE <span className="text-laundry-fresh">CLEAN</span>
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-gradient-to-br from-[#0D7377] to-[#14A3A8] rounded-[10px] flex items-center justify-center shadow-lg">
+             <img
+               src={logo}
+               alt="Pure Clean"
+               className="h-5 w-5 object-contain brightness-0 invert"
+             />
+          </div>
+          <span className="font-['Plus_Jakarta_Sans'] font-bold text-xl tracking-tight uppercase whitespace-nowrap">
+            Pure <span className="text-[var(--primary-light)]">Clean</span>
           </span>
         </div>
 
         {/* LINKS OR DIVIDER */}
-        <div className="w-full h-px bg-white/10 max-w-xs"></div>
+        <div className="w-full h-px bg-white/10 max-w-sm"></div>
 
         {/* COPYRIGHT TEXT */}
-        <div className="text-center space-y-2">
-          <p className="text-laundry-sky/60 text-xs font-bold tracking-widest uppercase">
-            © 2026 PURE CLEAN
+        <div className="text-center space-y-3">
+          <p className="font-['Inter'] text-[11px] font-bold tracking-[0.2em] uppercase text-white/40">
+            © 2026 PURE CLEAN MANAGEMENT
           </p>
-          <p className="text-laundry-sky/40 text-xs font-bold uppercase tracking-[0.2em] leading-relaxed max-w-xs mx-auto">
-            Système Premium de Gestion de Blanchisserie
+          <p className="font-['Inter'] text-[11px] font-medium uppercase tracking-[0.1em] text-white/20 leading-relaxed max-w-xs mx-auto">
+            Système Premium de Gestion de Blanchisserie pour Professionnels
           </p>
         </div>
       </div>

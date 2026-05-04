@@ -114,25 +114,33 @@ export default function AllCommandes() {
   const totalElements = pagination?.totalElements ?? commandes?.length ?? 0;
 
   return (
-    <div className="space-y-6 pb-12 animate-fade-in text-start relative overflow-hidden">
+    <div className="space-y-6 pb-12 animate-fade-in text-start">
 
       {/* HEADER SECTION */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">{t('admin.orders.title')}</h1>
-          <p className="text-sm text-text-muted font-bold uppercase tracking-widest opacity-60">{t('admin.orders.subtitle')}</p>
+          <h1 className="font-['Plus_Jakarta_Sans'] text-2xl font-bold text-[var(--text)] tracking-[-0.02em]">
+            {t('admin.orders.title')}
+          </h1>
+          <p className="font-['Inter'] text-[13px] text-[var(--text-muted)] mt-1">
+            {t('admin.orders.subtitle')}
+          </p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={handleExportCSV}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-surface border border-border/50 text-text-primary rounded-xl text-xs font-black uppercase tracking-widest shadow-sm hover:bg-background transition-all active:scale-95"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-[10px] bg-white border border-[rgba(0,0,0,0.08)] rounded-[10px] shadow-[var(--shadow-sm)] text-[13px] font-medium text-[var(--text-secondary)] active:scale-95 transition-all"
           >
-            <Download size={16} />
+            <Download size={16} className="text-[var(--primary)]" />
             {t('admin.orders.export_csv')}
           </button>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${showFilters ? 'bg-primary-500 text-white shadow-lg' : 'bg-surface border border-border/50 text-text-primary'}`}
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-[10px] rounded-[10px] text-[13px] font-bold transition-all active:scale-95 ${
+              showFilters 
+                ? 'bg-[var(--primary)] text-white shadow-[var(--shadow-teal)]' 
+                : 'bg-white border border-[rgba(0,0,0,0.08)] text-[var(--text-secondary)] shadow-[var(--shadow-sm)]'
+            }`}
           >
             <Filter size={16} />
             {t('admin.orders.advanced_filters')}
@@ -140,147 +148,130 @@ export default function AllCommandes() {
         </div>
       </div>
 
-      {/* KPI ROW */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {/* KPI GRID */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {[
-          { label: t('admin.orders.kpi.global'), value: totalElements, icon: ClipboardList, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-          { label: t('admin.orders.kpi.value'), value: `${totalAmount.toLocaleString()} DH`, icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-          { label: t('admin.orders.kpi.volumes'), value: totalVolumes, icon: Package, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
-        ].map((kpi, i) => (
-          <div key={i} className="bg-surface p-4 rounded-2xl border border-border/50 shadow-sm flex items-center gap-4 transition-all hover:shadow-md">
-            <div className={`w-10 h-10 rounded-xl ${kpi.bg} ${kpi.color} flex items-center justify-center shrink-0`}>
-              <kpi.icon size={20} />
+          { label: t('admin.orders.kpi.global'), value: totalElements, icon: ClipboardList, type: 'orders' },
+          { label: t('admin.orders.kpi.value'), value: `${totalAmount.toLocaleString()}`, suffix: 'DH', icon: CheckCircle2, type: 'revenus' },
+          { label: t('admin.orders.kpi.volumes'), value: totalVolumes, icon: Package, type: 'volumes' },
+        ].map((kpi, i) => {
+          const colors = {
+            orders: { accent: '#0D7377', bg: 'rgba(13,115,119,0.1)' },
+            revenus: { accent: '#C9A84C', bg: 'rgba(201,168,76,0.1)' },
+            volumes: { accent: '#3B82F6', bg: 'rgba(59,130,246,0.1)' }
+          }[kpi.type] || { accent: '#0D7377', bg: 'rgba(13,115,119,0.1)' };
+
+          return (
+            <div key={i} className="bg-white rounded-[16px] border border-[rgba(0,0,0,0.06)] shadow-[var(--shadow-sm)] p-4 relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ backgroundColor: colors.accent }} />
+              <div className="w-10 h-10 rounded-[10px] flex items-center justify-center mb-3" style={{ backgroundColor: colors.bg }}>
+                <kpi.icon size={20} style={{ color: colors.accent }} />
+              </div>
+              <p className="font-['Inter'] text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-[0.06em] truncate">{kpi.label}</p>
+              <p className="font-['Plus_Jakarta_Sans'] text-[20px] font-bold text-[var(--text)] tracking-tight truncate mt-1">
+                {kpi.value} {kpi.suffix && <span className="text-[12px] font-bold text-[var(--text-muted)]">{kpi.suffix}</span>}
+              </p>
             </div>
-            <div className="min-w-0">
-              <p className="text-xs font-bold text-text-muted uppercase tracking-wider truncate">{kpi.label}</p>
-              <p className="text-lg font-black text-text-primary tracking-tight truncate">{kpi.value}</p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* SEARCH & FILTERS */}
-      <div className="flex flex-col md:flex-row gap-4 items-center">
-        <div className="relative flex-1 w-full group">
-          <Search size={18} className="absolute start-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary-500 transition-colors" />
+      {/* SEARCH & VIEW MODES */}
+      <div className="flex gap-3">
+        <div className="relative flex-1 group">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
           <input
             type="text"
             placeholder={t('admin.orders.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-surface border border-border/50 rounded-2xl ps-12 pe-4 py-3.5 text-sm font-bold text-text-primary focus:ring-4 focus:ring-primary-500/5 focus:border-primary-500 transition-all outline-none"
+            className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[12px] py-3 pl-11 pr-4 text-sm font-medium text-[var(--text)] outline-none focus:ring-4 focus:ring-[var(--primary-glow)] focus:border-[var(--primary)] focus:bg-white transition-all"
           />
         </div>
-        <div className="flex bg-background p-1 rounded-2xl border border-border/50 shrink-0">
-          <button onClick={() => setViewMode('list')} className={`p-2 rounded-xl transition-all ${viewMode === 'list' ? 'bg-surface text-primary-600 shadow-sm border border-border/50' : 'text-text-muted'}`}><List size={20}/></button>
-          <button onClick={() => setViewMode('grid')} className={`p-2 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-surface text-primary-600 shadow-sm border border-border/50' : 'text-text-muted'}`}><LayoutGrid size={20}/></button>
+        <div className="flex bg-white border border-[rgba(0,0,0,0.08)] p-1 rounded-[12px] shadow-sm shrink-0">
+          <button 
+            onClick={() => setViewMode('list')} 
+            className={`p-2 rounded-[10px] transition-all ${viewMode === 'list' ? 'bg-[var(--primary)] text-white shadow-[0_2px_8px_rgba(13,115,119,0.2)]' : 'text-[var(--text-muted)]'}`}
+          >
+            <List size={20}/>
+          </button>
+          <button 
+            onClick={() => setViewMode('grid')} 
+            className={`p-2 rounded-[10px] transition-all ${viewMode === 'grid' ? 'bg-[var(--primary)] text-white shadow-[0_2px_8px_rgba(13,115,119,0.2)]' : 'text-[var(--text-muted)]'}`}
+          >
+            <LayoutGrid size={20}/>
+          </button>
         </div>
       </div>
 
       {showFilters && (
-        <div className="bg-surface rounded-[2rem] border border-border/50 p-6 md:p-8 shadow-card grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 animate-in slide-in-from-top-4 duration-300">
-          <div className="space-y-2">
-            <label className="text-xs font-black text-text-muted uppercase tracking-widest block">{t('admin.orders.filter_labels.status')}</label>
-            <select value={status} onChange={(e) => setStatus(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-xs font-bold text-text-primary outline-none focus:border-primary-500">
+        <div className="bg-white rounded-[20px] border border-[rgba(0,0,0,0.06)] p-5 shadow-[var(--shadow-md)] grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in slide-in-from-top-4 duration-300">
+          <div className="space-y-1.5">
+            <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider block px-1">{t('admin.orders.filter_labels.status')}</label>
+            <select value={status} onChange={(e) => setStatus(e.target.value)} className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[10px] px-3 py-2 text-[13px] font-bold text-[var(--text)] outline-none focus:border-[var(--primary)]">
               <option value="all">{t('admin.orders.status_options.all')}</option>
               {['EN_ATTENTE', 'VALIDEE', 'EN_TRAITEMENT', 'PRETE', 'LIVREE', 'PAYEE', 'ANNULEE', 'RETOURNEE'].map(s => <option key={s} value={s}>{t(`status.${s.toLowerCase()}`)}</option>)}
             </select>
           </div>
-          <div className="space-y-2">
-            <label className="text-xs font-black text-text-muted uppercase tracking-widest block">{t('admin.orders.filter_labels.from')}</label>
-            <input type="date" value={dateDebut} onChange={(e) => setDateDebut(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-xs font-bold text-text-primary outline-none focus:border-primary-500" />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider block px-1">{t('admin.orders.filter_labels.from')}</label>
+              <input type="date" value={dateDebut} onChange={(e) => setDateDebut(e.target.value)} className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[10px] px-3 py-2 text-[13px] font-bold text-[var(--text)] outline-none focus:border-[var(--primary)]" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider block px-1">{t('admin.orders.filter_labels.to')}</label>
+              <input type="date" value={dateFin} onChange={(e) => setDateFin(e.target.value)} className="w-full bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] rounded-[10px] px-3 py-2 text-[13px] font-bold text-[var(--text)] outline-none focus:border-[var(--primary)]" />
+            </div>
           </div>
-          <div className="space-y-2">
-            <label className="text-xs font-black text-text-muted uppercase tracking-widest block">{t('admin.orders.filter_labels.to')}</label>
-            <input type="date" value={dateFin} onChange={(e) => setDateFin(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-xs font-bold text-text-primary outline-none focus:border-primary-500" />
-          </div>
-          <div className="flex items-end">
-            <button onClick={() => { setSearch(''); setStatus('all'); setDateDebut(''); setDateFin(''); }} className="w-full bg-background hover:bg-red-50 dark:hover:bg-red-500/10 text-red-500 border border-border rounded-xl py-2.5 text-xs font-black uppercase tracking-widest transition-all">{t('admin.orders.filter_labels.reset')}</button>
+          <div className="sm:col-span-2">
+            <button onClick={() => { setSearch(''); setStatus('all'); setDateDebut(''); setDateFin(''); }} className="w-full bg-[#FEF2F2] hover:bg-[#FEE2E2] text-[#EF4444] border border-[#FECACA] rounded-[10px] py-2 text-[12px] font-bold uppercase tracking-wider transition-all">{t('admin.orders.filter_labels.reset')}</button>
           </div>
         </div>
       )}
 
       {/* MAIN CONTENT */}
-      <div className="bg-surface rounded-[2rem] border border-border/50 shadow-card overflow-hidden">
+      <div className="bg-white rounded-[20px] border border-[rgba(0,0,0,0.06)] shadow-[var(--shadow-sm)] overflow-hidden">
         {loading && !commandes?.length ? (
           <div className="py-32 flex flex-col items-center gap-4">
-            <Loader2 size={40} className="animate-spin text-primary-500" />
-            <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.loading_data')}</p>
+            <Loader2 size={40} className="animate-spin text-[var(--primary)]" />
+            <p className="font-['Inter'] text-[12px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em]">{t('admin.orders.loading_data')}</p>
           </div>
         ) : !commandes?.length ? (
           <div className="py-32 flex flex-col items-center text-center px-6">
-            <div className="w-20 h-20 bg-background rounded-[2rem] flex items-center justify-center mb-6 border border-dashed border-border"><ClipboardList size={32} className="text-text-muted/30" /></div>
-            <h3 className="text-lg font-black text-text-primary uppercase tracking-tight">{t('admin.orders.empty_db')}</h3>
-            <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">{t('admin.orders.no_match')}</p>
+            <div className="w-16 h-16 bg-[var(--bg)] rounded-[16px] flex items-center justify-center mb-6 border border-dashed border-[rgba(0,0,0,0.1)]"><ClipboardList size={32} className="text-[var(--text-muted)] opacity-30" /></div>
+            <h3 className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)]">{t('admin.orders.empty_db')}</h3>
+            <p className="font-['Inter'] text-[13px] text-[var(--text-muted)] mt-1">{t('admin.orders.no_match')}</p>
           </div>
         ) : viewMode === 'list' ? (
           <>
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full text-start border-collapse">
-              <thead>
-                <tr className="bg-background/50 border-b border-border/50">
-                  <th className="px-8 py-3 sm:py-4 text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.table.ref')}</th>
-                  <th className="px-8 py-3 sm:py-4 text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.table.contact')}</th>
-                  <th className="px-8 py-3 sm:py-4 text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.table.timestamp')}</th>
-                  <th className="px-8 py-3 sm:py-4 text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.table.billing')}</th>
-                  <th className="px-8 py-3 sm:py-4 text-xs font-black text-text-muted uppercase tracking-[0.2em] text-center">{t('admin.orders.table.status')}</th>
-                  <th className="px-8 py-3 sm:py-4"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/40">
-                {commandes.map((c) => {
-                  const { date, time } = formatDateTime(c.dateCreation || c.createdAt, i18n.language);
-                  return (
-                    <tr key={c.id} onClick={() => openQuickView(c.id)} className="group hover:bg-background/40 transition-all cursor-pointer">
-                      <td className="px-8 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-background border border-border/50 flex items-center justify-center text-primary-500 font-black text-xs">#{c.numeroCommande.slice(-3)}</div>
-                          <span className="text-sm font-black text-text-primary tracking-tight">#{c.numeroCommande}</span>
-                        </div>
-                      </td>
-                      <td className="px-8 py-5">
-                        <p className="text-sm font-black text-text-primary">{getClientDisplayName(c)}</p>
-                        <p className="text-xs text-text-muted font-bold uppercase tracking-tighter">{getClientPhone(c.client)}</p>
-                      </td>
-                      <td className="px-8 py-5">
-                        <p className="text-xs font-bold text-text-primary">{date}</p>
-                        <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-0.5 opacity-60">{time}</p>
-                      </td>
-                      <td className="px-8 py-5">
-                        <span className="font-black text-sm text-text-primary">{c.montantTotal} DH</span>
-                      </td>
-                      <td className="px-8 py-5 text-center"><div className="flex justify-center scale-90 group-hover:scale-100 transition-transform"><StatusBadge status={c.status} /></div></td>
-                      <td className="px-8 py-5 text-end"><button onClick={(e) => { e.stopPropagation(); navigate(`/admin/commandes/${c.id}`); }} className="w-8 h-8 rounded-lg bg-background flex items-center justify-center text-text-muted hover:text-primary-500 transition-all border border-border/50 shadow-sm active:scale-90"><ChevronRight size={18} className="rtl:rotate-180" /></button></td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
           {/* MOBILE CARDS */}
-          <div className="md:hidden divide-y divide-border/30">
+          <div className="divide-y divide-[rgba(0,0,0,0.05)]">
             {commandes.map((c) => {
               const { date, time } = formatDateTime(c.dateCreation || c.createdAt, i18n.language);
               return (
-                <div key={c.id} onClick={() => openQuickView(c.id)} className="p-5 flex flex-col gap-4 active:bg-background/50 transition-colors cursor-pointer">
+                <div key={c.id} onClick={() => openQuickView(c.id)} className="p-5 flex flex-col gap-4 active:bg-[var(--bg)] transition-colors cursor-pointer">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-background border border-border/50 flex items-center justify-center text-primary-500 font-black text-sm shadow-sm">
-                        #{c.numeroCommande.slice(-3)}
+                      <div className="w-10 h-10 rounded-full bg-[var(--primary-surface)] text-[var(--primary)] flex items-center justify-center font-['Plus_Jakarta_Sans'] font-bold text-sm">
+                        {(c.client?.name || c.clientNom || 'C')[0]}
                       </div>
                       <div>
-                        <p className="text-base font-black text-text-primary tracking-tight">#{c.numeroCommande}</p>
-                        <p className="text-xs font-bold text-text-muted mt-0.5 uppercase tracking-widest">{date} {time}</p>
+                        <p className="font-['Plus_Jakarta_Sans'] text-[15px] font-bold text-[var(--text)] truncate leading-tight">
+                          {getClientDisplayName(c)}
+                        </p>
+                        <p className="font-['Inter'] text-[12px] text-[var(--text-muted)] mt-0.5">
+                          #{c.numeroCommande} • {date}
+                        </p>
                       </div>
                     </div>
                     <StatusBadge status={c.status} />
                   </div>
-                  <div className="flex items-center justify-between pt-2">
-                    <div>
-                      <p className="text-sm font-black text-text-primary">{getClientDisplayName(c)}</p>
-                      <p className="text-xs text-text-muted font-bold mt-0.5">{getClientPhone(c.client)}</p>
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+                      <Package size={14} className="text-[var(--primary)]" />
+                      <span className="font-['Inter'] text-[12px] font-semibold">{c.commandeTapis?.length || 0} Art.</span>
                     </div>
-                    <span className="font-black text-lg text-primary-600">{c.montantTotal} DH</span>
+                    <span className="font-['Plus_Jakarta_Sans'] text-[16px] font-bold text-[var(--text)]">{c.montantTotal} <span className="text-[11px] text-[var(--text-muted)]">DH</span></span>
                   </div>
                 </div>
               );
@@ -288,20 +279,22 @@ export default function AllCommandes() {
           </div>
           </>
         ) : (
-          <div className="p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {commandes.map((c) => {
               const { date } = formatDateTime(c.dateCreation || c.createdAt, i18n.language);
               return (
-                <div key={c.id} className="bg-background/50 border border-border/50 rounded-[2rem] p-6 hover:bg-background hover:shadow-xl transition-all cursor-pointer group relative" onClick={() => openQuickView(c.id)}>
-                  <div className="flex justify-end mb-4"><StatusBadge status={c.status} size="sm" /></div>
-                  <div className="space-y-1 mb-6 text-center">
-                    <p className="text-xs font-black text-primary-500 uppercase tracking-widest">#{c.numeroCommande}</p>
-                    <p className="text-base font-black text-text-primary truncate">{getClientDisplayName(c)}</p>
-                    <p className="text-xs text-text-muted font-bold uppercase tracking-widest">{date}</p>
+                <div key={c.id} className="bg-white border border-[rgba(0,0,0,0.08)] rounded-[16px] p-5 hover:border-[var(--primary)] transition-all cursor-pointer relative" onClick={() => openQuickView(c.id)}>
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="font-['Inter'] text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider">#{c.numeroCommande}</span>
+                    <StatusBadge status={c.status} />
                   </div>
-                  <div className="flex items-center justify-between pt-4 border-t border-border/50">
-                    <div className="flex items-center gap-2 text-text-muted"><Package size={14} /><span className="text-xs font-bold uppercase tracking-widest">{c.commandeTapis?.length || 0} Tapis</span></div>
-                    <p className="text-sm font-black text-text-primary">{c.montantTotal} DH</p>
+                  <div className="space-y-1 mb-6">
+                    <p className="font-['Plus_Jakarta_Sans'] text-[16px] font-bold text-[var(--text)] truncate">{getClientDisplayName(c)}</p>
+                    <p className="font-['Inter'] text-[12px] text-[var(--text-muted)] uppercase tracking-wider">{date}</p>
+                  </div>
+                  <div className="flex items-center justify-between pt-4 border-t border-[rgba(0,0,0,0.04)]">
+                    <div className="flex items-center gap-2 text-[var(--text-secondary)]"><Package size={14} /><span className="font-['Inter'] text-[12px] font-bold">{c.commandeTapis?.length || 0}</span></div>
+                    <p className="font-['Plus_Jakarta_Sans'] text-[16px] font-bold text-[var(--primary)]">{c.montantTotal} DH</p>
                   </div>
                 </div>
               );
@@ -312,95 +305,95 @@ export default function AllCommandes() {
 
       {/* LOAD MORE */}
       {!pagination?.isLast && (
-        <div className="flex justify-center pt-2">
+        <div className="flex justify-center pt-2 pb-10">
           <button
             onClick={handleLoadMore}
             disabled={loading}
-            className="flex items-center gap-2 px-8 py-3 bg-surface border border-border/50 rounded-2xl text-xs font-black uppercase tracking-widest text-text-primary hover:bg-background transition-all active:scale-95 disabled:opacity-50 shadow-sm"
+            className="flex items-center gap-2 px-8 py-3 bg-white border border-[rgba(0,0,0,0.08)] rounded-[12px] text-[13px] font-bold text-[var(--text-secondary)] hover:bg-[var(--bg)] transition-all active:scale-95 disabled:opacity-50 shadow-sm"
           >
-            {loading ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
-            {loading ? t('admin.orders.loading_data') : `${t('admin.orders.load_more', 'Charger plus')} (${commandes?.length ?? 0} / ${totalElements})`}
+            {loading ? <Loader2 size={16} className="animate-spin text-[var(--primary)]" /> : <RefreshCw size={16} className="text-[var(--primary)]" />}
+            {loading ? t('admin.orders.loading_data') : t('admin.orders.load_more', 'Charger plus')}
           </button>
         </div>
       )}
-      {/* QUICK VIEW DRAWER */}
+      {/* QUICK VIEW DRAWER (Modern Sidebar) */}
       {isDrawerOpen && createPortal(
         <div className="fixed inset-0 z-[9999] flex justify-end animate-fade-in">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500" 
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-500" 
             onClick={closeDrawer} 
           />
           
           {/* Drawer Content */}
           <div 
-            className={`relative w-full sm:max-w-md bg-surface shadow-2xl h-full flex flex-col sm:border-s border-border/50 animate-in slide-in-from-right duration-500 ease-out`}
+            className={`relative w-full sm:max-w-md bg-white shadow-2xl h-full flex flex-col animate-in slide-in-from-right duration-500 ease-out`}
           >
-            <div className="p-6 md:p-8 border-b border-border/50 flex items-center justify-between bg-background/30 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+            <div className="p-6 border-b border-[rgba(0,0,0,0.06)] flex items-center justify-between bg-[var(--bg)] pt-[calc(env(safe-area-inset-top)+1.5rem)]">
               <div className="text-start">
                 <div className="flex items-center gap-2 mb-1">
-                  <Hash size={14} className="text-primary-500" />
-                  <span className="text-xs font-black text-text-muted uppercase tracking-widest">{t('admin.pro_ui.quick_details')}</span>
+                  <Hash size={14} className="text-[var(--primary)]" />
+                  <span className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest">{t('admin.pro_ui.quick_details')}</span>
                 </div>
-                <h3 className="text-xl font-black text-text-primary tracking-tight">#{drawerData?.numeroCommande}</h3>
+                <h3 className="font-['Plus_Jakarta_Sans'] text-[20px] font-bold text-[var(--text)]">#{drawerData?.numeroCommande}</h3>
               </div>
-              <button onClick={closeDrawer} className="w-10 h-10 rounded-xl bg-surface border border-border/50 flex items-center justify-center text-text-muted hover:text-red-500 transition-all shadow-sm"><X size={20}/></button>
+              <button onClick={closeDrawer} className="w-10 h-10 rounded-[10px] bg-white border border-[rgba(0,0,0,0.08)] flex items-center justify-center text-[var(--text-muted)] hover:text-[#EF4444] transition-all shadow-sm"><X size={20}/></button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 pb-[calc(env(safe-area-inset-bottom)+2rem)] md:p-8 space-y-8">
+            <div className="flex-1 overflow-y-auto p-6 pb-[calc(env(safe-area-inset-bottom)+2rem)] space-y-6">
               {!drawerData ? (
                 <div className="py-20 flex flex-col items-center gap-4 opacity-40">
-                  <Loader2 size={32} className="animate-spin text-primary-500" />
-                  <p className="text-xs font-black uppercase tracking-widest">{t('admin.orders.loading_data')}</p>
+                  <Loader2 size={32} className="animate-spin text-[var(--primary)]" />
+                  <p className="font-['Inter'] text-[12px] font-bold uppercase tracking-widest text-[var(--text-muted)]">{t('admin.orders.loading_data')}</p>
                 </div>
               ) : (
-                <div className="space-y-8">
+                <div className="space-y-6">
                   {/* Status & Summary */}
-                  <div className="flex items-center justify-between bg-background p-4 rounded-3xl border border-border/50">
+                  <div className="flex items-center justify-between bg-[var(--bg)] p-5 rounded-[16px] border border-[rgba(0,0,0,0.06)]">
                     <StatusBadge status={drawerData.status} />
                     <div className="text-end">
-                      <p className="text-xs font-black text-text-muted uppercase tracking-widest mb-0.5">{t('admin.orders.card.billing')}</p>
-                      <p className="text-lg font-black text-primary-600">{drawerData.montantTotal} DH</p>
+                      <p className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-0.5">{t('admin.orders.card.billing')}</p>
+                      <p className="font-['Plus_Jakarta_Sans'] text-[22px] font-bold text-[var(--primary)]">{drawerData.montantTotal} DH</p>
                     </div>
                   </div>
 
                   {/* Client & Driver Info */}
-                  <div className="grid grid-cols-1 gap-4">
-                    <div className="p-5 bg-background rounded-[2rem] border border-border/50 flex items-start gap-4 shadow-sm">
-                      <div className="w-10 h-10 rounded-2xl bg-teal-500/10 text-teal-600 flex items-center justify-center shrink-0 border border-teal-500/20"><User size={20}/></div>
-                      <div className="min-w-0 text-start">
-                        <p className="text-xs font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.orders.table.client')}</p>
-                        <p className="text-sm font-black text-text-primary truncate">{getClientDisplayName(drawerData)}</p>
-                        <p className="text-xs font-bold text-text-muted mt-0.5">{getClientPhone(drawerData.client)}</p>
+                  <div className="grid grid-cols-1 gap-4 text-start">
+                    <div className="p-4 bg-white rounded-[16px] border border-[rgba(0,0,0,0.08)] flex items-center gap-4 shadow-sm">
+                      <div className="w-10 h-10 rounded-[10px] bg-[rgba(16,185,129,0.1)] text-[#10B981] flex items-center justify-center shrink-0"><User size={20}/></div>
+                      <div className="min-w-0">
+                        <p className="font-['Inter'] text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-0.5">{t('admin.orders.table.client')}</p>
+                        <p className="font-['Plus_Jakarta_Sans'] text-[15px] font-bold text-[var(--text)] truncate">{getClientDisplayName(drawerData)}</p>
+                        <p className="font-['Inter'] text-[12px] text-[var(--text-secondary)]">{getClientPhone(drawerData.client)}</p>
                       </div>
                     </div>
-                    <div className="p-5 bg-background rounded-[2rem] border border-border/50 flex items-start gap-4 shadow-sm">
-                      <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-500/20"><Truck size={20}/></div>
-                      <div className="min-w-0 text-start">
-                        <p className="text-xs font-black text-text-muted uppercase tracking-widest mb-1">{t('admin.orders.details.labels.driver')}</p>
-                        <p className="text-sm font-black text-text-primary truncate">{drawerData.livreur?.name || t('admin.orders.details.labels.not_assigned', 'Non assigné')}</p>
-                        <p className="text-xs font-bold text-text-muted mt-0.5">{drawerData.livreur?.phone || '—'}</p>
+                    <div className="p-4 bg-white rounded-[16px] border border-[rgba(0,0,0,0.08)] flex items-center gap-4 shadow-sm">
+                      <div className="w-10 h-10 rounded-[10px] bg-[var(--primary-surface)] text-[var(--primary)] flex items-center justify-center shrink-0"><Truck size={20}/></div>
+                      <div className="min-w-0">
+                        <p className="font-['Inter'] text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-0.5">{t('admin.orders.details.labels.driver')}</p>
+                        <p className="font-['Plus_Jakarta_Sans'] text-[15px] font-bold text-[var(--text)] truncate">{drawerData.livreur?.name || t('admin.orders.details.labels.not_assigned')}</p>
+                        <p className="font-['Inter'] text-[12px] text-[var(--text-secondary)]">{drawerData.livreur?.phone || '—'}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Carpet Items Mini List */}
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between px-2">
-                      <h4 className="text-xs font-black text-text-muted uppercase tracking-[0.2em]">{t('admin.orders.details.articles', { count: drawerData.commandeTapis?.length || 0 })}</h4>
-                      <Calculator size={14} className="text-text-muted" />
+                    <div className="flex items-center justify-between px-1">
+                      <h4 className="font-['Inter'] text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em]">{t('admin.orders.details.articles', { count: drawerData.commandeTapis?.length || 0 })}</h4>
+                      <Calculator size={14} className="text-[var(--text-muted)]" />
                     </div>
                     <div className="space-y-3">
                       {drawerData.commandeTapis?.map((item, i) => (
-                        <div key={i} className="p-4 bg-background border border-border/50 rounded-2xl flex items-center justify-between hover:border-primary-200 transition-colors shadow-sm">
+                        <div key={i} className="p-4 bg-[var(--bg)] border border-[rgba(0,0,0,0.04)] rounded-[14px] flex items-center justify-between hover:border-[var(--primary)] transition-colors">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-primary-500 border border-border/50 text-xs font-black">{i+1}</div>
+                            <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[var(--primary)] border border-[rgba(0,0,0,0.06)] text-[11px] font-bold">{i+1}</div>
                             <div className="text-start">
-                              <p className="text-xs font-black text-text-primary">{item.tapis?.nom || t('admin.dashboard.carpets')}</p>
-                              <p className="text-xs font-bold text-text-muted uppercase">{item.largeur}m × {item.longueur || item.hauteur}m</p>
+                              <p className="font-['Inter'] text-[13px] font-bold text-[var(--text)]">{item.tapis?.nom || t('admin.dashboard.carpets')}</p>
+                              <p className="font-['Inter'] text-[11px] font-medium text-[var(--text-muted)] uppercase">{item.largeur}m × {item.longueur || item.hauteur}m</p>
                             </div>
                           </div>
-                          <p className="text-xs font-black text-text-primary">{item.prixFinal} DH</p>
+                          <p className="font-['Plus_Jakarta_Sans'] text-[14px] font-bold text-[var(--text)]">{item.prixFinal} DH</p>
                         </div>
                       ))}
                     </div>
@@ -408,9 +401,9 @@ export default function AllCommandes() {
 
                   <button 
                     onClick={() => navigate(`/admin/commandes/${drawerData.id}`)}
-                    className="w-full bg-primary-600 text-white py-3 sm:py-4 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-primary-500/20 hover:bg-primary-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                    className="w-full bg-[var(--primary)] text-white py-4 rounded-[12px] text-[14px] font-bold uppercase tracking-wider shadow-[var(--shadow-teal)] hover:bg-[var(--primary-dark)] transition-all active:scale-[0.98] flex items-center justify-center gap-2"
                   >
-                    {t('admin.pro_ui.see_full_sheet', 'Voir la fiche complète')} <ChevronRight size={14} className="rtl:rotate-180" />
+                    {t('admin.pro_ui.see_full_sheet')} <ChevronRight size={18} />
                   </button>
                 </div>
               )}

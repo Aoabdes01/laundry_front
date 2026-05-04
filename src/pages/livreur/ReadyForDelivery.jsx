@@ -37,16 +37,16 @@ const leafletStyles = `
 `;
 
 const livreurIcon = L.divIcon({
-  html: `<div class="w-8 h-8 bg-blue-600 rounded-full border-4 border-white shadow-lg flex items-center justify-center animate-pulse"><div class="w-2 h-2 bg-white rounded-full"></div></div>`,
+  html: `<div class="w-8 h-8 bg-[var(--primary)] rounded-full border-4 border-white shadow-[var(--shadow-teal)] flex items-center justify-center animate-pulse"><div class="w-2 h-2 bg-white rounded-full"></div></div>`,
   className: 'custom-div-icon', iconSize: [32, 32], iconAnchor: [16, 16]
 });
 
 const createNumberedIcon = (number, isSelected) => L.divIcon({
   html: `<div class="relative flex items-center justify-center">
-    <div class="w-8 h-8 ${isSelected ? 'bg-primary-600 scale-125' : 'bg-primary-500'} rounded-xl border-2 border-white shadow-xl flex items-center justify-center text-white text-xs font-black transition-all duration-300">
+    <div class="w-8 h-8 ${isSelected ? 'bg-[var(--primary-dark)] scale-125' : 'bg-[var(--primary)]'} rounded-xl border-2 border-white shadow-[var(--shadow-md)] flex items-center justify-center text-white text-xs font-bold transition-all duration-300">
       ${number || ''}
     </div>
-    <div class="absolute -bottom-1 w-2 h-2 ${isSelected ? 'bg-primary-600' : 'bg-primary-500'} rotate-45 border-b-2 border-r-2 border-white"></div>
+    <div class="absolute -bottom-1 w-2 h-2 ${isSelected ? 'bg-[var(--primary-dark)]' : 'bg-[var(--primary)]'} rotate-45 border-b-2 border-r-2 border-white"></div>
   </div>`,
   className: 'custom-div-icon', iconSize: [32, 32], iconAnchor: [16, 32]
 });
@@ -204,101 +204,112 @@ const DeliveryCard = ({ order, onPay, onCancel, onShowGallery, isOptimized, isSe
     }
   };
 
+  const getStatusBadge = (status) => {
+    const styles = {
+      'À LIVRER': 'bg-[#EFF6FF] border-[#BFDBFE] text-[#3B82F6]',
+      'EN COURS': 'bg-[#FFFBEB] border-[#FDE68A] text-[#D97706]',
+      'LIVRÉ': 'bg-[#ECFDF5] border-[#A7F3D0] text-[#10B981]',
+      'ANNULÉ': 'bg-[#FEF2F2] border-[#FECACA] text-[#EF4444]',
+      'DISPONIBLE': 'bg-[#ECFDF5] border-[#A7F3D0] text-[#10B981]'
+    };
+    const label = status === 'prete' ? 'À LIVRER' : status.toUpperCase();
+    return (
+      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.06em] border ${styles[label] || styles['À LIVRER']}`}>
+        {label}
+      </span>
+    );
+  };
+
   return (
     <div
-      className={`relative bg-surface rounded-[2rem] shadow-card overflow-hidden border transition-all animate-in slide-in-from-bottom duration-300 group cursor-pointer ${isSelected ? 'border-primary-500 ring-1 ring-primary-500/30 shadow-2xl scale-[1.02]' : 'border-border/50 hover:border-primary-200'}`}
+      className={`bg-white rounded-[20px] shadow-[var(--shadow-md)] p-5 border border-[rgba(0,0,0,0.06)] active:scale-[0.98] transition-all text-start relative overflow-hidden mb-3 ${isSelected ? 'ring-2 ring-[var(--primary)] ring-opacity-50' : ''}`}
       onClick={() => onSelect(order.id)}
     >
-      {isOptimized && order._stopNumber && (
-        <div className="absolute top-5 start-5 z-20 w-10 h-10 rounded-xl bg-primary-500 text-white text-base font-black flex items-center justify-center shadow-lg border-2 border-surface shadow-primary-500/30">
-          <span className="tracking-tighter">#{order._stopNumber}</span>
-        </div>
-      )}
+      <div className="flex justify-between items-start mb-1">
+        <span className="font-['Inter'] text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider">
+          #{order.numeroCommande}
+        </span>
+        {getStatusBadge(order.status)}
+      </div>
 
-      <div className="flex flex-col">
-        <div className="p-6 pb-0 flex justify-between items-start gap-4">
-          <div className="min-w-0 text-start flex-1 ps-2">
-            <div className="flex items-center gap-2 mb-1 opacity-60">
-              <Hash size={12} className="text-primary-500" />
-              <span className="text-xs font-black text-text-muted uppercase tracking-widest">{order.numeroCommande}</span>
-            </div>
-            <h3 className="text-xl font-black text-text-primary tracking-tighter truncate leading-tight">{order.client?.nom || order.client?.name || 'Client'}</h3>
-          </div>
-          <div className="flex flex-col items-end gap-2 shrink-0">
-            <span className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-100 dark:border-emerald-500/20 shadow-sm">{t('status.prete')}</span>
-            {order._legDistance && (
-              <div className="flex items-center gap-1.5 text-primary-600 font-black text-xs tracking-tighter bg-primary-50 px-2 py-0.5 rounded-lg border border-primary-100">
-                <Navigation size={12} fill="currentColor" className="rtl:rotate-180" />
-                {order._legDistance} km
-              </div>
-            )}
-          </div>
-        </div>
+      <h3 className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)] mb-4">
+        {order.client?.nom || order.client?.name || 'Client'}
+      </h3>
 
-        <div className="p-6 flex gap-5">
-          <div className="w-24 h-24 rounded-2xl bg-background overflow-hidden shrink-0 border border-border/50 relative shadow-sm" onClick={(e) => { e.stopPropagation(); onShowGallery(allPhotos, 0); }}>
-            {mainPhoto ? (
-              <img src={mainPhoto} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="preview" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-text-muted opacity-20">
-                <Package size={32} />
-              </div>
-            )}
-            <div className="absolute bottom-1 right-1 bg-black/60 text-xs text-white font-black px-2 py-0.5 rounded-lg backdrop-blur-sm border border-white/10">
-              {order.commandeTapis?.length || 0} ART.
-            </div>
-          </div>
-          <div className="flex-1 min-w-0 text-start flex flex-col justify-center gap-3">
-            <div className="flex items-start gap-2.5 text-text-muted">
-              <MapPin size={16} className="text-primary-500 shrink-0 mt-0.5" />
-              <p className="text-xs font-bold leading-relaxed line-clamp-2 uppercase tracking-tight italic">{address || t('driver.ready_delivery.card.no_address')}</p>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-primary-500/10 text-primary-600 flex items-center justify-center shrink-0">
-                <Phone size={14} strokeWidth={3} className="rtl:rotate-180" />
-              </div>
-              <a href={`tel:${order.client?.phones?.[0]?.phoneNumber}`} onClick={(e) => e.stopPropagation()} className="text-sm font-black text-text-primary hover:text-primary-500 transition-colors tracking-tight">
-                {order.client?.phones?.[0]?.phoneNumber || '—'}
-              </a>
-            </div>
+      <div className="flex gap-4 mb-4">
+        <div 
+          className="w-16 h-16 rounded-[12px] bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] shrink-0 overflow-hidden flex items-center justify-center relative"
+          onClick={(e) => { e.stopPropagation(); onShowGallery(allPhotos, 0); }}
+        >
+          {mainPhoto ? (
+            <img src={mainPhoto} className="w-full h-full object-cover" alt="preview" />
+          ) : (
+            <span className="text-2xl">🧺</span>
+          )}
+          <div className="absolute top-0 right-0 bg-[var(--text)] text-white text-[10px] font-bold px-1.5 rounded-bl-lg">
+            {order.commandeTapis?.length || 0}
           </div>
         </div>
+        
+        <div className="flex-1 min-w-0 flex flex-col justify-center gap-2">
+          <div className="flex items-start gap-2 text-[var(--text-secondary)]">
+            <MapPin size={16} className="text-[var(--primary)] shrink-0 mt-0.5" />
+            <p className="font-['Inter'] text-[13px] font-medium leading-tight line-clamp-2">
+              {address || t('driver.ready_delivery.card.no_address')}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Phone size={14} className="text-[#10B981] shrink-0" />
+            <a href={`tel:${order.client?.phones?.[0]?.phoneNumber}`} onClick={(e) => e.stopPropagation()} className="font-['Inter'] text-[14px] font-semibold text-[var(--text)]">
+              {order.client?.phones?.[0]?.phoneNumber || '—'}
+            </a>
+          </div>
+        </div>
+      </div>
 
-        <div className="px-6 pb-6 grid grid-cols-2 gap-4">
-          <div className="bg-background/40 rounded-2xl p-4 border border-border/40 text-start group-hover:bg-background/60 transition-colors">
-            <p className="text-xs font-black text-text-muted uppercase tracking-widest mb-1.5 opacity-60">{t('driver.pro_ui.total_to_collect')}</p>
-            <div className="flex items-baseline gap-1">
-              <span className="text-xl font-black text-text-primary tracking-tighter">{order.montantTotal}</span>
-              <span className="text-xs font-black text-text-muted uppercase opacity-40">DH</span>
-            </div>
-          </div>
-          <div className="bg-background/40 rounded-2xl p-4 border border-border/40 text-start group-hover:bg-background/60 transition-colors">
-            <p className="text-xs font-black text-text-muted uppercase tracking-widest mb-1.5 opacity-60">{t('driver.pro_ui.time_status')}</p>
-            <div className="flex items-center gap-2 text-emerald-600">
-              <Clock size={14} strokeWidth={3} />
-              <span className="text-xs font-black uppercase tracking-tighter">{t('driver.pro_ui.available_time_status')}</span>
-            </div>
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <div className="bg-[var(--bg)] rounded-[10px] border border-[rgba(0,0,0,0.06)] p-2.5">
+          <p className="font-['Inter'] text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1">TOTAL</p>
+          <div className="flex items-baseline gap-1">
+            <span className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)]">{order.montantTotal}</span>
+            <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase">DH</span>
           </div>
         </div>
+        <div className="bg-[#ECFDF5] rounded-[10px] border border-[#A7F3D0] p-2.5">
+          <p className="font-['Inter'] text-[10px] font-semibold text-[#10B981] uppercase tracking-wider mb-1">STATUS</p>
+          <div className="flex items-center gap-1.5 text-[#10B981]">
+            <Clock size={14} />
+            <span className="font-['Plus_Jakarta_Sans'] text-[12px] font-bold uppercase tracking-tighter">DISPONIBLE</span>
+          </div>
+        </div>
+      </div>
 
-        <div className="px-6 pb-6 flex gap-3">
-          <div className="flex-1 flex gap-2">
-            <button onClick={(e) => { e.stopPropagation(); handleItinerary('google'); }} className="flex-1 h-14 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-primary-500/20 active:scale-95 group/btn">
-              <Navigation size={18} fill="currentColor" className="rtl:rotate-180 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-              GPS
-            </button>
-            <button onClick={(e) => { e.stopPropagation(); navigate(`/livreur/delivery/${order.id}`); }} className="w-14 h-14 bg-background hover:bg-surface text-text-muted hover:text-primary-500 border border-border/50 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-sm">
-              <Eye size={22} />
-            </button>
-          </div>
-          <button onClick={(e) => { e.stopPropagation(); onPay(order); }} className="flex-1 h-14 bg-surface hover:bg-background text-text-primary border border-border/50 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2.5 transition-all active:scale-95 shadow-sm">
-            <CreditCard size={18} />
-            {t('driver.pro_ui.collect_payment')}
-          </button>
-          <button onClick={(e) => { e.stopPropagation(); onCancel(order); }} className="w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all border border-red-100 dark:border-red-500/20 active:scale-95 shrink-0 shadow-sm">
-            <X size={24} strokeWidth={3} />
-          </button>
-        </div>
+      <div className="flex gap-2">
+        <button 
+          onClick={(e) => { e.stopPropagation(); handleItinerary('google'); }}
+          className="w-12 h-12 rounded-[14px] bg-[var(--primary)] text-white flex items-center justify-center shadow-[var(--shadow-teal)] active:scale-95 transition-all"
+        >
+          <Navigation size={20} fill="currentColor" className="rtl:rotate-180" />
+        </button>
+        <button 
+          onClick={(e) => { e.stopPropagation(); navigate(`/livreur/delivery/${order.id}`); }}
+          className="w-12 h-12 rounded-[14px] bg-[var(--bg)] border border-[rgba(0,0,0,0.08)] text-[var(--text-secondary)] flex items-center justify-center active:scale-95 transition-all"
+        >
+          <Eye size={20} />
+        </button>
+        <button 
+          onClick={(e) => { e.stopPropagation(); onPay(order); }}
+          className="flex-1 h-12 rounded-[14px] bg-white border-[1.5px] border-[var(--primary)] text-[var(--primary)] font-['Inter'] font-bold text-[14px] flex items-center justify-center gap-2 active:scale-95 transition-all"
+        >
+          <CreditCard size={18} />
+          {t('driver.pro_ui.collect_payment').toUpperCase()}
+        </button>
+        <button 
+          onClick={(e) => { e.stopPropagation(); onCancel(order); }}
+          className="w-12 h-12 rounded-[14px] bg-[#FEF2F2] border border-[#FECACA] text-[#EF4444] flex items-center justify-center active:scale-95 transition-all"
+        >
+          <X size={20} strokeWidth={2.5} />
+        </button>
       </div>
     </div>
   );
@@ -484,30 +495,57 @@ export default function ReadyForDelivery() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-32 animate-fade-in px-4 md:px-0 text-start">
+    <div className="pb-24 animate-fade-in text-start">
       <style>{leafletStyles}</style>
 
-      <div className={`${isMapExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'} transition-opacity duration-300 flex flex-col sm:flex-row justify-between items-start gap-6 mt-2`}>
+      {/* PAGE HEADER */}
+      <div className={`${isMapExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'} transition-opacity duration-300 flex justify-between items-start mb-5`}>
         <div>
-          <h1 className="text-2xl font-black text-text-primary tracking-tight uppercase">{t('driver.ready_delivery.title')}</h1>
-          <p className="text-xs text-text-muted font-bold uppercase tracking-widest opacity-60 mt-1">{t('driver.ready_delivery.subtitle')}</p>
+          <h1 className="font-['Plus_Jakarta_Sans'] text-[22px] font-bold text-[var(--text)] tracking-tight">
+            {t('driver.ready_delivery.title')}
+          </h1>
+          <p className="font-['Inter'] text-[13px] text-[var(--text-muted)] mt-1">
+            {t('driver.ready_delivery.subtitle')}
+          </p>
         </div>
-        <div className="bg-primary-500/10 border border-primary-500/20 rounded-2xl px-5 py-2.5 flex items-center gap-3 shadow-sm shrink-0">
-          <ShoppingBag className="text-primary-500" size={20} strokeWidth={2.5} />
-          <p className="text-sm font-black text-primary-600 tracking-wide leading-none">{t('driver.ready_delivery.orders_count', { count: orders.length })}</p>
+        <div className="bg-[var(--primary-surface)] border border-[rgba(13,115,119,0.15)] rounded-full px-4 py-2 flex items-center gap-2 shadow-sm shrink-0">
+          <ShoppingBag className="text-[var(--primary)]" size={18} />
+          <p className="font-['Inter'] text-[14px] font-semibold text-[var(--primary)] leading-none">
+            {t('driver.ready_delivery.orders_count', { count: orders.length })}
+          </p>
         </div>
       </div>
 
-      <div className={`${isMapExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'} transition-opacity duration-300 flex bg-surface border border-border/50 p-1.5 rounded-2xl w-fit shadow-sm`}>
-        <button onClick={() => { setTravelMode('driving-car'); optimizeRoute('driving-car'); }} className={`flex items-center justify-center gap-2.5 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${travelMode === 'driving-car' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}>🚗 {t('driver.ready_delivery.travel_mode.driving')}</button>
-        <button onClick={() => { setTravelMode('foot-walking'); optimizeRoute('foot-walking'); }} className={`flex items-center justify-center gap-2.5 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${travelMode === 'foot-walking' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-text-muted hover:text-text-primary'}`}>🚶 {t('driver.ready_delivery.travel_mode.foot')}</button>
+      {/* TRANSPORT SELECTOR */}
+      <div className={`${isMapExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'} transition-opacity duration-300 bg-white border border-[rgba(0,0,0,0.08)] p-1 rounded-[12px] flex w-fit shadow-[var(--shadow-sm)] mb-6`}>
+        <button 
+          onClick={() => { setTravelMode('driving-car'); optimizeRoute('driving-car'); }} 
+          className={`px-5 py-2 rounded-[10px] text-[13px] transition-all duration-200 ${
+            travelMode === 'driving-car' 
+              ? 'bg-[var(--primary)] text-white font-bold shadow-[0_2px_8px_rgba(13,115,119,0.3)]' 
+              : 'text-[var(--text-muted)] font-medium'
+          }`}
+        >
+          🚗 {t('driver.ready_delivery.travel_mode.driving').toUpperCase()}
+        </button>
+        <button 
+          onClick={() => { setTravelMode('foot-walking'); optimizeRoute('foot-walking'); }} 
+          className={`px-5 py-2 rounded-[10px] text-[13px] transition-all duration-200 ${
+            travelMode === 'foot-walking' 
+              ? 'bg-[var(--primary)] text-white font-bold shadow-[0_2px_8px_rgba(13,115,119,0.3)]' 
+              : 'text-[var(--text-muted)] font-medium'
+          }`}
+        >
+          🚶 {t('driver.ready_delivery.travel_mode.foot').toUpperCase()}
+        </button>
       </div>
 
-      <div className={`transition-all duration-500 ease-in-out ${isMapExpanded ? 'fixed inset-0 z-[9999] bg-background !m-0 rounded-none' : 'relative group bg-surface rounded-[2.5rem] overflow-hidden border border-border/50 shadow-2xl shadow-primary-500/5'}`}>
-        <div className={`${isMapExpanded ? 'h-full w-full' : 'h-72 sm:h-96'} relative z-0 transition-all duration-500`}>
+      {/* MAP CONTAINER */}
+      <div className={`transition-all duration-500 ${isMapExpanded ? 'fixed inset-0 z-[9999] bg-white' : 'bg-white rounded-[16px] overflow-hidden border border-[rgba(0,0,0,0.08)] shadow-[var(--shadow-md)] mb-6'}`}>
+        <div className={`${isMapExpanded ? 'h-full w-full' : 'h-72'} relative z-0`}>
           <MapContainer center={[33.5731, -7.5898]} zoom={13} style={{ height: '100%', width: '100%', zIndex: 0 }} scrollWheelZoom={false}>
             <TileLayer url={`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${import.meta.env.VITE_MAPTILER_KEY}`} maxZoom={22} />
-            {routeCoords.length > 0 && <Polyline positions={routeCoords} pathOptions={{ color: '#F97316', weight: 5, opacity: 0.8, lineCap: 'round', lineJoin: 'round' }} />}
+            {routeCoords.length > 0 && <Polyline positions={routeCoords} pathOptions={{ color: 'var(--primary)', weight: 4, opacity: 0.8 }} />}
             {livreurPosition && <Marker position={[livreurPosition.lat, livreurPosition.lng]} icon={livreurIcon} />}
             <MapController markers={mapMarkers} selectedOrderId={selectedOrderId} livreurPosition={livreurPosition} forceFit={forceFit} isMapExpanded={isMapExpanded} />
             {mapMarkers.map((marker, idx) => (
@@ -518,29 +556,50 @@ export default function ReadyForDelivery() {
           </MapContainer>
         </div>
 
-        <div className={`absolute top-6 right-6 z-[10] flex flex-col gap-3 ${isMapExpanded ? 'mt-[calc(env(safe-area-inset-top)+1rem)]' : ''}`}>
-          <button onClick={() => setForceFit(prev => prev + 1)} className="w-12 h-12 bg-surface/90 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl flex items-center justify-center text-text-primary hover:text-primary-500 transition-all active:scale-90 shadow-primary-500/10" title={t('driver.pro_ui.recenter_map')}><Target size={24} strokeWidth={2.5} /></button>
-          <button onClick={() => setIsMapExpanded(!isMapExpanded)} className="w-12 h-12 bg-surface/90 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl flex items-center justify-center text-text-primary hover:text-primary-500 transition-all active:scale-90 shadow-primary-500/10">
-            {isMapExpanded ? <Minimize2 size={24} strokeWidth={2.5} /> : <Maximize2 size={24} strokeWidth={2.5} />}
+        <div className={`absolute top-4 right-4 z-[10] flex flex-col gap-2 ${isMapExpanded ? 'mt-[env(safe-area-inset-top)]' : ''}`}>
+          <button 
+            onClick={() => setForceFit(prev => prev + 1)} 
+            className="w-11 h-11 bg-white border border-[rgba(0,0,0,0.1)] rounded-[12px] shadow-[var(--shadow-sm)] flex items-center justify-center text-[var(--text-secondary)] active:scale-90 transition-all"
+          >
+            <Target size={22} />
+          </button>
+          <button 
+            onClick={() => setIsMapExpanded(!isMapExpanded)} 
+            className="w-11 h-11 bg-white border border-[rgba(0,0,0,0.1)] rounded-[12px] shadow-[var(--shadow-sm)] flex items-center justify-center text-[var(--text-secondary)] active:scale-90 transition-all"
+          >
+            {isMapExpanded ? <Minimize2 size={22} /> : <Maximize2 size={22} />}
           </button>
         </div>
 
-        <div className={`absolute bottom-6 left-6 right-6 z-[10] bg-surface/90 backdrop-blur-xl border border-border/50 p-5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex items-center justify-between gap-6 transition-all duration-500 ${isMapExpanded ? 'max-w-md mx-auto mb-[calc(env(safe-area-inset-bottom)+1rem)]' : 'opacity-100'}`}>
+        <div className={`absolute bottom-4 left-4 right-4 z-[10] bg-[rgba(255,255,255,0.92)] backdrop-blur-[16px] border border-[rgba(255,255,255,0.6)] p-4 rounded-[14px] shadow-[var(--shadow-lg)] flex items-center justify-between gap-4 transition-all duration-500 ${isMapExpanded ? 'max-w-md mx-auto mb-[env(safe-area-inset-bottom)]' : ''}`}>
           <div className="min-w-0">
-            <div className="flex items-center gap-2.5 mb-1.5 text-start">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
-              <h4 className="font-black text-xs text-text-primary uppercase tracking-[0.2em]">{t('driver.ready_delivery.actions.launch')}</h4>
+            <div className="flex items-center gap-2 mb-0.5">
+              <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
+              <h4 className="font-bold text-[12px] text-[var(--text)] uppercase tracking-wider">{t('driver.ready_delivery.actions.launch')}</h4>
             </div>
-            <p className="text-text-muted text-xs font-black uppercase tracking-tighter truncate text-start">{optimized ? `${totalDistance} ${t('driver.pro_ui.km_approx')} ${totalDuration} ${t('driver.pro_ui.minutes')}` : t('driver.ready_delivery.subtitle')}</p>
+            <p className="text-[var(--text-muted)] text-[12px] font-medium truncate">
+              {optimized ? `${totalDistance} km • ${totalDuration} min` : t('driver.ready_delivery.subtitle')}
+            </p>
           </div>
-          <div className="flex gap-3">
-            <button onClick={() => optimizeRoute(travelMode)} className="w-12 h-12 flex items-center justify-center bg-background border border-border/50 rounded-2xl text-text-muted hover:text-primary-500 transition-all shadow-sm"><RotateCcw size={20} className={isOptimizing ? 'animate-spin' : ''} strokeWidth={2.5} /></button>
-            <button onClick={() => { const list = optimized ? optimizedOrders.filter(o => o.client?.addresses?.[0]?.latitude) : orders.filter(o => o.client?.addresses?.[0]?.latitude); if (!list.length) return; const url = `https://www.google.com/maps/dir/${livreurPosition ? livreurPosition.lat + ',' + livreurPosition.lng : ''}/${list.map(o => o.client.addresses[0].latitude + ',' + o.client.addresses[0].longitude).join('/')}`; window.open(url, '_blank'); }} className="bg-primary-600 hover:bg-primary-700 text-white rounded-2xl px-6 h-12 text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-primary-500/20 flex items-center gap-3 active:scale-95"><ExternalLink size={18} strokeWidth={2.5} /> {t('common.google', 'Google')}</button>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => optimizeRoute(travelMode)} 
+              className="w-11 h-11 flex items-center justify-center bg-white border border-[rgba(0,0,0,0.1)] rounded-[12px] text-[var(--text-secondary)] active:scale-95 transition-all shadow-sm"
+            >
+              <RotateCcw size={18} className={isOptimizing ? 'animate-spin' : ''} />
+            </button>
+            <button 
+              onClick={() => { const list = optimized ? optimizedOrders.filter(o => o.client?.addresses?.[0]?.latitude) : orders.filter(o => o.client?.addresses?.[0]?.latitude); if (!list.length) return; const url = `https://www.google.com/maps/dir/${livreurPosition ? livreurPosition.lat + ',' + livreurPosition.lng : ''}/${list.map(o => o.client.addresses[0].latitude + ',' + o.client.addresses[0].longitude).join('/')}`; window.open(url, '_blank'); }} 
+              className="bg-[var(--primary)] text-white rounded-[12px] px-5 h-11 text-[13px] font-bold uppercase tracking-wider flex items-center gap-2 active:scale-95 transition-all shadow-[var(--shadow-teal)]"
+            >
+              <ExternalLink size={18} /> {t('common.google', 'GOOGLE')}
+            </button>
           </div>
         </div>
       </div>
 
-      <div className={`${isMapExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'} transition-opacity duration-300 grid grid-cols-1 lg:grid-cols-2 gap-6 text-start`}>
+      {/* DELIVERY CARDS */}
+      <div className={`${isMapExpanded ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 space-y-3`}>
         {displayOrders.length > 0 ? displayOrders.map(order => (
           <DeliveryCard 
             key={order.id} 
@@ -560,12 +619,9 @@ export default function ReadyForDelivery() {
             navigate={navigate} 
           />
         )) : (
-          <div className="col-span-full py-32 flex flex-col items-center justify-center bg-surface rounded-[2.5rem] border-2 border-dashed border-border/40 opacity-40">
-            <div className="w-20 h-20 bg-background rounded-[2rem] flex items-center justify-center mb-6 shadow-inner border border-border/50">
-              <Navigation size={40} className="text-text-muted" />
-            </div>
-            <h3 className="text-xl font-black text-text-primary uppercase tracking-tight">{t('driver.ready_delivery.empty.title')}</h3>
-            <p className="text-xs font-bold text-text-muted mt-2 uppercase tracking-[0.2em]">{t('driver.ready_delivery.empty.desc')}</p>
+          <div className="py-20 text-center opacity-40">
+            <Navigation size={48} className="mx-auto mb-4 text-[var(--text-muted)]" />
+            <h3 className="font-['Plus_Jakarta_Sans'] text-[18px] font-bold text-[var(--text)]">{t('driver.ready_delivery.empty.title')}</h3>
           </div>
         )}
       </div>
